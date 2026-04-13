@@ -19,11 +19,19 @@ const posts = [
 export default function BlogPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <div className="flex items-end justify-between flex-wrap gap-6">
+      <div className="mx-auto max-w-3xl text-center">
+        <Badge variant="secondary">Blog tecnico</Badge>
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mt-4">Blog</h1>
+        <p className="text-muted-foreground mt-3">
+          Articulos tecnicos sobre Data, AI Engineering y construccion de sistemas en produccion.
+        </p>
+      </div>
+
+      <div className="flex items-end justify-between flex-wrap gap-6 mt-10">
         <div>
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Blog</h1>
-          <p className="text-muted-foreground mt-3 max-w-2xl">
-            Articulos tecnicos sobre Data, AI Engineering y construccion de sistemas en produccion.
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight">Ultimos articulos</h2>
+          <p className="text-muted-foreground mt-2 max-w-2xl">
+            Ideas practicas y aprendizajes de proyectos reales.
           </p>
         </div>
         <Button asChild>
@@ -35,21 +43,21 @@ export default function BlogPage() {
 
       <div className="grid grid-cols-1 gap-4">
         {posts.map((post) => (
-          <Card key={post.href}>
-            <CardContent className="p-6 flex flex-col gap-4">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <h2 className="text-xl font-semibold leading-tight">{post.title}</h2>
+          <Card key={post.href} className="transition-colors hover:border-foreground/30">
+            <CardContent className="p-6 md:p-8 flex flex-col gap-4">
+              <div className="flex items-center justify-between flex-wrap gap-3 text-xs text-muted-foreground">
+                <div>
+                  {post.date} · {post.readTime}
+                </div>
                 <Badge variant="outline">{post.tag}</Badge>
               </div>
 
-              <p className="text-sm text-muted-foreground">{post.excerpt}</p>
+              <h3 className="text-xl md:text-2xl font-semibold leading-tight">{post.title}</h3>
 
-              <div className="text-xs text-muted-foreground">
-                {post.date} · {post.readTime}
-              </div>
+              <p className="text-sm md:text-base text-muted-foreground max-w-3xl">{post.excerpt}</p>
 
               <div>
-                <Button asChild variant="outline" size="sm">
+                <Button asChild variant="outline">
                   <Link href={post.href}>Leer articulo</Link>
                 </Button>
               </div>
