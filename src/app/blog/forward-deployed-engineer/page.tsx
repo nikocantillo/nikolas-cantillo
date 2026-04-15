@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { ShareActions } from "@/components/blog/share-actions"
 
 
 export default function ForwardDeployedEngineerPage() {
@@ -17,6 +18,11 @@ export default function ForwardDeployedEngineerPage() {
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mt-4">
           Forward Deployed Engineer: el rol puente entre producto y tecnologia
         </h1>
+
+        <ShareActions
+          title="Forward Deployed Engineer: el rol puente entre producto y tecnologia"
+          path="/blog/forward-deployed-engineer"
+        />
 
         <p className="text-muted-foreground mt-4 text-base leading-7">
           Cuando una empresa trabaja con software complejo, datos e inteligencia artificial, no

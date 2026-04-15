@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { ShareActions } from "@/components/blog/share-actions"
 
 export default function AiYLosVedasPage() {
   return (
@@ -16,6 +17,11 @@ export default function AiYLosVedasPage() {
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mt-4">
           AI y astrologia vedica: entre tradicion, datos y criterio
         </h1>
+
+        <ShareActions
+          title="AI y astrologia vedica: entre tradicion, datos y criterio"
+          path="/blog/ai-y-los-vedas"
+        />
 
         <p className="text-muted-foreground mt-4 text-base leading-7">
           Hablar de AI y astrologia vedica puede sonar provocador: por un lado tenemos modelos,
