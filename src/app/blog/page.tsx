@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button"
 
 const posts = [
   {
+    title: "AI y astrologia vedica: entre tradicion, datos y criterio",
+    excerpt:
+      "Como usar IA para analizar patrones en astrologia vedica sin confundir correlacion con verdad absoluta.",
+    tag: "AI / Astrologia",
+    href: "/blog/ai-y-los-vedas",
+    date: "Abr 2026",
+    readTime: "8 min",
+  },
+  {
     title: "Forward Deployed Engineer: el rol puente entre producto y tecnología",
     excerpt:
       "Qué hace un FDE, por qué es clave en productos de datos e IA, y qué habilidades técnicas y humanas lo vuelven diferencial.",
