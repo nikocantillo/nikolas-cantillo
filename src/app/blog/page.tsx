@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button"
 
 const posts = [
   {
+    title: "Data Mesh: arquitectura de datos para escalar equipos y decisiones",
+    excerpt:
+      "Como pasar de un modelo centralizado a dominios responsables de data products con governance federada y plataforma self-serve.",
+    tag: "Data Architecture",
+    href: "/blog/data-mesh-arquitectura-datos",
+    date: "Abr 2026",
+    readTime: "9 min",
+  },
+  {
     title: "AI y astrologia vedica: entre tradicion, datos y criterio",
     excerpt:
       "Como usar IA para analizar patrones en astrologia vedica sin confundir correlacion con verdad absoluta.",
