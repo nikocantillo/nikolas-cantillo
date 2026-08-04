@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button"
 
 const posts = [
   {
+    title: "Hashes de archivos y ciencia de datos responsable: integridad, trazabilidad y privacidad",
+    excerpt:
+      "Que es el hash de un archivo, como garantiza integridad y reproducibilidad en pipelines, y por que hashear datos personales no es lo mismo que anonimizarlos.",
+    tag: "Data Engineering / Ethics",
+    href: "/blog/hashes-y-ciencia-de-datos-responsable",
+    date: "Ago 2026",
+    readTime: "8 min",
+  },
+  {
     title: "Data Mesh: arquitectura de datos para escalar equipos y decisiones",
     excerpt:
       "Como pasar de un modelo centralizado a dominios responsables de data products con governance federada y plataforma self-serve.",
