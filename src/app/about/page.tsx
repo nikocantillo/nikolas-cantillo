@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { ExperienceTimeline } from "@/components/experience-timeline"
 
 export default function AboutPage() {
   return (
@@ -49,37 +50,16 @@ export default function AboutPage() {
 
       <Separator className="my-12" />
 
-      {/* EXPERIENCIA (RESUMEN) */}
+      {/* EXPERIENCIA (TIMELINE) */}
       <section>
-        <h2 className="text-2xl font-semibold">Experiencia (resumen)</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Experiencia</h2>
         <p className="text-muted-foreground mt-2 max-w-3xl">
-          Enfoque en responsabilidades técnicas y tipo de problemas abordados.
+          Mi recorrido profesional: de freelancer a construir sistemas de datos e IA en
+          producción.
         </p>
 
-        <div className="mt-6 space-y-4">
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="font-semibold">Data / AI Engineer</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Entornos productivos · Datos a escala · Sistemas internos
-              </p>
-
-              <ul className="mt-4 space-y-2 text-sm text-muted-foreground list-disc pl-5">
-                <li>
-                  Diseño y mantenimiento de pipelines de datos escalables (Spark / SQL),
-                  con foco en rendimiento, costos y confiabilidad.
-                </li>
-                <li>
-                  Implementación de procesos de data quality y governance:
-                  validación de esquemas, control de archivos, métricas y trazabilidad.
-                </li>
-                <li>
-                  Desarrollo de servicios y APIs para automatizar flujos,
-                  con logging, manejo de errores y observabilidad.
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+        <div className="max-w-4xl">
+          <ExperienceTimeline />
         </div>
       </section>
 
@@ -208,10 +188,6 @@ export default function AboutPage() {
             <Link href="/contact">Intercambiar ideas</Link>
           </Button>
         </div>
-
-        <p className="text-xs text-muted-foreground mt-6">
-          © {new Date().getFullYear()} Nikolas Cantillo
-        </p>
       </section>
     </main>
   )
