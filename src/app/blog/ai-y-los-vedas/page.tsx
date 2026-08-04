@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ShareActions } from "@/components/blog/share-actions"
+import { ReadingProgress } from "@/components/blog/reading-progress"
 
 export default function AiYLosVedasPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
+      <ReadingProgress />
       <div className="mx-auto max-w-3xl">
         <div className="flex items-center gap-3 flex-wrap">
           <Badge variant="secondary">AI / Astrologia</Badge>

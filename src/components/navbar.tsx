@@ -1,6 +1,10 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils"
 
 const navItems = [
   { label: "About", href: "/about" },
@@ -10,55 +14,65 @@ const navItems = [
 ]
 
 export function Navbar() {
+  const pathname = usePathname()
+
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`)
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/70 backdrop-blur-md">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-4">
           {/* Left: Brand */}
-          <Link href="/" className="font-semibold tracking-tight">
+          <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
+            <span className="size-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" />
             Nikolas Cantillo
           </Link>
 
           {/* Center: Links */}
-          <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
+          <nav className="hidden md:flex items-center gap-1 text-sm">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="hover:text-foreground transition-colors"
+                className={cn(
+                  "rounded-full px-3.5 py-1.5 transition-colors",
+                  isActive(item.href)
+                    ? "bg-secondary text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                )}
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          {/* Right: CTA */}
+          {/* Right: theme + CTA */}
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button asChild className="hidden sm:inline-flex">
               <Link href="/contact">Contact</Link>
-            </Button>
-
-            {/* Mobile: simple menu via links (minimalist) */}
-            <Button asChild variant="outline" className="md:hidden">
-              <Link href="/about">Menu</Link>
             </Button>
           </div>
         </div>
 
-        <div className="md:hidden pb-3">
-          <Separator className="mb-3" />
-          <nav className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="hover:text-foreground transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
+        {/* Mobile: links row */}
+        <nav className="md:hidden flex flex-wrap gap-2 pb-3 text-sm">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "rounded-full border px-3 py-1 transition-colors",
+                isActive(item.href)
+                  ? "border-foreground/30 bg-secondary text-foreground font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </header>
   )

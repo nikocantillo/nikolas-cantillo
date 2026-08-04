@@ -1,100 +1,161 @@
+"use client"
+
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { useState } from "react"
+import { ArrowRight, ArrowUpRight, BookOpen } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { posts } from "@/lib/posts"
 
-const posts = [
-  {
-    title: "Hashes de archivos y ciencia de datos responsable: integridad, trazabilidad y privacidad",
-    excerpt:
-      "Que es el hash de un archivo, como garantiza integridad y reproducibilidad en pipelines, y por que hashear datos personales no es lo mismo que anonimizarlos.",
-    tag: "Data Engineering / Ethics",
-    href: "/blog/hashes-y-ciencia-de-datos-responsable",
-    date: "Ago 2026",
-    readTime: "8 min",
-  },
-  {
-    title: "Data Mesh: arquitectura de datos para escalar equipos y decisiones",
-    excerpt:
-      "Como pasar de un modelo centralizado a dominios responsables de data products con governance federada y plataforma self-serve.",
-    tag: "Data Architecture",
-    href: "/blog/data-mesh-arquitectura-datos",
-    date: "Abr 2026",
-    readTime: "9 min",
-  },
-  {
-    title: "AI y astrologia vedica: entre tradicion, datos y criterio",
-    excerpt:
-      "Como usar IA para analizar patrones en astrologia vedica sin confundir correlacion con verdad absoluta.",
-    tag: "AI / Astrologia",
-    href: "/blog/ai-y-los-vedas",
-    date: "Abr 2026",
-    readTime: "8 min",
-  },
-  {
-    title: "Forward Deployed Engineer: el rol puente entre producto y tecnología",
-    excerpt:
-      "Qué hace un FDE, por qué es clave en productos de datos e IA, y qué habilidades técnicas y humanas lo vuelven diferencial.",
-    tag: "Career / Engineering",
-    href: "/blog/forward-deployed-engineer",
-    date: "Abr 2026",
-    readTime: "7 min",
-  },
-]
+const tags = ["Todos", ...Array.from(new Set(posts.map((p) => p.tag)))]
 
 export default function BlogPage() {
+  const [activeTag, setActiveTag] = useState("Todos")
+
+  const filtered = activeTag === "Todos" ? posts : posts.filter((p) => p.tag === activeTag)
+  const showFeatured = activeTag === "Todos"
+  const featured = posts[0]
+  const rest = showFeatured ? filtered.slice(1) : filtered
+
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
-      <section className="rounded-2xl border bg-gradient-to-b from-muted/40 to-background p-6 md:p-10">
-        <Badge variant="secondary">Blog tecnico</Badge>
-        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mt-4">Blog</h1>
-        <p className="text-muted-foreground mt-4 max-w-2xl leading-7">
-          Articulos tecnicos sobre Data, AI Engineering y construccion de sistemas en produccion.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href={posts[0].href}>
-              Leer articulo destacado
-              <ArrowRight />
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/contact">Proponer tema</Link>
-          </Button>
+    <main className="mx-auto max-w-6xl px-6 py-12">
+      {/* HERO */}
+      <section className="relative overflow-hidden rounded-2xl border bg-gradient-to-b from-muted/40 to-background p-6 md:p-10">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-grid opacity-40 [mask-image:radial-gradient(ellipse_at_top_left,black_10%,transparent_60%)]"
+        />
+        <div className="relative">
+          <Badge variant="secondary">
+            <BookOpen className="size-3.5" />
+            Blog técnico
+          </Badge>
+          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mt-4">
+            Ideas sobre <span className="text-gradient">datos, IA y producción</span>
+          </h1>
+          <p className="text-muted-foreground mt-4 max-w-2xl leading-7">
+            Artículos prácticos sobre Data, AI Engineering y construcción de sistemas reales.
+            Sin humo: aprendizajes de proyectos de verdad.
+          </p>
         </div>
       </section>
 
-      <section>
-        <div className="mb-5">
-          <h2 className="text-xl md:text-2xl font-semibold tracking-tight">Ultimos articulos</h2>
-          <p className="text-muted-foreground mt-2">Ideas practicas y aprendizajes de proyectos reales.</p>
-        </div>
+      {/* FILTRO POR TAG */}
+      <div className="mt-8 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => setActiveTag(tag)}
+            className={cn(
+              "rounded-full border px-4 py-1.5 text-sm transition-colors",
+              activeTag === tag
+                ? "border-primary bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:border-foreground/40"
+            )}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
 
-        <div className="space-y-4">
-          {posts.map((post) => (
+      {/* DESTACADO */}
+      {showFeatured && (
+        <Link
+          href={featured.href}
+          className="group mt-6 block rounded-2xl border overflow-hidden transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr]">
+            <div className="p-6 md:p-8 flex flex-col justify-center gap-4 order-2 md:order-1">
+              <div className="flex items-center gap-3 flex-wrap text-xs text-muted-foreground">
+                <Badge variant="outline">{featured.tag}</Badge>
+                <span>
+                  {featured.date} · {featured.readTime} de lectura
+                </span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-semibold leading-tight tracking-tight">
+                {featured.title}
+              </h2>
+              <p className="text-muted-foreground leading-7">{featured.excerpt}</p>
+              <span className="inline-flex items-center gap-2 text-sm font-medium text-primary">
+                Leer artículo destacado
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+
+            <div
+              className={cn(
+                "relative min-h-44 md:min-h-full bg-gradient-to-br order-1 md:order-2",
+                featured.gradient
+              )}
+            >
+              <featured.icon className="absolute inset-0 m-auto size-20 text-foreground/15 group-hover:text-foreground/30 group-hover:scale-110 transition-all duration-300" />
+              <span className="absolute left-5 bottom-4 font-mono text-xs text-muted-foreground">
+                {featured.deco}
+              </span>
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* GRID DE ARTÍCULOS */}
+      <section className="mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {rest.map((post) => (
             <Link
               key={post.href}
               href={post.href}
-              className="group block rounded-xl border p-5 md:p-6 transition-colors hover:border-foreground/40"
+              className="group rounded-xl border overflow-hidden transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
             >
-              <div className="flex items-center justify-between flex-wrap gap-3 text-xs text-muted-foreground">
-                <div>
-                  {post.date} · {post.readTime}
-                </div>
-                <Badge variant="outline">{post.tag}</Badge>
+              <div className={cn("h-32 relative bg-gradient-to-br", post.gradient)}>
+                <post.icon className="absolute right-5 bottom-4 size-12 text-foreground/15 group-hover:text-foreground/35 group-hover:scale-110 transition-all duration-300" />
+                <span className="absolute left-5 bottom-4 font-mono text-xs text-muted-foreground">
+                  {post.deco}
+                </span>
               </div>
 
-              <h3 className="mt-3 text-xl md:text-2xl font-semibold leading-tight">{post.title}</h3>
+              <div className="p-5 md:p-6 flex flex-col gap-3">
+                <div className="flex items-center justify-between flex-wrap gap-3 text-xs text-muted-foreground">
+                  <span>
+                    {post.date} · {post.readTime}
+                  </span>
+                  <Badge variant="outline">{post.tag}</Badge>
+                </div>
 
-              <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-3xl">{post.excerpt}</p>
+                <h3 className="text-lg md:text-xl font-semibold leading-snug">{post.title}</h3>
 
-              <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium group-hover:underline">
-                Leer articulo
-                <ArrowRight className="size-4" />
+                <p className="text-sm text-muted-foreground leading-6 line-clamp-3">
+                  {post.excerpt}
+                </p>
+
+                <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                  Leer artículo
+                  <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
               </div>
             </Link>
           ))}
         </div>
+
+        {rest.length === 0 && !showFeatured && (
+          <p className="mt-10 text-center text-muted-foreground">
+            No hay artículos con ese tag todavía.
+          </p>
+        )}
+      </section>
+
+      {/* CTA */}
+      <section className="mt-12 rounded-2xl border p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 bg-gradient-to-r from-indigo-500/5 via-transparent to-cyan-400/5">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight">¿Hay un tema que te gustaría leer aquí?</h2>
+          <p className="text-muted-foreground mt-1.5 leading-7">
+            Proponme un tema de datos o IA y lo convierto en el próximo artículo.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/contact">Proponer tema</Link>
+        </Button>
       </section>
     </main>
   )
