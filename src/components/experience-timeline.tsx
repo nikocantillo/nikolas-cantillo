@@ -5,13 +5,13 @@ import { experience } from "@/lib/experience"
 function CompanyLogo({ company, logo }: { company: string; logo?: string }) {
   if (logo) {
     return (
-      <div className="relative size-12 md:size-14 border-2 border-ink bg-white overflow-hidden shrink-0">
+      <div className="relative size-12 md:size-14 border border-ink bg-white overflow-hidden shrink-0">
         <Image src={logo} alt={`Logo de ${company}`} fill className="object-contain p-2" />
       </div>
     )
   }
   return (
-    <div className="size-12 md:size-14 shrink-0 border-2 border-ink bg-secondary flex items-center justify-center">
+    <div className="size-12 md:size-14 shrink-0 border border-ink bg-secondary flex items-center justify-center">
       <span className="font-display text-lg md:text-xl">{company.charAt(0)}</span>
     </div>
   )
@@ -23,7 +23,7 @@ export function ExperienceTimeline() {
       {/* Línea vertical */}
       <div
         aria-hidden
-        className="absolute left-[23px] md:left-[27px] top-2 bottom-2 w-0.5 bg-foreground"
+        className="absolute left-[23px] md:left-[27px] top-2 bottom-2 w-px bg-foreground/30"
       />
 
       {experience.map((entry) => {

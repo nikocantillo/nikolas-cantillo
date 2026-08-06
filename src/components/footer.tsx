@@ -10,9 +10,9 @@ const navItems = [
 
 export function Footer() {
   return (
-    <footer className="border-t-2 border-ink mt-20">
+    <footer className="border-t border-ink mt-20">
       <div className="grid grid-cols-1 md:grid-cols-3">
-        <div className="p-6 md:p-8 border-b-2 md:border-b-0 md:border-r-2 border-ink">
+        <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-ink">
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Índice
           </p>
@@ -30,7 +30,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="p-6 md:p-8 border-b-2 md:border-b-0 md:border-r-2 border-ink">
+        <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-ink">
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Últimos artículos
           </p>
@@ -68,7 +68,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t-2 border-ink px-6 py-3 flex items-center justify-between flex-wrap gap-2">
+      <div className="border-t border-ink px-6 py-3 flex items-center justify-between flex-wrap gap-2">
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
           © {new Date().getFullYear()} Nikolas Cantillo
         </span>

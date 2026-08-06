@@ -18,12 +18,12 @@ export default function BlogPage() {
   return (
     <main>
       {/* CABECERA */}
-      <section className="border-b-2 border-ink px-6 md:px-10 py-10 md:py-14">
+      <section className="border-b border-ink px-6 md:px-10 py-10 md:py-14">
         <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between text-muted-foreground">
           <span>Blog / Índice</span>
           <span className="text-accent">{posts.length} artículos</span>
         </div>
-        <h1 className="font-display text-[13vw] md:text-8xl mt-6">
+        <h1 className="font-display text-[10vw] md:text-7xl mt-6">
           El <span className="text-outline">Blog</span>
         </h1>
         <p className="mt-6 max-w-2xl leading-7 text-muted-foreground">
@@ -33,17 +33,15 @@ export default function BlogPage() {
       </section>
 
       {/* FILTRO */}
-      <div className="border-b-2 border-ink flex flex-wrap">
+      <div className="border-b border-ink flex flex-wrap">
         {tags.map((tag) => (
           <button
             key={tag}
             type="button"
             onClick={() => setActiveTag(tag)}
             className={cn(
-              "px-4 md:px-6 py-3 font-mono text-[10px] md:text-xs uppercase tracking-widest border-r-2 border-ink transition-colors",
-              activeTag === tag
-                ? "bg-primary text-primary-foreground"
-                : "hover:bg-primary hover:text-primary-foreground"
+              "px-4 md:px-6 py-3 font-mono text-[10px] md:text-xs uppercase tracking-widest border-r border-ink transition-colors",
+              activeTag === tag ? "bg-secondary" : "hover:bg-secondary"
             )}
           >
             {activeTag === tag && <span className="text-accent mr-1.5">●</span>}
@@ -56,19 +54,19 @@ export default function BlogPage() {
       {showFeatured && (
         <Link
           href={featured.href}
-          className="group block border-b-2 border-ink px-6 md:px-10 py-10 md:py-14 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="group block border-b border-ink px-6 md:px-10 py-10 md:py-14 hover:bg-secondary transition-colors"
         >
-          <div className="flex items-baseline justify-between flex-wrap gap-3 font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground group-hover:text-primary-foreground/60">
+          <div className="flex items-baseline justify-between flex-wrap gap-3 font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
             <span>Destacado — {featured.tag}</span>
             <span>
               {featured.date} · {featured.readTime} · {featured.deco}
             </span>
           </div>
-          <h2 className="font-display text-3xl md:text-6xl mt-5 max-w-5xl">{featured.title}</h2>
-          <p className="mt-5 max-w-3xl leading-7 text-muted-foreground group-hover:text-primary-foreground/70">
+          <h2 className="font-display text-3xl md:text-5xl mt-5 max-w-5xl">{featured.title}</h2>
+          <p className="mt-5 max-w-3xl leading-7 text-muted-foreground">
             {featured.excerpt}
           </p>
-          <span className="mt-6 inline-block font-mono text-xs uppercase tracking-widest text-accent group-hover:text-primary-foreground">
+          <span className="mt-6 inline-block font-mono text-xs uppercase tracking-widest text-accent">
             Leer artículo{" "}
             <span className="inline-block transition-transform group-hover:translate-x-2">→</span>
           </span>
@@ -81,17 +79,17 @@ export default function BlogPage() {
           <Link
             key={post.href}
             href={post.href}
-            className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-6 md:px-10 py-7 border-b border-ink/30 hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-6 md:px-10 py-7 border-b border-ink/30 hover:bg-secondary transition-colors"
           >
             <span className="font-mono text-sm text-accent">
               {String(i + (showFeatured ? 2 : 1)).padStart(2, "0")}
             </span>
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground group-hover:text-primary-foreground/60">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                 {post.date} · {post.readTime} · {post.tag}
               </div>
               <h3 className="font-display text-xl md:text-3xl mt-1.5">{post.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground group-hover:text-primary-foreground/70 max-w-3xl">
+              <p className="mt-2 text-sm leading-6 text-muted-foreground max-w-3xl">
                 {post.excerpt}
               </p>
             </div>
@@ -112,12 +110,12 @@ export default function BlogPage() {
       <section>
         <Link
           href="/contact"
-          className="group block px-6 md:px-10 py-12 md:py-16 hover:bg-accent hover:text-accent-foreground transition-colors"
+          className="group block px-6 md:px-10 py-12 md:py-16 hover:bg-secondary transition-colors"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-accent group-hover:text-accent-foreground">
+          <span className="font-mono text-xs uppercase tracking-widest text-accent">
             Proponer tema
           </span>
-          <p className="font-display text-[7vw] md:text-5xl mt-3">
+          <p className="font-display text-[6vw] md:text-4xl mt-3">
             ¿Qué te gustaría leer aquí?
             <span className="inline-block transition-transform group-hover:translate-x-3"> →</span>
           </p>

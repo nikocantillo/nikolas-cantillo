@@ -53,8 +53,8 @@
 :root {
   --radius: 0rem;
   --paper: oklch(0.966 0.012 85);
-  --ink: oklch(0.22 0.02 60);
-  --red: oklch(0.55 0.21 28);
+  --ink: oklch(0.27 0.015 60);
+  --red: oklch(0.5 0.16 25);
 
   --background: var(--paper);
   --foreground: var(--ink);
@@ -112,15 +112,15 @@
 
 /* Titulares display: siempre en mayúsculas, peso máximo, interletrado apretado */
 @utility font-display {
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 0.92;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
 }
 
 /* Texto sólo contorno, para titulares repetidos o de fondo */
 @utility text-outline {
-  -webkit-text-stroke: 1.5px var(--ink);
+  -webkit-text-stroke: 1px var(--ink);
   color: transparent;
 }
 
@@ -149,5 +149,5 @@
 }
 
 @utility animate-marquee {
-  animation: marquee 28s linear infinite;
+  animation: marquee 45s linear infinite;
 }

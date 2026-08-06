@@ -18,12 +18,12 @@ export function Navbar() {
     pathname === href || pathname.startsWith(`${href}/`)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-ink bg-background">
+    <header className="sticky top-0 z-50 w-full border-b border-ink bg-background">
       <div className="flex items-stretch justify-between">
         {/* Brand */}
         <Link
           href="/"
-          className="flex items-center gap-2 px-4 md:px-6 py-3 font-display text-sm md:text-base border-r-2 border-ink hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="flex items-center gap-2 px-4 md:px-6 py-3 font-display text-sm md:text-base border-r border-ink hover:bg-secondary transition-colors"
         >
           Nikolas&nbsp;Cantillo
           <span className="text-accent">®</span>
@@ -36,10 +36,8 @@ export function Navbar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center px-5 font-mono text-xs uppercase tracking-widest border-l-2 border-ink transition-colors",
-                isActive(item.href)
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-primary hover:text-primary-foreground"
+                "flex items-center px-5 font-mono text-xs uppercase tracking-widest border-l border-ink transition-colors",
+                isActive(item.href) ? "bg-secondary" : "hover:bg-secondary"
               )}
             >
               {isActive(item.href) && <span className="text-accent mr-1.5">●</span>}
@@ -50,19 +48,18 @@ export function Navbar() {
       </div>
 
       {/* Links mobile */}
-      <nav className="md:hidden flex items-stretch border-t-2 border-ink">
+      <nav className="md:hidden flex items-stretch border-t border-ink">
         {navItems.map((item, i) => (
           <Link
             key={item.href}
             href={item.href}
             className={cn(
               "flex-1 text-center py-2 font-mono text-[10px] uppercase tracking-wider transition-colors",
-              i > 0 && "border-l-2 border-ink",
-              isActive(item.href)
-                ? "bg-primary text-primary-foreground"
-                : "hover:bg-primary hover:text-primary-foreground"
+              i > 0 && "border-l border-ink",
+              isActive(item.href) ? "bg-secondary" : "hover:bg-secondary"
             )}
           >
+            {isActive(item.href) && <span className="text-accent mr-1">●</span>}
             {item.label}
           </Link>
         ))}
