@@ -6,7 +6,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-archivo);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -37,82 +37,61 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
 }
 
+/*
+  Sistema editorial brutalista: papel cálido + tinta + un rojo editorial.
+  Sin radios, sin sombras difusas; la jerarquía la dan la tipografía y las líneas.
+*/
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.51 0.22 277);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.96 0.01 277);
-  --accent-foreground: oklch(0.3 0.1 277);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.62 0.18 277);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0rem;
+  --paper: oklch(0.966 0.012 85);
+  --ink: oklch(0.22 0.02 60);
+  --red: oklch(0.55 0.21 28);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: oklch(0.93 0.014 85);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.93 0.014 85);
+  --muted-foreground: oklch(0.45 0.02 60);
+  --accent: var(--red);
+  --accent-foreground: var(--paper);
+  --destructive: var(--red);
+  --border: oklch(0.22 0.02 60 / 30%);
+  --input: oklch(0.22 0.02 60 / 30%);
+  --ring: var(--red);
+  --chart-1: var(--red);
+  --chart-2: oklch(0.45 0.1 250);
+  --chart-3: oklch(0.6 0.12 150);
+  --chart-4: oklch(0.7 0.15 80);
+  --chart-5: oklch(0.5 0.1 320);
+  --sidebar: var(--paper);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ink);
+  --sidebar-primary-foreground: var(--paper);
+  --sidebar-accent: oklch(0.93 0.014 85);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: oklch(0.22 0.02 60 / 30%);
+  --sidebar-ring: var(--red);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.73 0.15 277);
-  --primary-foreground: oklch(0.17 0.04 277);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.28 0.03 277);
-  --accent-foreground: oklch(0.9 0.05 277);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.55 0.15 277);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @layer base {
@@ -126,25 +105,49 @@
     @apply bg-background text-foreground;
   }
   ::selection {
-    background: oklch(0.51 0.22 277 / 25%);
+    background: var(--red);
+    color: var(--paper);
   }
 }
 
-@utility text-gradient {
-  background-image: linear-gradient(
-    90deg,
-    oklch(0.55 0.2 277) 0%,
-    oklch(0.6 0.21 300) 50%,
-    oklch(0.7 0.14 220) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
+/* Titulares display: siempre en mayúsculas, peso máximo, interletrado apretado */
+@utility font-display {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+
+/* Texto sólo contorno, para titulares repetidos o de fondo */
+@utility text-outline {
+  -webkit-text-stroke: 1.5px var(--ink);
   color: transparent;
 }
 
-@utility bg-grid {
-  background-image:
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: 2.5rem 2.5rem;
+/* Borde de tinta sólida (los bordes por defecto quedan al 30%) */
+@utility border-ink {
+  border-color: var(--ink);
+}
+
+/* Sombra dura desplazada, el único "relieve" permitido */
+@utility shadow-hard {
+  box-shadow: 4px 4px 0 0 var(--ink);
+}
+
+@utility shadow-hard-red {
+  box-shadow: 4px 4px 0 0 var(--red);
+}
+
+/* Cinta marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee 28s linear infinite;
 }

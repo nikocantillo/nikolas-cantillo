@@ -5,14 +5,14 @@ import { experience } from "@/lib/experience"
 function CompanyLogo({ company, logo }: { company: string; logo?: string }) {
   if (logo) {
     return (
-      <div className="relative size-12 md:size-14 rounded-xl border bg-white overflow-hidden shrink-0">
+      <div className="relative size-12 md:size-14 border-2 border-ink bg-white overflow-hidden shrink-0">
         <Image src={logo} alt={`Logo de ${company}`} fill className="object-contain p-2" />
       </div>
     )
   }
   return (
-    <div className="size-12 md:size-14 rounded-xl shrink-0 bg-gradient-to-br from-indigo-500/20 to-cyan-400/20 border flex items-center justify-center">
-      <span className="text-lg md:text-xl font-semibold text-primary">{company.charAt(0)}</span>
+    <div className="size-12 md:size-14 shrink-0 border-2 border-ink bg-secondary flex items-center justify-center">
+      <span className="font-display text-lg md:text-xl">{company.charAt(0)}</span>
     </div>
   )
 }
@@ -23,7 +23,7 @@ export function ExperienceTimeline() {
       {/* Línea vertical */}
       <div
         aria-hidden
-        className="absolute left-[23px] md:left-[27px] top-2 bottom-2 w-px bg-gradient-to-b from-indigo-500/50 via-border to-transparent"
+        className="absolute left-[23px] md:left-[27px] top-2 bottom-2 w-0.5 bg-foreground"
       />
 
       {experience.map((entry) => {
@@ -47,7 +47,7 @@ export function ExperienceTimeline() {
                     entry.company
                   )}
                 </h3>
-                <span className="font-mono text-xs md:text-sm text-primary whitespace-nowrap">
+                <span className="font-mono text-xs md:text-sm text-accent whitespace-nowrap">
                   {entry.period}
                 </span>
               </div>
@@ -63,7 +63,7 @@ export function ExperienceTimeline() {
                     <li key={role.title} className="flex items-baseline gap-3">
                       <span
                         aria-hidden
-                        className="size-1.5 rounded-full bg-primary/60 shrink-0 translate-y-[-2px]"
+                        className="size-1.5 bg-accent shrink-0 translate-y-[-2px]"
                       />
                       <div className="flex items-baseline justify-between flex-wrap gap-x-4 gap-y-0.5 flex-1">
                         <span className="text-sm md:text-base font-medium">

@@ -2,9 +2,6 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { ArrowRight, ArrowUpRight, BookOpen } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { posts } from "@/lib/posts"
 
@@ -19,42 +16,37 @@ export default function BlogPage() {
   const rest = showFeatured ? filtered.slice(1) : filtered
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
-      {/* HERO */}
-      <section className="relative overflow-hidden rounded-2xl border bg-gradient-to-b from-muted/40 to-background p-6 md:p-10">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-grid opacity-40 [mask-image:radial-gradient(ellipse_at_top_left,black_10%,transparent_60%)]"
-        />
-        <div className="relative">
-          <Badge variant="secondary">
-            <BookOpen className="size-3.5" />
-            Blog técnico
-          </Badge>
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mt-4">
-            Ideas sobre <span className="text-gradient">datos, IA y producción</span>
-          </h1>
-          <p className="text-muted-foreground mt-4 max-w-2xl leading-7">
-            Artículos prácticos sobre Data, AI Engineering y construcción de sistemas reales.
-            Sin humo: aprendizajes de proyectos de verdad.
-          </p>
+    <main>
+      {/* CABECERA */}
+      <section className="border-b-2 border-ink px-6 md:px-10 py-10 md:py-14">
+        <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between text-muted-foreground">
+          <span>Blog / Índice</span>
+          <span className="text-accent">{posts.length} artículos</span>
         </div>
+        <h1 className="font-display text-[13vw] md:text-8xl mt-6">
+          El <span className="text-outline">Blog</span>
+        </h1>
+        <p className="mt-6 max-w-2xl leading-7 text-muted-foreground">
+          Artículos prácticos sobre Data, AI Engineering y construcción de sistemas reales. Sin
+          humo: aprendizajes de proyectos de verdad.
+        </p>
       </section>
 
-      {/* FILTRO POR TAG */}
-      <div className="mt-8 flex flex-wrap gap-2">
+      {/* FILTRO */}
+      <div className="border-b-2 border-ink flex flex-wrap">
         {tags.map((tag) => (
           <button
             key={tag}
             type="button"
             onClick={() => setActiveTag(tag)}
             className={cn(
-              "rounded-full border px-4 py-1.5 text-sm transition-colors",
+              "px-4 md:px-6 py-3 font-mono text-[10px] md:text-xs uppercase tracking-widest border-r-2 border-ink transition-colors",
               activeTag === tag
-                ? "border-primary bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-primary hover:text-primary-foreground"
             )}
           >
+            {activeTag === tag && <span className="text-accent mr-1.5">●</span>}
             {tag}
           </button>
         ))}
@@ -64,98 +56,72 @@ export default function BlogPage() {
       {showFeatured && (
         <Link
           href={featured.href}
-          className="group mt-6 block rounded-2xl border overflow-hidden transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
+          className="group block border-b-2 border-ink px-6 md:px-10 py-10 md:py-14 hover:bg-primary hover:text-primary-foreground transition-colors"
         >
-          <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr]">
-            <div className="p-6 md:p-8 flex flex-col justify-center gap-4 order-2 md:order-1">
-              <div className="flex items-center gap-3 flex-wrap text-xs text-muted-foreground">
-                <Badge variant="outline">{featured.tag}</Badge>
-                <span>
-                  {featured.date} · {featured.readTime} de lectura
-                </span>
-              </div>
-              <h2 className="text-2xl md:text-3xl font-semibold leading-tight tracking-tight">
-                {featured.title}
-              </h2>
-              <p className="text-muted-foreground leading-7">{featured.excerpt}</p>
-              <span className="inline-flex items-center gap-2 text-sm font-medium text-primary">
-                Leer artículo destacado
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </div>
-
-            <div
-              className={cn(
-                "relative min-h-44 md:min-h-full bg-gradient-to-br order-1 md:order-2",
-                featured.gradient
-              )}
-            >
-              <featured.icon className="absolute inset-0 m-auto size-20 text-foreground/15 group-hover:text-foreground/30 group-hover:scale-110 transition-all duration-300" />
-              <span className="absolute left-5 bottom-4 font-mono text-xs text-muted-foreground">
-                {featured.deco}
-              </span>
-            </div>
+          <div className="flex items-baseline justify-between flex-wrap gap-3 font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground group-hover:text-primary-foreground/60">
+            <span>Destacado — {featured.tag}</span>
+            <span>
+              {featured.date} · {featured.readTime} · {featured.deco}
+            </span>
           </div>
+          <h2 className="font-display text-3xl md:text-6xl mt-5 max-w-5xl">{featured.title}</h2>
+          <p className="mt-5 max-w-3xl leading-7 text-muted-foreground group-hover:text-primary-foreground/70">
+            {featured.excerpt}
+          </p>
+          <span className="mt-6 inline-block font-mono text-xs uppercase tracking-widest text-accent group-hover:text-primary-foreground">
+            Leer artículo{" "}
+            <span className="inline-block transition-transform group-hover:translate-x-2">→</span>
+          </span>
         </Link>
       )}
 
-      {/* GRID DE ARTÍCULOS */}
-      <section className="mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {rest.map((post) => (
-            <Link
-              key={post.href}
-              href={post.href}
-              className="group rounded-xl border overflow-hidden transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
-            >
-              <div className={cn("h-32 relative bg-gradient-to-br", post.gradient)}>
-                <post.icon className="absolute right-5 bottom-4 size-12 text-foreground/15 group-hover:text-foreground/35 group-hover:scale-110 transition-all duration-300" />
-                <span className="absolute left-5 bottom-4 font-mono text-xs text-muted-foreground">
-                  {post.deco}
-                </span>
+      {/* LISTA */}
+      <section>
+        {rest.map((post, i) => (
+          <Link
+            key={post.href}
+            href={post.href}
+            className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-6 md:px-10 py-7 border-b border-ink/30 hover:bg-primary hover:text-primary-foreground transition-colors"
+          >
+            <span className="font-mono text-sm text-accent">
+              {String(i + (showFeatured ? 2 : 1)).padStart(2, "0")}
+            </span>
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground group-hover:text-primary-foreground/60">
+                {post.date} · {post.readTime} · {post.tag}
               </div>
-
-              <div className="p-5 md:p-6 flex flex-col gap-3">
-                <div className="flex items-center justify-between flex-wrap gap-3 text-xs text-muted-foreground">
-                  <span>
-                    {post.date} · {post.readTime}
-                  </span>
-                  <Badge variant="outline">{post.tag}</Badge>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-semibold leading-snug">{post.title}</h3>
-
-                <p className="text-sm text-muted-foreground leading-6 line-clamp-3">
-                  {post.excerpt}
-                </p>
-
-                <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-                  Leer artículo
-                  <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+              <h3 className="font-display text-xl md:text-3xl mt-1.5">{post.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground group-hover:text-primary-foreground/70 max-w-3xl">
+                {post.excerpt}
+              </p>
+            </div>
+            <span className="font-display text-2xl md:text-4xl transition-transform group-hover:translate-x-2">
+              →
+            </span>
+          </Link>
+        ))}
 
         {rest.length === 0 && !showFeatured && (
-          <p className="mt-10 text-center text-muted-foreground">
+          <p className="px-6 md:px-10 py-14 font-mono text-xs uppercase tracking-widest text-muted-foreground">
             No hay artículos con ese tag todavía.
           </p>
         )}
       </section>
 
       {/* CTA */}
-      <section className="mt-12 rounded-2xl border p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 bg-gradient-to-r from-indigo-500/5 via-transparent to-cyan-400/5">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">¿Hay un tema que te gustaría leer aquí?</h2>
-          <p className="text-muted-foreground mt-1.5 leading-7">
-            Proponme un tema de datos o IA y lo convierto en el próximo artículo.
+      <section>
+        <Link
+          href="/contact"
+          className="group block px-6 md:px-10 py-12 md:py-16 hover:bg-accent hover:text-accent-foreground transition-colors"
+        >
+          <span className="font-mono text-xs uppercase tracking-widest text-accent group-hover:text-accent-foreground">
+            Proponer tema
+          </span>
+          <p className="font-display text-[7vw] md:text-5xl mt-3">
+            ¿Qué te gustaría leer aquí?
+            <span className="inline-block transition-transform group-hover:translate-x-3"> →</span>
           </p>
-        </div>
-        <Button asChild>
-          <Link href="/contact">Proponer tema</Link>
-        </Button>
+        </Link>
       </section>
     </main>
   )

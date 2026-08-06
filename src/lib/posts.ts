@@ -1,5 +1,3 @@
-import { Hash, Network, Sparkles, Rocket, type LucideIcon } from "lucide-react"
-
 export type Post = {
   title: string
   excerpt: string
@@ -7,8 +5,6 @@ export type Post = {
   href: string
   date: string
   readTime: string
-  icon: LucideIcon
-  gradient: string
   deco: string
 }
 
@@ -21,8 +17,6 @@ export const posts: Post[] = [
     href: "/blog/hashes-y-ciencia-de-datos-responsable",
     date: "Ago 2026",
     readTime: "8 min",
-    icon: Hash,
-    gradient: "from-indigo-500/25 via-violet-500/15 to-cyan-400/25",
     deco: "sha256 · 9f2a4c…e81b",
   },
   {
@@ -33,8 +27,6 @@ export const posts: Post[] = [
     href: "/blog/data-mesh-arquitectura-datos",
     date: "Abr 2026",
     readTime: "9 min",
-    icon: Network,
-    gradient: "from-cyan-500/25 via-sky-500/15 to-indigo-400/25",
     deco: "data-as-product",
   },
   {
@@ -45,8 +37,6 @@ export const posts: Post[] = [
     href: "/blog/ai-y-los-vedas",
     date: "Abr 2026",
     readTime: "8 min",
-    icon: Sparkles,
-    gradient: "from-violet-500/25 via-fuchsia-500/15 to-amber-400/25",
     deco: "datos + criterio",
   },
   {
@@ -57,8 +47,6 @@ export const posts: Post[] = [
     href: "/blog/forward-deployed-engineer",
     date: "Abr 2026",
     readTime: "7 min",
-    icon: Rocket,
-    gradient: "from-emerald-500/25 via-teal-500/15 to-cyan-400/25",
     deco: "codigo ⇄ producto",
   },
 ]
