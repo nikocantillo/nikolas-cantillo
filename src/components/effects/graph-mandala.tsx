@@ -9,7 +9,7 @@ const CYAN = "56, 225, 212"
 const VIOLET = "167, 139, 250"
 const AMBER = "251, 191, 93"
 
-export function GraphMandala({ size = 560 }: { size?: number }) {
+export function GraphMandala() {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -20,8 +20,16 @@ export function GraphMandala({ size = 560 }: { size?: number }) {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     const dpr = window.devicePixelRatio || 1
-    canvas.width = size * dpr
-    canvas.height = size * dpr
+    let scale = 0
+    let cx = 0
+
+    const setSize = () => {
+      const s = canvas.offsetWidth
+      canvas.width = s * dpr
+      canvas.height = s * dpr
+      scale = (s / 2) * 0.92 * dpr
+      cx = (s / 2) * dpr
+    }
 
     const SYMMETRIES = [6, 8, 10, 12]
     let symIdx = Math.floor(Math.random() * SYMMETRIES.length)
@@ -79,9 +87,7 @@ export function GraphMandala({ size = 560 }: { size?: number }) {
     }
 
     build(SYMMETRIES[symIdx])
-
-    const scale = (size / 2) * 0.92 * dpr
-    const cx = (size / 2) * dpr
+    setSize()
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -149,6 +155,12 @@ export function GraphMandala({ size = 560 }: { size?: number }) {
       raf = requestAnimationFrame(tick)
     }
 
+    const onResize = () => {
+      setSize()
+      draw()
+    }
+    window.addEventListener("resize", onResize)
+
     if (reduced) {
       progress = 1
       draw()
@@ -156,15 +168,11 @@ export function GraphMandala({ size = 560 }: { size?: number }) {
       tick()
     }
 
-    return () => cancelAnimationFrame(raf)
-  }, [size])
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener("resize", onResize)
+    }
+  }, [])
 
-  return (
-    <canvas
-      ref={ref}
-      aria-hidden
-      style={{ width: size, height: size }}
-      className="max-w-full"
-    />
-  )
+  return <canvas ref={ref} aria-hidden className="w-full h-full" />
 }

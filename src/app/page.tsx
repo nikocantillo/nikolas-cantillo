@@ -84,17 +84,25 @@ export default function Home() {
             </div>
           </div>
 
-          {/* FOTO */}
+          {/* FOTO como centro del mandala */}
           <div className="flex justify-center md:justify-end">
-            <div className="rounded-full bg-gradient-to-tr from-[color:var(--cyan)] via-[color:var(--violet)] to-[color:var(--amber)] p-[3px] shadow-glow">
-              <div className="relative size-48 md:size-64 lg:size-80 rounded-full overflow-hidden border-4 border-background">
-                <Image
-                  src="/nikolascantillo.jpeg"
-                  alt="Nikolas Cantillo – Data Science & AI"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+            <div className="relative flex items-center justify-center">
+              <div
+                aria-hidden
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(430px,96vw)] md:w-[540px] lg:w-[620px] aspect-square pointer-events-none opacity-60"
+              >
+                <GraphMandala />
+              </div>
+              <div className="relative rounded-full bg-gradient-to-tr from-[color:var(--cyan)] via-[color:var(--violet)] to-[color:var(--amber)] p-[3px] shadow-glow">
+                <div className="relative size-44 md:size-56 lg:size-72 rounded-full overflow-hidden border-4 border-background">
+                  <Image
+                    src="/nikolascantillo.jpeg"
+                    alt="Nikolas Cantillo – Data Science & AI"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -307,7 +315,9 @@ export default function Home() {
           aria-hidden
           className="absolute inset-0 flex items-center justify-center opacity-45 pointer-events-none"
         >
-          <GraphMandala size={620} />
+          <div className="w-[min(620px,90vw)] aspect-square">
+            <GraphMandala />
+          </div>
         </div>
         <Reveal className="relative">
           <h2 className="font-display text-4xl md:text-6xl text-balance">
