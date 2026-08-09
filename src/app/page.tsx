@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight, Brain, Database, Boxes } from "lucide-react"
 import { posts } from "@/lib/posts"
@@ -45,39 +46,56 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-[92vh] flex flex-col justify-center overflow-hidden">
         <HeroCanvas />
-        <div className="relative mx-auto max-w-6xl px-5 md:px-8 w-full py-24">
-          <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-accent/5 px-4 py-1.5 text-[13px] text-muted-foreground">
-            <span className="size-2 rounded-full bg-accent animate-pulse-dot" />
-            Principal Consultant · Oracle
-          </span>
+        <div className="relative mx-auto max-w-6xl px-5 md:px-8 w-full py-24 grid grid-cols-1 md:grid-cols-[1.4fr_1fr] items-center gap-12">
+          <div>
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-accent/5 px-4 py-1.5 text-[13px] text-muted-foreground">
+              <span className="size-2 rounded-full bg-accent animate-pulse-dot" />
+              Principal Consultant · Oracle
+            </span>
 
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mt-7 max-w-[16ch] text-balance">
-            Construyo sistemas de <span className="text-shimmer">datos e IA</span> que sobreviven
-            a producción.
-          </h1>
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mt-7 max-w-[16ch] text-balance">
+              Construyo sistemas de <span className="text-shimmer">datos e IA</span> que
+              sobreviven a producción.
+            </h1>
 
-          <div className="mt-6 min-h-7">
-            <Typewriter phrases={roles} />
+            <div className="mt-6 min-h-7">
+              <Typewriter phrases={roles} />
+            </div>
+
+            <p className="mt-4 max-w-xl text-muted-foreground leading-7">
+              Soy Nikolas Cantillo. Cinco años entre pipelines, migraciones cloud y LLMs —
+              documentando lo que funciona y, sobre todo, lo que no.
+            </p>
+
+            <div className="mt-9 flex flex-wrap gap-4">
+              <Link
+                href="/projects"
+                className="rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 transition-all"
+              >
+                Ver mi trabajo
+              </Link>
+              <Link
+                href="/blog"
+                className="rounded-xl border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-accent hover:text-accent transition-colors"
+              >
+                Leer el blog
+              </Link>
+            </div>
           </div>
 
-          <p className="mt-4 max-w-xl text-muted-foreground leading-7">
-            Soy Nikolas Cantillo. Cinco años entre pipelines, migraciones cloud y LLMs —
-            documentando lo que funciona y, sobre todo, lo que no.
-          </p>
-
-          <div className="mt-9 flex flex-wrap gap-4">
-            <Link
-              href="/projects"
-              className="rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 transition-all"
-            >
-              Ver mi trabajo
-            </Link>
-            <Link
-              href="/blog"
-              className="rounded-xl border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-accent hover:text-accent transition-colors"
-            >
-              Leer el blog
-            </Link>
+          {/* FOTO */}
+          <div className="flex justify-center md:justify-end">
+            <div className="rounded-full bg-gradient-to-tr from-[color:var(--cyan)] via-[color:var(--violet)] to-[color:var(--amber)] p-[3px] shadow-glow">
+              <div className="relative size-48 md:size-64 lg:size-80 rounded-full overflow-hidden border-4 border-background">
+                <Image
+                  src="/nikolascantillo.jpeg"
+                  alt="Nikolas Cantillo – Data Science & AI"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </div>
 
