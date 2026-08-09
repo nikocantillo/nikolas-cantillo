@@ -6,6 +6,7 @@ import { HeroCanvas } from "@/components/effects/hero-canvas"
 import { Typewriter } from "@/components/effects/typewriter"
 import { Reveal } from "@/components/effects/reveal"
 import { CountUp } from "@/components/effects/count-up"
+import { GraphMandala } from "@/components/effects/graph-mandala"
 
 const roles = [
   "PySpark · OCI Dataflow · Oracle Cloud",
@@ -300,9 +301,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-6xl px-5 md:px-8 py-24 md:py-32 text-center">
-        <Reveal>
+      {/* CTA con mandala de grafos */}
+      <section className="relative mx-auto max-w-6xl px-5 md:px-8 py-28 md:py-40 text-center overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 flex items-center justify-center opacity-45 pointer-events-none"
+        >
+          <GraphMandala size={620} />
+        </div>
+        <Reveal className="relative">
           <h2 className="font-display text-4xl md:text-6xl text-balance">
             ¿Hablamos de <span className="text-shimmer">datos</span>?
           </h2>
