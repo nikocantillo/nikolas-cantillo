@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { ArrowUpRight } from "lucide-react"
+import { Reveal } from "@/components/effects/reveal"
+import { CountUp } from "@/components/effects/count-up"
 
 const pipeline = [
   {
@@ -36,15 +37,20 @@ const fmt = (v: number) => v.toFixed(3).replace(/0$/, "")
 
 export default function RagFeverFactCheckingPage() {
   return (
-    <main>
+    <main className="mx-auto max-w-6xl px-5 md:px-8 py-14">
       {/* CABECERA */}
-      <section className="border-b border-ink px-6 md:px-10 py-10 md:py-14">
-        <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between flex-wrap gap-2 text-muted-foreground">
-          <span>Caso / NLP · Magíster en Ciencia de Datos — UC Chile</span>
-          <span className="text-accent">FEVER · 500 claims</span>
+      <section>
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-accent">
+            Caso · NLP
+          </span>
+          <span className="font-mono text-xs text-muted-foreground">
+            Magíster en Ciencia de Datos — UC Chile · FEVER · 500 claims
+          </span>
         </div>
-        <h1 className="font-display text-3xl md:text-6xl mt-6 max-w-5xl">
-          Fact-checking con RAG: cuando la evidencia no ayuda
+        <h1 className="font-display text-3xl md:text-6xl mt-6 max-w-4xl text-balance">
+          Fact-checking con RAG: cuando la <span className="text-shimmer">evidencia</span> no
+          ayuda
         </h1>
         <p className="mt-6 max-w-3xl leading-7 text-muted-foreground">
           Verificación automática de afirmaciones sobre el dataset FEVER: un baseline zero-shot
@@ -54,92 +60,107 @@ export default function RagFeverFactCheckingPage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
           {["Llama-3.2-3B", "LangChain", "FAISS", "Transformers", "Wikipedia"].map((t) => (
-            <Badge key={t} variant="outline">
+            <span
+              key={t}
+              className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+            >
               {t}
-            </Badge>
+            </span>
           ))}
         </div>
       </section>
 
       {/* CONTEXTO */}
-      <section className="border-b border-ink grid grid-cols-1 md:grid-cols-2">
-        <div className="p-6 md:p-10 md:border-r border-ink">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            /01 — El problema
-          </span>
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
+            El problema
+          </p>
           <p className="mt-4 leading-7 text-muted-foreground">
             FEVER (Fact Extraction and VERification) es el dataset de referencia para
             fact-checking automático: afirmaciones generadas desde Wikipedia que deben
             clasificarse como <strong className="text-foreground">SUPPORTS</strong> o{" "}
             <strong className="text-foreground">REFUTES</strong> según la evidencia. Trabajé con
-            una muestra balanceada de 500 claims (250 por clase), de modo que el azar rinde 50%
-            y ninguna métrica se infla por desbalance.
+            una muestra balanceada de 500 claims (250 por clase): el azar rinde 50% y ninguna
+            métrica se infla por desbalance.
           </p>
-        </div>
-        <div className="p-6 md:p-10">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            /02 — El experimento
-          </span>
+        </Reveal>
+        <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
+            El experimento
+          </p>
           <p className="mt-4 leading-7 text-muted-foreground">
             Primero un baseline zero-shot: el modelo decide solo con su conocimiento
             paramétrico, prompt restrictivo y decodificación determinística (temperature 0).
             Después, el mismo modelo pero alimentado con evidencia real recuperada de Wikipedia
             vía una base vectorial FAISS. La hipótesis obvia: con evidencia debería mejorar.
           </p>
-        </div>
+        </Reveal>
       </section>
 
       {/* PIPELINE */}
-      <section className="border-b border-ink">
-        <div className="px-6 md:px-10 py-6 border-b border-ink/30 flex items-baseline justify-between">
-          <h2 className="font-display text-2xl md:text-4xl">El pipeline RAG</h2>
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">/03</span>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 md:divide-x divide-y md:divide-y-0">
-          {pipeline.map((step) => (
-            <div key={step.n} className="p-6 md:p-8">
-              <span className="font-mono text-xs text-accent">{step.n}</span>
-              <h3 className="font-display text-lg mt-3">{step.title}</h3>
+      <section className="mt-16">
+        <Reveal>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
+            El pipeline RAG
+          </p>
+          <h2 className="font-display text-2xl md:text-3xl mt-2.5">Cuatro etapas, un cuello de botella.</h2>
+        </Reveal>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-7">
+          {pipeline.map((step, i) => (
+            <Reveal
+              key={step.n}
+              delay={i * 100}
+              className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
+            >
+              <span className="font-mono text-sm text-violet">{step.n}</span>
+              <h3 className="font-display text-base mt-3">{step.title}</h3>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">{step.desc}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* RESULTADOS */}
-      <section className="border-b border-ink">
-        <div className="px-6 md:px-10 py-6 border-b border-ink/30 flex items-baseline justify-between">
-          <h2 className="font-display text-2xl md:text-4xl">Resultados</h2>
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">/04</span>
-        </div>
+      <section className="mt-16">
+        <Reveal>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
+            Resultados
+          </p>
+          <h2 className="font-display text-2xl md:text-3xl mt-2.5">La evidencia no alcanzó.</h2>
+        </Reveal>
 
         {/* Cifras principales */}
-        <div className="grid grid-cols-2 md:divide-x divide-y-0 border-b border-ink/30">
-          <div className="p-6 md:p-10">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        <div className="grid grid-cols-2 gap-4 mt-7">
+          <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               Zero-shot · accuracy
             </p>
-            <p className="font-display text-5xl md:text-7xl mt-3">65.4%</p>
+            <p className="font-display text-4xl md:text-6xl mt-3 tabular-nums">
+              <CountUp value={65.4} decimals={1} className="text-violet" />%
+            </p>
             <p className="mt-2 text-sm text-muted-foreground">solo conocimiento paramétrico</p>
-          </div>
-          <div className="p-6 md:p-10">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          </Reveal>
+          <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               RAG · accuracy
             </p>
-            <p className="font-display text-5xl md:text-7xl mt-3 text-accent">64.0%</p>
+            <p className="font-display text-4xl md:text-6xl mt-3 tabular-nums">
+              <CountUp value={64.0} decimals={1} className="text-accent" />%
+            </p>
             <p className="mt-2 text-sm text-muted-foreground">con evidencia de Wikipedia</p>
-          </div>
+          </Reveal>
         </div>
 
         {/* Comparación por métrica */}
-        <div className="px-6 md:px-10 py-8">
-          <div className="flex flex-wrap gap-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8 mt-4">
+          <div className="flex flex-wrap gap-5 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-2">
-              <span className="inline-block w-6 h-2.5 border border-ink" />
+              <span className="inline-block w-6 h-2 rounded-full bg-violet" />
               Zero-shot
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="inline-block w-6 h-2.5 bg-accent" />
+              <span className="inline-block w-6 h-2 rounded-full bg-accent" />
               RAG
             </span>
           </div>
@@ -147,27 +168,23 @@ export default function RagFeverFactCheckingPage() {
           <div className="mt-6 space-y-5 max-w-3xl">
             {metrics.map((m) => (
               <div key={m.label}>
-                <p className="font-mono text-xs uppercase tracking-widest">{m.label}</p>
-                <div className="mt-1.5 space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-widest">{m.label}</p>
+                <div className="mt-2 space-y-1.5">
                   <div className="flex items-center gap-3">
-                    <div className="h-2.5 border border-ink" style={{ width: `${m.zs * 100}%` }} />
-                    <span className="font-mono text-xs text-muted-foreground shrink-0">
-                      {fmt(m.zs)}
-                    </span>
+                    <div className="h-1.5 flex-none rounded-full bg-violet" style={{ width: `${m.zs * 80}%` }} />
+                    <span className="font-mono text-xs text-muted-foreground shrink-0">{fmt(m.zs)}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="h-2.5 bg-accent" style={{ width: `${m.rag * 100}%` }} />
-                    <span className="font-mono text-xs text-muted-foreground shrink-0">
-                      {fmt(m.rag)}
-                    </span>
+                    <div className="h-1.5 flex-none rounded-full bg-accent" style={{ width: `${m.rag * 80}%` }} />
+                    <span className="font-mono text-xs text-muted-foreground shrink-0">{fmt(m.rag)}</span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
 
-        <div className="px-6 md:px-10 py-8 border-t border-ink/30 max-w-3xl">
+        <Reveal className="max-w-3xl mt-8">
           <p className="leading-7 text-muted-foreground">
             El RAG <strong className="text-foreground">no superó al baseline</strong> (64.0% vs
             65.4%), pero el detalle importa: la evidencia recuperada mejoró la detección de
@@ -185,21 +202,21 @@ export default function RagFeverFactCheckingPage() {
             LLM. Las mejoras con más potencial: recuperar por entidad, re-ranking de evidencia y
             chunks alineados a oraciones factuales.
           </p>
-        </div>
+        </Reveal>
       </section>
 
       {/* VERIFICABLE */}
-      <section className="border-b border-ink">
+      <Reveal className="mt-16">
         <Link
           href="/projects/rag-fever-fact-checking/notebook"
-          className="group block px-6 md:px-10 py-10 md:py-12 hover:bg-secondary transition-colors"
+          className="group relative block rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            /05 — Verifícalo tú mismo
-          </span>
-          <p className="font-display text-2xl md:text-4xl mt-4">
-            Ver el notebook, celda por celda
-            <span className="inline-block transition-transform group-hover:translate-x-2"> →</span>
+          <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
+            Verifícalo tú mismo
+          </p>
+          <p className="font-display text-2xl md:text-4xl mt-3 pr-8">
+            Ver el notebook, celda por celda →
           </p>
           <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
             Código ejecutado, outputs reales y análisis, renderizados aquí mismo — del curso de
@@ -207,18 +224,22 @@ export default function RagFeverFactCheckingPage() {
             Universidad Católica de Chile).
           </p>
         </Link>
-      </section>
+      </Reveal>
 
       {/* NAV */}
-      <section className="px-6 md:px-10 py-8 flex flex-wrap gap-4">
-        <Button asChild variant="outline">
-          <Link href="/projects">← Volver a proyectos</Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/blog/hashes-y-ciencia-de-datos-responsable">
-            Artículo relacionado: ciencia de datos responsable
-          </Link>
-        </Button>
+      <section className="mt-10 flex flex-wrap gap-4">
+        <Link
+          href="/projects"
+          className="rounded-xl border border-border px-5 py-2.5 text-sm text-muted-foreground hover:border-accent hover:text-accent transition-colors"
+        >
+          ← Volver a proyectos
+        </Link>
+        <Link
+          href="/blog/hashes-y-ciencia-de-datos-responsable"
+          className="rounded-xl border border-border px-5 py-2.5 text-sm text-muted-foreground hover:border-accent hover:text-accent transition-colors"
+        >
+          Artículo relacionado: ciencia de datos responsable
+        </Link>
       </section>
     </main>
   )

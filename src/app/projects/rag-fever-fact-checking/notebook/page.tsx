@@ -22,8 +22,8 @@ export default function RagFeverNotebookPage() {
   return (
     <main>
       {/* CABECERA */}
-      <section className="border-b border-ink px-6 md:px-10 py-10">
-        <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between flex-wrap gap-2 text-muted-foreground">
+      <section className="mx-auto max-w-5xl px-5 md:px-8 pt-14 pb-6">
+        <div className="font-mono text-xs flex justify-between flex-wrap gap-2 text-muted-foreground">
           <span>
             <Link href="/projects/rag-fever-fact-checking" className="hover:text-accent">
               Caso FEVER
@@ -33,7 +33,7 @@ export default function RagFeverNotebookPage() {
           <span className="text-accent">Ejecutado · Tesla T4</span>
         </div>
         <h1 className="font-display text-3xl md:text-5xl mt-5">
-          El notebook, celda por celda
+          El notebook, <span className="text-shimmer">celda por celda</span>
         </h1>
         <p className="mt-4 max-w-3xl leading-7 text-muted-foreground">
           Tarea 4 del curso de Procesamiento de Lenguaje Natural — Magíster en Ciencia de Datos,
@@ -44,7 +44,7 @@ export default function RagFeverNotebookPage() {
       </section>
 
       {/* CELDAS */}
-      <section className="mx-auto max-w-5xl px-6 md:px-10 py-8">
+      <section className="mx-auto max-w-5xl px-5 md:px-8 py-6">
         {cells.map((cell, i) => {
           if (cell.kind === "markdown") {
             return (
@@ -58,25 +58,21 @@ export default function RagFeverNotebookPage() {
 
           codeIndex += 1
           return (
-            <div key={i} className="my-6 border border-ink/40">
-              <div className="flex items-center justify-between border-b border-ink/40 bg-secondary px-4 py-2">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
+            <div key={i} className="my-6 rounded-xl border border-border overflow-hidden">
+              <div className="flex items-center justify-between border-b border-border bg-secondary px-4 py-2">
+                <span className="font-mono text-[11px] text-accent">
                   In [{cell.execCount ?? codeIndex}]
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Python
-                </span>
+                <span className="font-mono text-[11px] text-muted-foreground">Python</span>
               </div>
               <pre className="overflow-x-auto p-4 md:p-5 font-mono text-xs md:text-[13px] leading-6">
                 <code>{cell.source}</code>
               </pre>
 
               {cell.outputs.length > 0 && (
-                <div className="border-t border-ink/40">
-                  <div className="border-b border-ink/20 bg-secondary/60 px-4 py-1.5">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Out
-                    </span>
+                <div className="border-t border-border">
+                  <div className="border-b border-border bg-secondary/60 px-4 py-1.5">
+                    <span className="font-mono text-[11px] text-violet">Out</span>
                   </div>
                   {cell.outputs.map((out, j) =>
                     out.type === "text" ? (
@@ -104,7 +100,7 @@ export default function RagFeverNotebookPage() {
       </section>
 
       {/* NAV */}
-      <section className="border-t border-ink px-6 md:px-10 py-8 flex flex-wrap gap-4">
+      <section className="mx-auto max-w-5xl px-5 md:px-8 py-8 flex flex-wrap gap-4">
         <Button asChild variant="outline">
           <Link href="/projects/rag-fever-fact-checking">← Volver al caso</Link>
         </Button>

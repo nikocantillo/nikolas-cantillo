@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { ArrowUpRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { posts } from "@/lib/posts"
 
@@ -16,35 +17,35 @@ export default function BlogPage() {
   const rest = showFeatured ? filtered.slice(1) : filtered
 
   return (
-    <main>
+    <main className="mx-auto max-w-6xl px-5 md:px-8 py-14">
       {/* CABECERA */}
-      <section className="border-b border-ink px-6 md:px-10 py-10 md:py-14">
-        <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between text-muted-foreground">
-          <span>Blog / Índice</span>
-          <span className="text-accent">{posts.length} artículos</span>
-        </div>
-        <h1 className="font-display text-[10vw] md:text-7xl mt-6">
-          Blog<span className="text-accent">.</span>
+      <section>
+        <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
+          Blog técnico
+        </p>
+        <h1 className="font-display text-4xl md:text-6xl mt-3">
+          Aprendizajes <span className="text-shimmer">documentados</span>.
         </h1>
-        <p className="mt-6 max-w-2xl leading-7 text-muted-foreground">
-          Artículos prácticos sobre Data, AI Engineering y construcción de sistemas reales. Sin
-          humo: aprendizajes de proyectos de verdad.
+        <p className="mt-5 max-w-2xl text-muted-foreground leading-7">
+          Artículos prácticos sobre Data, AI Engineering y sistemas reales. Sin humo:
+          lo que funciona y, sobre todo, lo que no.
         </p>
       </section>
 
       {/* FILTRO */}
-      <div className="border-b border-ink flex flex-wrap">
+      <div className="mt-8 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <button
             key={tag}
             type="button"
             onClick={() => setActiveTag(tag)}
             className={cn(
-              "px-4 md:px-6 py-3 font-mono text-[10px] md:text-xs uppercase tracking-widest border-r border-ink transition-colors",
-              activeTag === tag ? "bg-secondary" : "hover:bg-secondary"
+              "rounded-full border px-4 py-1.5 text-[13px] transition-all",
+              activeTag === tag
+                ? "border-accent bg-accent text-accent-foreground font-semibold shadow-glow"
+                : "border-border text-muted-foreground hover:text-foreground hover:border-accent/40"
             )}
           >
-            {activeTag === tag && <span className="text-accent mr-1.5">●</span>}
             {tag}
           </button>
         ))}
@@ -54,71 +55,74 @@ export default function BlogPage() {
       {showFeatured && (
         <Link
           href={featured.href}
-          className="group block border-b border-ink px-6 md:px-10 py-10 md:py-14 hover:bg-secondary transition-colors"
+          className="group relative block mt-8 rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
         >
-          <div className="flex items-baseline justify-between flex-wrap gap-3 font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
-            <span>Destacado — {featured.tag}</span>
-            <span>
+          <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-accent">
+              Destacado
+            </span>
+            <span className="font-mono text-xs text-muted-foreground">
               {featured.date} · {featured.readTime} · {featured.deco}
             </span>
           </div>
-          <h2 className="font-display text-3xl md:text-5xl mt-5 max-w-5xl">{featured.title}</h2>
-          <p className="mt-5 max-w-3xl leading-7 text-muted-foreground">
-            {featured.excerpt}
-          </p>
-          <span className="mt-6 inline-block font-mono text-xs uppercase tracking-widest text-accent">
-            Leer artículo{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-2">→</span>
-          </span>
+          <h2 className="font-display text-2xl md:text-4xl mt-5 max-w-4xl leading-tight pr-8">
+            {featured.title}
+          </h2>
+          <p className="mt-4 max-w-3xl text-muted-foreground leading-7">{featured.excerpt}</p>
+          <p className="mt-6 text-sm font-semibold text-accent">Leer artículo →</p>
         </Link>
       )}
 
-      {/* LISTA */}
-      <section>
-        {rest.map((post, i) => (
+      {/* GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        {rest.map((post) => (
           <Link
             key={post.href}
             href={post.href}
-            className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-6 md:px-10 py-7 border-b border-ink/30 hover:bg-secondary transition-colors"
+            className="group relative block rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-7 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
           >
-            <span className="font-mono text-sm text-accent tabular-nums">
-              {String(i + (showFeatured ? 2 : 1)).padStart(3, "0")}
-            </span>
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                {post.date} · {post.readTime} · {post.tag}
-              </div>
-              <h3 className="font-display text-xl md:text-3xl mt-1.5">{post.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground max-w-3xl">
-                {post.excerpt}
-              </p>
+            <ArrowUpRight className="absolute top-6 right-6 size-4 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-violet">
+                {post.tag}
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                {post.date} · {post.readTime}
+              </span>
             </div>
-            <span className="font-display text-2xl md:text-4xl transition-transform group-hover:translate-x-2">
-              →
-            </span>
+            <h3 className="font-display text-lg md:text-xl mt-4 leading-snug pr-6">
+              {post.title}
+            </h3>
+            <p className="mt-3 text-sm text-muted-foreground leading-6 line-clamp-3">
+              {post.excerpt}
+            </p>
+            <p className="mt-4 font-mono text-xs text-accent">{post.deco}</p>
           </Link>
         ))}
+      </div>
 
-        {rest.length === 0 && !showFeatured && (
-          <p className="px-6 md:px-10 py-14 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            No hay artículos con ese tag todavía.
-          </p>
-        )}
-      </section>
+      {rest.length === 0 && !showFeatured && (
+        <p className="mt-14 text-center text-muted-foreground">
+          No hay artículos con ese tag todavía.
+        </p>
+      )}
 
       {/* CTA */}
-      <section>
+      <section className="mt-16 rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-9 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+        <div>
+          <h2 className="font-display text-xl md:text-2xl">
+            ¿Hay un tema que te gustaría leer aquí?
+          </h2>
+          <p className="text-muted-foreground mt-1.5 leading-7">
+            Proponme un tema de datos o IA y lo convierto en el próximo artículo.
+          </p>
+        </div>
         <Link
           href="/contact"
-          className="group block px-6 md:px-10 py-12 md:py-16 hover:bg-secondary transition-colors"
+          className="shrink-0 rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 transition-all"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            Proponer tema
-          </span>
-          <p className="font-display text-[6vw] md:text-4xl mt-3">
-            ¿Qué te gustaría leer aquí?
-            <span className="inline-block transition-transform group-hover:translate-x-3"> →</span>
-          </p>
+          Proponer tema
         </Link>
       </section>
     </main>

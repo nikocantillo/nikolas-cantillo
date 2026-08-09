@@ -8,7 +8,6 @@ const navItems = [
   { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
 ]
 
 export function Navbar() {
@@ -18,56 +17,40 @@ export function Navbar() {
     pathname === href || pathname.startsWith(`${href}/`)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-ink bg-background">
-      <div className="flex items-stretch justify-between">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="mx-auto max-w-6xl px-5 md:px-8 flex items-center justify-between h-16">
         {/* Brand */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 px-4 md:px-6 py-3 font-display text-base hover:text-accent transition-colors"
-        >
-          Nikolas Cantillo
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-0.5 hidden sm:inline">
-            — Data & AI
-          </span>
+        <Link href="/" className="font-display text-[15px] hover:text-accent transition-colors">
+          nikolas<span className="text-accent">.</span>cantillo
         </Link>
 
-        {/* Links desktop */}
-        <nav className="hidden md:flex items-stretch">
+        {/* Links */}
+        <nav className="flex items-center gap-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center px-5 text-sm border-l border-border transition-colors",
+                "rounded-full px-3 md:px-4 py-1.5 text-[13px] md:text-sm transition-colors",
                 isActive(item.href)
-                  ? "text-accent font-medium"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-foreground bg-secondary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               )}
             >
               {item.label}
             </Link>
           ))}
-        </nav>
-      </div>
-
-      {/* Links mobile */}
-      <nav className="md:hidden flex items-stretch border-t border-border">
-        {navItems.map((item, i) => (
           <Link
-            key={item.href}
-            href={item.href}
+            href="/contact"
             className={cn(
-              "flex-1 text-center py-2 text-xs transition-colors",
-              i > 0 && "border-l border-border",
-              isActive(item.href)
-                ? "text-accent font-medium"
-                : "text-muted-foreground hover:text-foreground"
+              "ml-1 md:ml-2 rounded-full px-3.5 md:px-4 py-1.5 text-[13px] md:text-sm font-semibold transition-all",
+              "bg-accent text-accent-foreground shadow-glow hover:shadow-glow-strong"
             )}
           >
-            {item.label}
+            Contacto
           </Link>
-        ))}
-      </nav>
+        </nav>
+      </div>
     </header>
   )
 }
