@@ -26,11 +26,13 @@ const pipeline = [
 ]
 
 const metrics = [
-  { label: "Accuracy", zeroshot: "65.4%", rag: "64.0%" },
-  { label: "Macro F1", zeroshot: "0.653", rag: "0.638" },
-  { label: "Recall SUPPORTS", zeroshot: "0.616", rag: "0.520" },
-  { label: "Recall REFUTES", zeroshot: "0.692", rag: "0.760" },
+  { label: "Accuracy", zs: 0.654, rag: 0.64 },
+  { label: "Macro F1", zs: 0.653, rag: 0.638 },
+  { label: "Recall SUPPORTS", zs: 0.616, rag: 0.52 },
+  { label: "Recall REFUTES", zs: 0.692, rag: 0.76 },
 ]
+
+const fmt = (v: number) => v.toFixed(3).replace(/0$/, "")
 
 export default function RagFeverFactCheckingPage() {
   return (
@@ -111,25 +113,58 @@ export default function RagFeverFactCheckingPage() {
           <span className="font-mono text-xs uppercase tracking-widest text-accent">/04</span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full font-mono text-sm">
-            <thead>
-              <tr className="border-b border-ink/30 text-[10px] uppercase tracking-widest text-muted-foreground">
-                <th className="text-left px-6 md:px-10 py-3 font-medium">Métrica</th>
-                <th className="text-right px-6 py-3 font-medium">Zero-shot</th>
-                <th className="text-right px-6 md:pr-10 py-3 font-medium">RAG</th>
-              </tr>
-            </thead>
-            <tbody>
-              {metrics.map((m) => (
-                <tr key={m.label} className="border-b border-ink/20 last:border-b-0">
-                  <td className="px-6 md:px-10 py-3">{m.label}</td>
-                  <td className="text-right px-6 py-3">{m.zeroshot}</td>
-                  <td className="text-right px-6 md:pr-10 py-3 text-accent">{m.rag}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Cifras principales */}
+        <div className="grid grid-cols-2 md:divide-x divide-y-0 border-b border-ink/30">
+          <div className="p-6 md:p-10">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              Zero-shot · accuracy
+            </p>
+            <p className="font-display text-5xl md:text-7xl mt-3">65.4%</p>
+            <p className="mt-2 text-sm text-muted-foreground">solo conocimiento paramétrico</p>
+          </div>
+          <div className="p-6 md:p-10">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              RAG · accuracy
+            </p>
+            <p className="font-display text-5xl md:text-7xl mt-3 text-accent">64.0%</p>
+            <p className="mt-2 text-sm text-muted-foreground">con evidencia de Wikipedia</p>
+          </div>
+        </div>
+
+        {/* Comparación por métrica */}
+        <div className="px-6 md:px-10 py-8">
+          <div className="flex flex-wrap gap-5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-block w-6 h-2.5 border border-ink" />
+              Zero-shot
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-block w-6 h-2.5 bg-accent" />
+              RAG
+            </span>
+          </div>
+
+          <div className="mt-6 space-y-5 max-w-3xl">
+            {metrics.map((m) => (
+              <div key={m.label}>
+                <p className="font-mono text-xs uppercase tracking-widest">{m.label}</p>
+                <div className="mt-1.5 space-y-1">
+                  <div className="flex items-center gap-3">
+                    <div className="h-2.5 border border-ink" style={{ width: `${m.zs * 100}%` }} />
+                    <span className="font-mono text-xs text-muted-foreground shrink-0">
+                      {fmt(m.zs)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="h-2.5 bg-accent" style={{ width: `${m.rag * 100}%` }} />
+                    <span className="font-mono text-xs text-muted-foreground shrink-0">
+                      {fmt(m.rag)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="px-6 md:px-10 py-8 border-t border-ink/30 max-w-3xl">
@@ -154,22 +189,24 @@ export default function RagFeverFactCheckingPage() {
       </section>
 
       {/* VERIFICABLE */}
-      <section className="border-b border-ink px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="max-w-2xl">
+      <section className="border-b border-ink">
+        <Link
+          href="/projects/rag-fever-fact-checking/notebook"
+          className="group block px-6 md:px-10 py-10 md:py-12 hover:bg-secondary transition-colors"
+        >
           <span className="font-mono text-xs uppercase tracking-widest text-accent">
             /05 — Verifícalo tú mismo
           </span>
-          <p className="mt-3 leading-7 text-muted-foreground">
-            El notebook completo — código ejecutado, métricas y análisis — está disponible tal
-            cual fue entregado en el curso de Procesamiento de Lenguaje Natural del Magíster en
-            Ciencia de Datos (Pontificia Universidad Católica de Chile).
+          <p className="font-display text-2xl md:text-4xl mt-4">
+            Ver el notebook, celda por celda
+            <span className="inline-block transition-transform group-hover:translate-x-2"> →</span>
           </p>
-        </div>
-        <Button asChild size="lg">
-          <a href="/notebooks/rag-fever-fact-checking-nikolas-cantillo.ipynb" download>
-            Descargar notebook ↓
-          </a>
-        </Button>
+          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
+            Código ejecutado, outputs reales y análisis, renderizados aquí mismo — del curso de
+            Procesamiento de Lenguaje Natural del Magíster en Ciencia de Datos (Pontificia
+            Universidad Católica de Chile).
+          </p>
+        </Link>
       </section>
 
       {/* NAV */}

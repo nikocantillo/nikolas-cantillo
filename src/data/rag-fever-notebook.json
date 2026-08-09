@@ -1,0 +1,133 @@
+{
+ "cells": [
+  {
+   "kind": "markdown",
+   "html": "<h1>Librerías</h1>\n"
+  },
+  {
+   "kind": "code",
+   "source": "import pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nfrom datasets import Dataset\nfrom sklearn.model_selection import train_test_split\nfrom sklearn import metrics\nfrom sklearn.metrics import (\n    classification_report, \n    confusion_matrix, \n    precision_recall_fscore_support\n)\nimport evaluate\nimport torch\nfrom torch import cuda\nfrom datasets import (\n    Dataset, \n    Value, \n    ClassLabel, \n    Features, \n    DatasetDict\n)\nimport transformers\nfrom transformers import (\n    AutoTokenizer, \n    RobertaModel, \n    RobertaTokenizer, \n    BertModel, \n    BertTokenizer, \n    DistilBertModel, \n    DistilBertTokenizer, \n    DataCollatorWithPadding,\n    AutoModelForSequenceClassification,\n    TrainingArguments,\n    Trainer, \n    pipeline,\n    AutoModelForCausalLM\n)\n\nimport json\nfrom tqdm import tqdm\n\nimport logging\nlogging.basicConfig(level=logging.ERROR)\n\n\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\ndevice",
+   "execCount": 1,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "device(type='cuda')"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>Introducción</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>En el contexto actual de la desinformación digital, la capacidad de verificar hechos de manera automática (Automated Fact-Checking) es una de las áreas más críticas del Procesamiento del Lenguaje Natural (NLP). Para esta tarea, trabajaremos con FEVER, uno de los datasets de referencia para la investigación en verificación de afirmaciones.</p>\n<p>FEVER (Fact Extraction and VERification) es un conjunto de datos a gran escala que consta de más de 185.000 afirmaciones (claims) generadas a partir de Wikipedia. A diferencia de las tareas simples de clasificación de texto, FEVER requiere un razonamiento complejo que combina dos sub-tareas de NLP:</p>\n<ul>\n<li><p>Recuperación de Información: Encontrar documentos relevantes que contengan la evidencia.</p>\n</li>\n<li><p>Inferencia del Lenguaje Natural: Determinar si la evidencia recuperada apoya o refuta la afirmación.</p>\n</li>\n</ul>\n<p>Cada entrada en el dataset presenta una afirmación y debe ser clasificada en una de las siguientes tres etiquetas basándose exclusivamente en la evidencia proporcionada (artículos de Wikipedia):</p>\n<ul>\n<li><p>Supported (Respaldado): La evidencia contiene información suficiente para confirmar que la afirmación es verdadera.</p>\n</li>\n<li><p>Refuted (Refutado): La evidencia contiene información que contradice la afirmación (es falsa).</p>\n</li>\n<li><p>Not Enough Info (Información Insuficiente): No existe evidencia en la base de conocimiento dada para confirmar o negar la afirmación.</p>\n</li>\n</ul>\n<p>En esta tarea solo nos centraremos en dos clases: <strong>Supported</strong> y <strong>Refuted</strong>.</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>1 - Baseline: Uso de LLM como clasificador Zero-shot (6 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Cargue el dataset <code>df_sample_fever.csv</code>. Este conjunto de datos corresponde a una muestra aleatoria de 500 afirmaciones. Solo debe utilizar los campos <strong>claim</strong> y <strong>label</strong>.</p>\n<p>Utilice el modelo <code>meta-llama/Llama-3.2-3B-Instruct</code> para obtener predicciones para cada afirmación (obtener label SUPPORTS\to REFUTES). Justifique el diseño del prompt.</p>\n<p>Calcule las métricas Precision, Recall y F1-score para el conjunto analizado (general y por clase). Comente los resultados.</p>\n<p><strong>Observaciones</strong></p>\n<ul>\n<li>Ver modelo en: <a href=\"https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct\">https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct</a></li>\n<li>Para utilizar este modelo debe registrarse en huggingface y solicitar permiso. Al importarlo, debe ingresar el token de huggingface. Revisar la ayudantía 3.</li>\n<li>Para esta pregunta deben trabajar con GPU.</li>\n<li>El tiempo de procesamiento para las 500 afirmaciones es de 5 minutos, aproximadamente.</li>\n</ul>\n"
+  },
+  {
+   "kind": "code",
+   "source": "MODEL_NAME = \"meta-llama/Llama-3.2-3B-Instruct\"\n\ndf = pd.read_csv(\"df_sample_fever.csv\")\n\ndf = df[[\"claim\", \"label\"]].dropna()\n\ndef normalize_label(x: str) -> str:\n    x = str(x).strip().upper()\n    if x in [\"SUPPORTED\", \"SUPPORT\", \"SUPPORTS\"]:\n        return \"SUPPORTS\"\n    if x in [\"REFUTED\", \"REFUTE\", \"REFUTES\"]:\n        return \"REFUTES\"\n    return x\n\ndf[\"label_norm\"] = df[\"label\"].apply(normalize_label)\n\ndf = df[df[\"label_norm\"].isin([\"SUPPORTS\", \"REFUTES\"])].reset_index(drop=True)\nprint(\"Filas usadas:\", len(df))\nprint(df[\"label_norm\"].value_counts())",
+   "execCount": 3,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Filas usadas: 500\nlabel_norm\nSUPPORTS    250\nREFUTES     250\nName: count, dtype: int64"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=True)\nmodel = AutoModelForCausalLM.from_pretrained(\n    MODEL_NAME,\n    torch_dtype=torch.float16,\n    device_map=\"auto\" \n)",
+   "execCount": 4,
+   "outputs": []
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "code",
+   "source": "import re\nSYSTEM_MSG = (\n    \"You are an automated fact-checking classifier.\\n\"\n    \"Task: Given a CLAIM, output exactly one label:\\n\"\n    \"- SUPPORTS: the claim is true.\\n\"\n    \"- REFUTES: the claim is false.\\n\"\n    \"Rules:\\n\"\n    \"1) Output ONLY the label word: SUPPORTS or REFUTES.\\n\"\n    \"2) Do not add explanations, punctuation, or extra text.\\n\"\n)\n\ndef build_messages(claim: str):\n    return [\n        {\"role\": \"system\", \"content\": SYSTEM_MSG},\n        {\"role\": \"user\", \"content\": f\"CLAIM: {claim}\\nLABEL:\"}\n    ]\n\nLABEL_RE = re.compile(r\"\\b(SUPPORTS|REFUTES)\\b\", re.IGNORECASE)\n\n@torch.inference_mode()\ndef predict_one(claim: str) -> str:\n    messages = build_messages(claim)\n    inputs = tokenizer.apply_chat_template(\n        messages,\n        tokenize=True,\n        add_generation_prompt=True,\n        return_tensors=\"pt\"\n    ).to(model.device)\n\n    out = model.generate(\n        inputs,\n        max_new_tokens=3,\n        do_sample=False,\n        temperature=0.0,\n        top_p=1.0\n    )\n\n    gen_text = tokenizer.decode(out[0][inputs.shape[-1]:], skip_special_tokens=True).strip()\n    m = LABEL_RE.search(gen_text)\n    if m:\n        return m.group(1).upper()\n\n    return \"REFUTES\"\n\npreds = []\nfor i, claim in enumerate(df[\"claim\"].tolist(), start=1):\n    preds.append(predict_one(claim))\n    if i % 50 == 0:\n        print(f\"Procesadas: {i}/{len(df)}\")\n\ndf[\"pred\"] = preds\n\ny_true = df[\"label_norm\"].tolist()\ny_pred = df[\"pred\"].tolist()\n\nprint(\"\\n=== Classification report ===\")\nprint(classification_report(y_true, y_pred, labels=[\"SUPPORTS\", \"REFUTES\"], digits=4))\n\np_macro, r_macro, f1_macro, _ = precision_recall_fscore_support(\n    y_true, y_pred, average=\"macro\", labels=[\"SUPPORTS\", \"REFUTES\"]\n)\np_micro, r_micro, f1_micro, _ = precision_recall_fscore_support(\n    y_true, y_pred, average=\"micro\", labels=[\"SUPPORTS\", \"REFUTES\"]\n)\n\nprint(\"\\nMacro  P/R/F1:\", p_macro, r_macro, f1_macro)\nprint(\"Micro  P/R/F1:\", p_micro, r_micro, f1_micro)\n\ndf.to_csv(\"fever_llama32_3b_zeroshot_preds.csv\", index=False)\nprint(\"\\nGuardado: fever_llama32_3b_zeroshot_preds.csv\")",
+   "execCount": 5,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "c:\\Users\\DELL\\.conda\\envs\\NLP\\Lib\\site-packages\\transformers\\generation\\configuration_utils.py:628: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.\n  warnings.warn(\nThe attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.=== Classification report ===\n              precision    recall  f1-score   support\n\n    SUPPORTS     0.6667    0.6160    0.6403       250\n     REFUTES     0.6431    0.6920    0.6667       250\n\n    accuracy                         0.6540       500\n   macro avg     0.6549    0.6540    0.6535       500\nweighted avg     0.6549    0.6540    0.6535       500\n\nMacro  P/R/F1: 0.6548946716232962 0.6539999999999999 0.6534996534996536\nMicro  P/R/F1: 0.654 0.654 0.654\n\nGuardado: fever_llama32_3b_zeroshot_preds.csv"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>El modelo meta-llama/Llama-3.2-3B-Instruct usado en modo zero-shot logra un rendimiento global de 0.654 (accuracy y micro-F1) y un macro-F1 de 0.6535. En otras palabras, funciona se podria decir que de una forma decente como línea base y se comporta de forma bastante similar en ambas clases.</p>\n<p>Mirando por etiqueta, el modelo detecta mejor los casos REFUTES (recall 0.692) que los SUPPORTS (recall 0.616). Esto sugiere que, cuando el modelo no está completamente seguro, tiende a inclinarse por refutar más seguido que por respaldar.</p>\n<p>Estos resultados tienen sentido dado el enfoque: como no se recupera evidencia desde Wikipedia, el modelo no “verifica” realmente, sino que decide apoyándose en lo que ya sabe (conocimiento aprendido durante el entrenamiento) y en qué tan plausible suena la afirmación. Eso puede fallar especialmente en claims muy específicos, de nicho o que requieren contexto. Por eso, este baseline es útil como punto de partida, pero lo esperable es mejorar de forma clara al pasar a un pipeline FEVER completo (recuperación de evidencia + verificación con NLI).</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>2 - Creación de base de conocimiento (10 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Para sustentar el proceso de verificación de afirmaciones, se debe construir una base de conocimiento basada en Wikipedia, utilizando LangChain. El objetivo es implementar un flujo de recuperación de información que permita obtener evidencia factual de manera automatizada.</p>\n<p>Para lograr esto, se deben seguir las siguientes instrucciones:</p>\n<ol>\n<li><p>Se debe implementar una función de extracción de entidades para cada afirmación. Esta entidad servirá como el parámetro principal de consulta para localizar los artículos más relevantes en Wikipedia.\nSe recomienda utilizar el modelo Llama-3.2-3B-Instruct para esta tarea.</p>\n</li>\n<li><p>Se debe recuperar el contenido textual de los artículos identificados en Wikipedia, en función de las entidades reconocidas en el punto 1.</p>\n</li>\n<li><p>Se debe construir una base vectorial utilizando FAISS. Este paso requiere definir una estrategia de segmentación de texto (chunks) y transformar los segmentos en embeddings para permitir búsquedas por similitud.</p>\n</li>\n</ol>\n<p><strong>Observaciones</strong></p>\n<ul>\n<li><p>Se recomienda revisar la ayudantía 4.</p>\n</li>\n<li><p>La definición de hiperparámetros queda a criterio del modelador. Por ejemplo, el tamaño de los chunks, solapamiento (overlap), cantidad de ejemplos retornados por FAISS al hacer la búsqueda, entre otros.</p>\n</li>\n<li><p>Dadas las limitaciones del modelo Llama-3.2-3B, es posible que algunas entidades no sean factibles de reconocer (punto 1). Eso se entiende como una limitación del sistema. No afectará la calificación.</p>\n</li>\n<li><p>La construcción de esta base de datos vectorial podría tomar cerca de 20 minutos, dependiendo del pipeline diseñado. Se recomienda guardar en un dataframe todos los fragmentos de texto para no repetir la búsqueda de entidades en wikipedia.</p>\n</li>\n</ul>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "code",
+   "source": "import os\nimport re\nimport time\nimport pandas as pd\nfrom tqdm import tqdm\n\n\nfrom langchain_community.document_loaders import WikipediaLoader\nfrom langchain_community.vectorstores import FAISS\nfrom langchain_community.embeddings import HuggingFaceEmbeddings\n\ntry:\n    from langchain_text_splitters import RecursiveCharacterTextSplitter\nexcept ImportError:\n    from langchain.text_splitter import RecursiveCharacterTextSplitter\n\n\nOUT_DIR = \"kb_fever_faiss_light\"\nos.makedirs(OUT_DIR, exist_ok=True)\n\nENTITIES_CSV = os.path.join(OUT_DIR, \"claim_entities.csv\")\nCHUNKS_CSV   = os.path.join(OUT_DIR, \"kb_chunks.csv\")\nFAISS_DIR    = os.path.join(OUT_DIR, \"faiss_index\")\n\nLOAD_MAX_DOCS = 1\nDOC_CHARS_MAX = 4000\n\nCHUNK_SIZE = 700\nCHUNK_OVERLAP = 80\n\nEMBEDDING_MODEL = \"sentence-transformers/all-MiniLM-L6-v2\"\n\nEMB_DEVICE = \"cuda:0\" if torch.cuda.is_available() else \"cpu\"\n\nprint(\"GPU (torch):\", torch.cuda.is_available(), \"| Embeddings device:\", EMB_DEVICE)\n\nSYSTEM_ENTITY_FAST = (\n    \"Extract the single main Wikipedia page title for this claim.\\n\"\n    \"Return ONLY the title, no extra text, no punctuation.\\n\"\n    \"If unsure, return the most central named entity.\"\n)\n\ndef _fallback_entity_from_claim(claim: str) -> str:\n    m = re.findall(r\"\\b([A-Z][a-z]+(?:\\s+[A-Z][a-z]+){0,3})\\b\", claim)\n    if m:\n        return m[0].strip()\n    return claim[:60].strip()\n\n@torch.inference_mode()\ndef extract_entity_fast(claim: str) -> str:\n    \"\"\"\n    Usa Llama para extraer 1 entidad (título de Wikipedia).\n    Requiere que tokenizer y model ya existan en el notebook.\n    \"\"\"\n    messages = [\n        {\"role\": \"system\", \"content\": SYSTEM_ENTITY_FAST},\n        {\"role\": \"user\", \"content\": f\"CLAIM: {claim}\\nTITLE:\"}\n    ]\n    inputs = tokenizer.apply_chat_template(\n        messages,\n        tokenize=True,\n        add_generation_prompt=True,\n        return_tensors=\"pt\"\n    ).to(model.device)\n\n    out = model.generate(\n        inputs,\n        max_new_tokens=12,\n        do_sample=False,\n        temperature=0.0,\n        top_p=1.0\n    )\n\n    txt = tokenizer.decode(out[0][inputs.shape[-1]:], skip_special_tokens=True).strip()\n\n    # Limpieza básica\n    txt = txt.split(\"\\n\")[0].strip()\n    txt = re.sub(r\"^[\\-\\:\\s]+\", \"\", txt)\n    txt = re.sub(r\"[\\\"`\\']+\", \"\", txt).strip()\n\n    # fallback si quedó vacío o raro\n    if len(txt) < 2:\n        txt = _fallback_entity_from_claim(claim)\n\n    return txt[:80].strip()\n\n\ndef load_wiki(entity: str):\n    loader = WikipediaLoader(\n        query=entity,\n        load_max_docs=LOAD_MAX_DOCS,\n        doc_content_chars_max=DOC_CHARS_MAX\n    )\n    return loader.load()\n\n\ndf = pd.read_csv(\"df_sample_fever.csv\")[[\"claim\", \"label\"]].dropna().reset_index(drop=True)\n\nif os.path.exists(ENTITIES_CSV):\n    print(f\"[CACHE] Cargando entidades desde: {ENTITIES_CSV}\")\n    df = pd.read_csv(ENTITIES_CSV)\nelse:\n    entities = []\n    t0 = time.time()\n    for claim in tqdm(df[\"claim\"].tolist(), desc=\"Entity extraction (Llama)\"):\n        entities.append(extract_entity_fast(claim))\n    df[\"entity\"] = entities\n    df.to_csv(ENTITIES_CSV, index=False)\n    print(f\"[OK] Entidades guardadas en: {ENTITIES_CSV} | tiempo: {time.time()-t0:.1f}s\")\n\nprint(\"Ejemplo entity:\", df.loc[0, \"entity\"])\n\n\nif os.path.exists(CHUNKS_CSV):\n    print(f\"[CACHE] Cargando chunks desde: {CHUNKS_CSV}\")\n    chunks_df = pd.read_csv(CHUNKS_CSV)\nelse:\n    splitter = RecursiveCharacterTextSplitter(\n        chunk_size=CHUNK_SIZE,\n        chunk_overlap=CHUNK_OVERLAP\n    )\n\n    unique_entities = sorted(set(df[\"entity\"].dropna().tolist()))\n    print(\"Unique entities:\", len(unique_entities))\n\n    rows = []\n    wiki_cache = {}\n\n    t0 = time.time()\n    for ent in tqdm(unique_entities, desc=\"Wikipedia retrieval\"):\n        if ent in wiki_cache:\n            docs = wiki_cache[ent]\n        else:\n            try:\n                docs = load_wiki(ent)\n            except Exception:\n                docs = []\n            wiki_cache[ent] = docs\n\n        if not docs:\n            rows.append({\n                \"entity\": ent,\n                \"page_title\": None,\n                \"chunk_id\": None,\n                \"chunk\": None\n            })\n            continue\n\n        for d in docs:\n            title = d.metadata.get(\"title\", \"unknown\") if d.metadata else \"unknown\"\n            chunks = splitter.split_text(d.page_content)\n\n            for j, ch in enumerate(chunks):\n                rows.append({\n                    \"entity\": ent,\n                    \"page_title\": title,\n                    \"chunk_id\": j,\n                    \"chunk\": ch\n                })\n\n    chunks_df = pd.DataFrame(rows)\n    chunks_df.to_csv(CHUNKS_CSV, index=False)\n    print(f\"[OK] Chunks guardados en: {CHUNKS_CSV} | tiempo: {time.time()-t0:.1f}s\")\n\nprint(\"Total chunks (incluye None):\", len(chunks_df))\nprint(\"Chunks válidos:\", chunks_df[\"chunk\"].notna().sum())\n\n\nembeddings = HuggingFaceEmbeddings(\n    model_name=EMBEDDING_MODEL,\n    model_kwargs={\"device\": EMB_DEVICE}\n)\n\nif os.path.exists(FAISS_DIR):\n    print(f\"[CACHE] Cargando FAISS desde: {FAISS_DIR}\")\n    vectorstore = FAISS.load_local(FAISS_DIR, embeddings, allow_dangerous_deserialization=True)\nelse:\n    valid_df = chunks_df.dropna(subset=[\"chunk\"]).reset_index(drop=True)\n\n    texts = valid_df[\"chunk\"].tolist()\n    metadatas = valid_df[[\"entity\", \"page_title\", \"chunk_id\"]].to_dict(orient=\"records\")\n\n    t0 = time.time()\n    vectorstore = FAISS.from_texts(texts=texts, embedding=embeddings, metadatas=metadatas)\n    vectorstore.save_local(FAISS_DIR)\n    print(f\"[OK] FAISS guardado en: {FAISS_DIR} | tiempo: {time.time()-t0:.1f}s\")\n\nprint(\"KB lista\")",
+   "execCount": 15,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "GPU (torch): True | Embeddings device: cuda:0\n[CACHE] Cargando entidades desde: kb_fever_faiss_light\\claim_entities.csv\nEjemplo entity: The Blacklist\n[CACHE] Cargando chunks desde: kb_fever_faiss_light\\kb_chunks.csv\nTotal chunks (incluye None): 4149\nChunks válidos: 4125\n[CACHE] Cargando FAISS desde: kb_fever_faiss_light\\faiss_index\nKB lista"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>3 - Aplicación de RAG (10 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Utilice la base de datos vectorial creada en el punto 2 como fuente de conocimiento externo para contextualizar el modelo de lenguaje <code>meta-llama/Llama-3.2-3B-Instruct</code>.</p>\n<p>Diseñe un prompt que permita realizar predicciones en función del contexto recuperado desde dicha base vectorial.</p>\n<p>Calcule las métricas Precision, Recall y F1-score para el conjunto analizado (general y por clase). Comente los resultados.</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "code",
+   "source": "df = pd.read_csv(\"df_sample_fever.csv\")[[\"claim\", \"label\"]].dropna().reset_index(drop=True)\n\ndef normalize_label(x: str) -> str:\n    x = str(x).strip().upper()\n    if x in [\"SUPPORTED\", \"SUPPORT\", \"SUPPORTS\"]:\n        return \"SUPPORTS\"\n    if x in [\"REFUTED\", \"REFUTE\", \"REFUTES\"]:\n        return \"REFUTES\"\n    return x\n\ndf[\"label_norm\"] = df[\"label\"].apply(normalize_label)\ndf = df[df[\"label_norm\"].isin([\"SUPPORTS\", \"REFUTES\"])].reset_index(drop=True)\n\nprint(\"Filas usadas:\", len(df))\nprint(df[\"label_norm\"].value_counts())\n\n\nTOP_K = 5       \nMAX_EVID_CHARS = 2600\n\ndef retrieve_docs(query: str, k: int = TOP_K):\n    return vectorstore.similarity_search(query, k=k)\n\ndef format_evidence(docs, max_chars: int = MAX_EVID_CHARS) -> str:\n    parts = []\n    total = 0\n    for i, d in enumerate(docs, start=1):\n        title = d.metadata.get(\"page_title\", d.metadata.get(\"title\", \"unknown\"))\n        chunk = d.page_content.strip().replace(\"\\n\", \" \")\n        snippet = f\"[{i}] ({title}) {chunk}\"\n        if total + len(snippet) > max_chars:\n            break\n        parts.append(snippet)\n        total += len(snippet)\n    return \"\\n\".join(parts)\n\n\nSYSTEM_RAG = (\n    \"You are a fact-checking assistant.\\n\"\n    \"You will receive a CLAIM and EVIDENCE passages from Wikipedia.\\n\"\n    \"Classify the claim using ONLY the evidence.\\n\"\n    \"Return exactly one label:\\n\"\n    \"- SUPPORTS (evidence supports the claim)\\n\"\n    \"- REFUTES (evidence contradicts the claim)\\n\"\n    \"Rules:\\n\"\n    \"1) Use ONLY the provided evidence.\\n\"\n    \"2) Output ONLY one word: SUPPORTS or REFUTES.\\n\"\n    \"3) No explanations, no punctuation, no extra text.\\n\"\n)\n\nLABEL_RE = re.compile(r\"\\b(SUPPORTS|REFUTES)\\b\", re.IGNORECASE)\n\n@torch.inference_mode()\ndef predict_rag(claim: str) -> str:\n    docs = retrieve_docs(claim, k=TOP_K)\n    evidence = format_evidence(docs)\n\n    messages = [\n        {\"role\": \"system\", \"content\": SYSTEM_RAG},\n        {\"role\": \"user\", \"content\": f\"CLAIM:\\n{claim}\\n\\nEVIDENCE:\\n{evidence}\\n\\nLABEL:\"}\n    ]\n\n    inputs = tokenizer.apply_chat_template(\n        messages,\n        tokenize=True,\n        add_generation_prompt=True,\n        return_tensors=\"pt\"\n    ).to(model.device)\n\n    out = model.generate(\n        inputs,\n        max_new_tokens=3,\n        do_sample=False,\n        temperature=0.0,\n        top_p=1.0\n    )\n\n    gen = tokenizer.decode(out[0][inputs.shape[-1]:], skip_special_tokens=True).strip()\n    m = LABEL_RE.search(gen)\n    if m:\n        return m.group(1).upper()\n\n    return \"REFUTES\"\n\n\npreds = []\nfor claim in tqdm(df[\"claim\"].tolist(), desc=\"RAG predictions\"):\n    preds.append(predict_rag(claim))\n\ndf[\"pred_rag\"] = preds\n\n\nout_path = \"fever_llama32_3b_rag_preds.csv\"\ndf.to_csv(out_path, index=False)\nprint(\"Guardado:\", out_path)\n\n\ny_true = df[\"label_norm\"].tolist()\ny_pred = df[\"pred_rag\"].tolist()\n\nprint(\"\\n=== Classification report (RAG) ===\")\nprint(classification_report(y_true, y_pred, labels=[\"SUPPORTS\", \"REFUTES\"], digits=4))\n\np_macro, r_macro, f1_macro, _ = precision_recall_fscore_support(\n    y_true, y_pred, average=\"macro\", labels=[\"SUPPORTS\", \"REFUTES\"]\n)\np_micro, r_micro, f1_micro, _ = precision_recall_fscore_support(\n    y_true, y_pred, average=\"micro\", labels=[\"SUPPORTS\", \"REFUTES\"]\n)\n\nprint(\"\\nMacro  P/R/F1:\", p_macro, r_macro, f1_macro)\nprint(\"Micro  P/R/F1:\", p_micro, r_micro, f1_micro)",
+   "execCount": 14,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Filas usadas: 500\nlabel_norm\nSUPPORTS    250\nREFUTES     250\nName: count, dtype: int64warnings.warn(Guardado: fever_llama32_3b_rag_preds.csv\n\n=== Classification report (RAG) ===\n              precision    recall  f1-score   support\n\n    SUPPORTS     0.6842    0.5200    0.5909       250\n     REFUTES     0.6129    0.7600    0.6786       250\n\n    accuracy                         0.6400       500\n   macro avg     0.6486    0.6400    0.6347       500\nweighted avg     0.6486    0.6400    0.6347       500\n\nMacro  P/R/F1: 0.6485568760611206 0.64 0.6347402597402598\nMicro  P/R/F1: 0.64 0.64 0.64"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>4 - Conclusiones (4 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Compare los resultados obtenidos por cada solución implementada.</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Comparando las dos soluciones, el baseline zero-shot termina rindiendo un poco mejor en general (accuracy/micro-F1 = 0.654) que el enfoque RAG (0.640, con un dataset balanceado de 250/250 por clase). Aunque RAG incorpora evidencia desde Wikipedia, el rendimiento global baja principalmente porque empeora SUPPORTS: su recall cae de 0.616 a 0.520, lo que sugiere que en muchos casos la evidencia recuperada no es lo suficientemente clara o relevante para confirmar afirmaciones verdaderas.</p>\n<p>Al mismo tiempo, RAG sí ayuda en REFUTES: el recall sube de 0.692 a 0.760, lo que indica que la evidencia recuperada suele ser más útil para encontrar contradicciones que para respaldar un hecho. En conjunto, cuando el contexto no es concluyente, el sistema tiende a refutar con más frecuencia, lo que favorece REFUTES pero perjudica SUPPORTS.</p>\n<p>En conclusión, el principal cuello de botella parece estar en la etapa de recuperación (calidad de chunks, embeddings, top-k y estrategia de consulta). Ajustes como recuperar por entidad, aumentar top-k, mejorar el chunking o incorporar un re-ranker probablemente permitirían que RAG supere al baseline en una iteración posterior.</p>\n"
+  }
+ ]
+}
