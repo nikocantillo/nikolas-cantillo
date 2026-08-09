@@ -24,7 +24,7 @@ export default function BlogPage() {
           <span className="text-accent">{posts.length} artículos</span>
         </div>
         <h1 className="font-display text-[10vw] md:text-7xl mt-6">
-          El <span className="text-outline">Blog</span>
+          Blog<span className="text-accent">.</span>
         </h1>
         <p className="mt-6 max-w-2xl leading-7 text-muted-foreground">
           Artículos prácticos sobre Data, AI Engineering y construcción de sistemas reales. Sin
@@ -81,8 +81,8 @@ export default function BlogPage() {
             href={post.href}
             className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-6 md:px-10 py-7 border-b border-ink/30 hover:bg-secondary transition-colors"
           >
-            <span className="font-mono text-sm text-accent">
-              {String(i + (showFeatured ? 2 : 1)).padStart(2, "0")}
+            <span className="font-mono text-sm text-accent tabular-nums">
+              {String(i + (showFeatured ? 2 : 1)).padStart(3, "0")}
             </span>
             <div>
               <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">

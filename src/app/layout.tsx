@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
-import { Archivo, Geist_Mono } from "next/font/google"
+import { Inter_Tight, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
   subsets: ["latin"],
   display: "swap",
 })
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${archivo.variable} ${geistMono.variable} min-h-screen font-sans antialiased flex flex-col`}
+        className={`${interTight.variable} ${geistMono.variable} min-h-screen font-sans antialiased flex flex-col`}
       >
         <Navbar />
         <div className="flex-1">{children}</div>

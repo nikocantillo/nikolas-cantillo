@@ -2,22 +2,19 @@ import Image from "next/image"
 import Link from "next/link"
 import { posts } from "@/lib/posts"
 
-const ticker =
-  "DATA ENGINEERING · PYSPARK · OCI · LLMs · RAG · DATA QUALITY · APIs · SPARK · PYTHON · SQL · "
-
 const offerings = [
   {
-    n: "01",
+    n: "001",
     title: "IA aplicada",
     desc: "LLMs, RAG, asistentes y automatización con enfoque práctico.",
   },
   {
-    n: "02",
+    n: "002",
     title: "Ciencia de datos",
     desc: "EDA, modelado, evaluación y experimentación con criterio.",
   },
   {
-    n: "03",
+    n: "003",
     title: "Arquitectura",
     desc: "Sistemas escalables, APIs y operación: lo que pasa después del modelo.",
   },
@@ -25,28 +22,28 @@ const offerings = [
 
 const projects = [
   {
-    n: "01",
+    n: "001",
     title: "Fact-checking con RAG (FEVER)",
     desc: "Zero-shot vs RAG con Llama-3.2-3B, Wikipedia y FAISS — con notebook verificable del Magíster UC Chile.",
     tag: "NLP / RAG",
     href: "/projects/rag-fever-fact-checking",
   },
   {
-    n: "02",
+    n: "002",
     title: "RAG para documentos",
     desc: "Búsqueda semántica y respuestas con contexto sobre PDFs.",
     tag: "LLMs / RAG",
     href: "/projects/rag-documents",
   },
   {
-    n: "03",
+    n: "003",
     title: "Data Quality & Governance",
     desc: "Validaciones, reglas y trazabilidad en pipelines reales.",
     tag: "Data Engineering",
     href: "/projects",
   },
   {
-    n: "04",
+    n: "004",
     title: "Pipelines escalables",
     desc: "Procesamiento masivo con Spark y cargas incrementales.",
     tag: "Big Data",
@@ -58,31 +55,28 @@ export default function Home() {
   return (
     <main>
       {/* HERO */}
-      <section className="border-b border-ink">
-        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr]">
-          <div className="p-6 md:p-10 flex flex-col justify-between gap-10 md:border-r border-ink">
-            <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between text-muted-foreground">
-              <span>Portafolio / 2026</span>
-              <span className="text-accent">● Data & AI</span>
+      <section className="border-b-2 border-ink">
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr]">
+          <div className="p-6 md:p-10 flex flex-col justify-between gap-10 md:border-r border-border">
+            <div className="font-mono text-[10px] md:text-xs uppercase tracking-widest flex justify-between flex-wrap gap-2 text-muted-foreground">
+              <span>Nikolas Cantillo — Principal Consultant · Oracle</span>
+              <span className="text-accent">Data & AI</span>
             </div>
 
-            <h1 className="font-display text-[13vw] md:text-7xl lg:text-8xl">
-              Nikolas
-              <br />
-              <span className="text-outline">Cantillo</span>
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl max-w-[14ch]">
+              Datos e IA, con foco en <span className="text-accent">producción</span>.
             </h1>
 
             <div className="max-w-xl">
-              <p className="text-base md:text-lg leading-7">
-                Trabajo en <span className="font-semibold underline decoration-accent decoration-2 underline-offset-4">datos e IA</span>{" "}
-                con foco en producción. Proyectos, demos y aprendizajes sobre LLMs, RAG, calidad
-                de datos y sistemas escalables.
+              <p className="text-base md:text-lg leading-7 text-muted-foreground">
+                Pipelines, migraciones cloud, LLMs y la disciplina de medir antes de opinar.
+                Proyectos reales, notebooks verificables y aprendizajes documentados.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href="/projects"
-                  className="inline-flex items-center gap-2 border border-ink bg-primary text-primary-foreground px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-primary/85 transition-colors"
+                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-accent/90 transition-colors"
                 >
                   Ver proyectos →
                 </Link>
@@ -96,28 +90,38 @@ export default function Home() {
             </div>
           </div>
 
-          {/* FOTO */}
-          <div className="relative border-t md:border-t-0 border-ink min-h-72 md:min-h-full">
-            <Image
-              src="/nikolascantillo.jpeg"
-              alt="Nikolas Cantillo – Data Science & AI"
-              fill
-              className="object-cover grayscale-[60%]"
-              priority
-            />
-            <div className="absolute bottom-0 left-0 right-0 border-t border-ink bg-background px-4 py-2 flex justify-between font-mono text-[10px] uppercase tracking-widest">
-              <span>Fig. 01 — Retrato</span>
-              <span className="text-accent">Bogotá, CO</span>
+          {/* COLUMNA DE DATOS */}
+          <aside className="border-t md:border-t-0 border-border flex flex-col">
+            <div className="relative h-56 md:h-64 border-b border-border">
+              <Image
+                src="/nikolascantillo.jpeg"
+                alt="Nikolas Cantillo – Data Science & AI"
+                fill
+                className="object-cover grayscale"
+                priority
+              />
             </div>
-          </div>
-        </div>
-
-        {/* TICKER */}
-        <div className="border-t border-ink overflow-hidden py-2 select-none text-muted-foreground">
-          <div className="animate-marquee whitespace-nowrap font-mono text-xs uppercase tracking-widest w-max">
-            <span>{ticker}</span>
-            <span>{ticker}</span>
-          </div>
+            <div className="flex-1 grid grid-rows-3">
+              <div className="px-6 py-4 border-b border-border">
+                <p className="font-display text-2xl md:text-3xl tabular-nums">65.4%</p>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                  Zero-shot · caso FEVER
+                </p>
+              </div>
+              <div className="px-6 py-4 border-b border-border">
+                <p className="font-display text-2xl md:text-3xl tabular-nums">4,125</p>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                  Chunks indexados en FAISS
+                </p>
+              </div>
+              <div className="px-6 py-4">
+                <p className="font-display text-2xl md:text-3xl tabular-nums">2021→</p>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                  De freelance a Oracle
+                </p>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -184,7 +188,9 @@ export default function Home() {
             href={post.href}
             className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-6 md:px-10 py-6 border-b border-ink/30 last:border-b-0 hover:bg-secondary transition-colors"
           >
-            <span className="font-mono text-sm text-accent">{String(i + 1).padStart(2, "0")}</span>
+            <span className="font-mono text-sm text-accent tabular-nums">
+              {String(i + 1).padStart(3, "0")}
+            </span>
             <div>
               <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                 {post.date} · {post.readTime} · {post.deco}
