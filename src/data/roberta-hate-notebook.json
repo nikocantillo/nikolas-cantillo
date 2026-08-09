@@ -1,0 +1,405 @@
+{
+ "cells": [
+  {
+   "kind": "markdown",
+   "html": "<h1>Librerías</h1>\n"
+  },
+  {
+   "kind": "code",
+   "source": "import pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nfrom datasets import Dataset\nfrom sklearn.model_selection import train_test_split\nfrom sklearn import metrics\nfrom sklearn.metrics import (\n    classification_report, \n    confusion_matrix, \n    precision_recall_fscore_support\n)\nimport evaluate\nimport torch\nfrom torch import cuda\nfrom datasets import (\n    Dataset, \n    Value, \n    ClassLabel, \n    Features, \n    DatasetDict\n)\nimport transformers\nfrom transformers import (\n    AutoTokenizer, \n    RobertaModel, \n    RobertaTokenizer, \n    BertModel, \n    BertTokenizer, \n    DistilBertModel, \n    DistilBertTokenizer, \n    DataCollatorWithPadding,\n    AutoModelForSequenceClassification,\n    TrainingArguments,\n    Trainer, \n    pipeline\n)\n\nimport json\nfrom tqdm import tqdm\n\nimport logging\nlogging.basicConfig(level=logging.ERROR)\n\n\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\ndevice",
+   "execCount": 1,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "device(type='cuda')"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>Introducción</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>El conjunto de datos utilizado en este estudio se construyó a partir de tweets obtenidos a través de la API de Twitter y filtrados utilizando un léxico de discurso de odio proporcionado por Hatebase.org. Inicialmente, se identificaron y recopilaron tweets que contenían términos específicos catalogados como discurso de odio por la comunidad. Este proceso resultó en una muestra de 85.4 millones de tweets, provenientes de 33,458 usuarios de Twitter.</p>\n<p>Posteriormente, se realizó una selección aleatoria de tweets de esta muestra inicial para su análisis detallado. Estos tweets fueron evaluados manualmente por trabajadores de CrowdFlower (CF), quienes clasificaron cada tweet en una de tres categorías: discurso de odio, lenguaje ofensivo pero no discurso de odio, y ni ofensivo ni discurso de odio.</p>\n<p><strong>Estructura del dataset</strong></p>\n<p>Para el desarrollo de la tarea, se deben concentrar en dos columnas:</p>\n<ul>\n<li>tweet: Contiene la sentencia que debe ser evaluada.</li>\n<li>label: Clasificación asociada a cada sentencia de la variable tweet.</li>\n</ul>\n<p>Respecto a la variable label, se tiene la siguiente codificación:</p>\n<ul>\n<li>0 - discurso de odio</li>\n<li>1 - lenguaje ofensivo</li>\n<li>2 - ninguno</li>\n</ul>\n<p>El conjunto de datos ya está divido en train (df_train) y test (df_test)</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>1 - Entrenar clasificador con RoBERTa (10 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Utilizando el modelo RoBERTa-base, construya un clasificador para la tarea planteada.</p>\n<p>Calcule las métricas Precision, Recall y F1-score para el conjunto test (general y por clase). Comente sus resultados.</p>\n<p>Considere un entrenamiento por 3 épocas.</p>\n<p><strong>Observación</strong></p>\n<ul>\n<li>Debe trabajar con GPU. El tiempo de entrenamiento es de 20 minutos, aproximadamente. Se recomienda guardar el modelo para no repetir entrenamiento.</li>\n<li>Respecto a la implementación desarrollada en la <strong>ayudantía 3</strong>, deben modificar la función <code>compute_metrics</code>. A continuación, se presenta la función que debe ser utilizada:</li>\n</ul>\n<pre><code>def compute_metrics(eval_pred):\n    predictions, labels = eval_pred\n    predictions = np.argmax(predictions, axis=1)\n    return f1.compute(references=labels, predictions=predictions, average=&#39;micro&#39;)\n</code></pre>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "code",
+   "source": "df_train = pd.read_csv(\"df_train.csv\")\ndf_test = pd.read_csv('df_test.csv')",
+   "execCount": 2,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "df_train.head()",
+   "execCount": 3,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "df_test.head()",
+   "execCount": 4,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "train_ds = Dataset.from_pandas(df_train[[\"tweet\", \"label\"]])\ntest_ds  = Dataset.from_pandas(df_test[[\"tweet\", \"label\"]])",
+   "execCount": 5,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "ds = DatasetDict()\nds[\"train\"] = train_ds\nds[\"test\"] = test_ds\nds",
+   "execCount": 6,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "DatasetDict({\n    train: Dataset({\n        features: ['tweet', 'label'],\n        num_rows: 19826\n    })\n    test: Dataset({\n        features: ['tweet', 'label'],\n        num_rows: 4957\n    })\n})"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "ds[\"train\"][0]",
+   "execCount": 7,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "MODEL_NAME = \"roberta-base\"\ntokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)",
+   "execCount": 8,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "def tokenize_fn(batch):\n    return tokenizer(\n        batch[\"tweet\"],\n        truncation=True,\n        max_length=128\n    )\n\ntrain_ds = train_ds.map(tokenize_fn, batched=True)\ntest_ds  = test_ds.map(tokenize_fn, batched=True)",
+   "execCount": 9,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Map:   0%|          | 0/19826 [00:00<?, ? examples/s]Map:   0%|          | 0/4957 [00:00<?, ? examples/s]"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "train_ds",
+   "execCount": 10,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Dataset({\n    features: ['tweet', 'label', 'input_ids', 'attention_mask'],\n    num_rows: 19826\n})"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "test_ds",
+   "execCount": 11,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Dataset({\n    features: ['tweet', 'label', 'input_ids', 'attention_mask'],\n    num_rows: 4957\n})"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "f1 = evaluate.load(\"f1\")\naccuracy_metric = evaluate.load(\"accuracy\")",
+   "execCount": null,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "data_collator = DataCollatorWithPadding(tokenizer=tokenizer, padding=\"longest\")",
+   "execCount": 13,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "model = AutoModelForSequenceClassification.from_pretrained(\n    MODEL_NAME,\n    num_labels=3\n)",
+   "execCount": 14,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Some weights of RobertaForSequenceClassification were not initialized from the model checkpoint at roberta-base and are newly initialized: ['classifier.dense.bias', 'classifier.dense.weight', 'classifier.out_proj.bias', 'classifier.out_proj.weight']\nYou should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "LABEL_NAMES = [\"hate_speech(0)\", \"offensive(1)\", \"neither(2)\"]\n\ndef compute_metrics(eval_pred):\n    logits, labels = eval_pred\n    preds = np.argmax(logits, axis=1)\n\n    p_macro, r_macro, f1_macro, _ = precision_recall_fscore_support(labels, preds, average=\"macro\", zero_division=0)\n    p_micro, r_micro, f1_micro, _ = precision_recall_fscore_support(labels, preds, average=\"micro\", zero_division=0)\n\n    p_cls, r_cls, f1_cls, _ = precision_recall_fscore_support(labels, preds, average=None, zero_division=0)\n\n    metrics = {\n        \"precision_macro\": p_macro,\n        \"recall_macro\": r_macro,\n        \"f1_macro\": f1_macro,\n        \"precision_micro\": p_micro,\n        \"recall_micro\": r_micro,\n        \"f1_micro\": f1_micro,\n    }\n\n    for i, name in enumerate(LABEL_NAMES):\n        metrics[f\"precision_{name}\"] = p_cls[i]\n        metrics[f\"recall_{name}\"] = r_cls[i]\n        metrics[f\"f1_{name}\"] = f1_cls[i]\n\n    return metrics",
+   "execCount": null,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "training_args = TrainingArguments(\n    report_to=\"none\",\n    output_dir=\"./roberta_hate_classifier\",\n    evaluation_strategy=\"epoch\",\n    save_strategy=\"epoch\",\n    learning_rate=2e-5,\n    warmup_ratio=0.1,\n    per_device_train_batch_size=16,\n    gradient_accumulation_steps=2,\n    per_device_eval_batch_size=32,\n    num_train_epochs=3,\n    weight_decay=0.01,\n    logging_steps=100,\n    load_best_model_at_end=True,\n    metric_for_best_model=\"f1_macro\",\n    fp16=torch.cuda.is_available(),\n)",
+   "execCount": 16,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "c:\\Users\\DELL\\.conda\\envs\\NLP\\Lib\\site-packages\\transformers\\training_args.py:1575: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead\n  warnings.warn("
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "trainer = Trainer(\n    model=model,\n    args=training_args,\n    train_dataset=train_ds,\n    eval_dataset=test_ds,\n    data_collator=data_collator,\n    compute_metrics=compute_metrics\n)",
+   "execCount": 17,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "trainer.train()",
+   "execCount": 18,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "TrainOutput(global_step=1860, training_loss=0.2667585665179837, metrics={'train_runtime': 258.5366, 'train_samples_per_second': 230.056, 'train_steps_per_second': 7.194, 'total_flos': 1913805805397220.0, 'train_loss': 0.2667585665179837, 'epoch': 3.0})"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "trainer.save_model(\"./roberta_hate_classifier_final\")",
+   "execCount": 19,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "tokenizer.save_pretrained(\"./roberta_hate_classifier_final\")",
+   "execCount": 21,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "('./roberta_hate_classifier_final\\\\tokenizer_config.json',\n './roberta_hate_classifier_final\\\\special_tokens_map.json',\n './roberta_hate_classifier_final\\\\vocab.json',\n './roberta_hate_classifier_final\\\\merges.txt',\n './roberta_hate_classifier_final\\\\added_tokens.json',\n './roberta_hate_classifier_final\\\\tokenizer.json')"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "preds_output = trainer.predict(test_ds)\npreds = np.argmax(preds_output.predictions, axis=1)\nlabels = preds_output.label_ids\n\nprint(classification_report(labels, preds, target_names=LABEL_NAMES))",
+   "execCount": 20,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "precision    recall  f1-score   support\n\nhate_speech(0)       0.49      0.43      0.46       286\n  offensive(1)       0.95      0.96      0.95      3838\n    neither(2)       0.91      0.91      0.91       833\n\n      accuracy                           0.92      4957\n     macro avg       0.78      0.76      0.77      4957\n  weighted avg       0.91      0.92      0.92      4957"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>El modelo RoBERTa-base alcanza un desempeño global alto en test (Micro-F1 ≈ 0.917) y un rendimiento robusto en las clases Offensive y Neither (F1 &gt; 0.90). Sin embargo, la clase Hate Speech presenta el peor desempeño (F1 ≈ 0.46) debido al desbalance del dataset y la dificultad semántica para distinguir entre insultos ofensivos y discurso de odio explícito. A lo largo de las 3 épocas se observa una mejora progresiva en Macro-F1 y en la clase minoritaria, aunque el margen de mejora en hate speech es limitado sin técnicas adicionales como re-weighting, oversampling o focal loss.</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>2 - Uso de LLM como clasificador: Zero-shot (8 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Seleccione una muestra aleatoria de 20 ejemplos por categoría desde el conjunto de test (en total son 60 ejemplos).</p>\n<p>Utilice el modelo <code>meta-llama/Llama-3.2-3B-Instruct</code> para obtener predicciones para cada comentario. Justifique el diseño del prompt.</p>\n<p>Ver modelo en: <a href=\"https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct\">https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct</a></p>\n<p>Calcule las métricas Precision, Recall y F1-score para el conjunto analizado (general y por clase). Comente los resultados.</p>\n<p><strong>Observación</strong></p>\n<ul>\n<li>Para utilizar este modelo debe registrarse en huggingface y solicitar permiso. Al importarlo, debe ingresar el token de huggingface. Revisar la ayudantía 3.</li>\n<li>Para esta pregunta deben trabajar con GPU.</li>\n</ul>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "code",
+   "source": "df_sample = (\n    df_test\n    .groupby(\"label\", group_keys=False)\n    .apply(lambda x: x.sample(n=20, random_state=42))\n    .reset_index(drop=True)\n)\n\nprint(df_sample[\"label\"].value_counts())\ndf_sample.head()",
+   "execCount": 23,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "MODEL_NAME = \"meta-llama/Llama-3.2-3B-Instruct\"\n\npipe = pipeline(\n    \"text-generation\",\n    model=MODEL_NAME,\n    torch_dtype=torch.bfloat16,\n    device_map=device,\n)",
+   "execCount": 37,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "config.json:   0%|          | 0.00/878 [00:00<?, ?B/s]c:\\Users\\DELL\\.conda\\envs\\NLP\\Lib\\site-packages\\huggingface_hub\\file_download.py:147: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\\Users\\DELL\\.cache\\huggingface\\hub\\models--meta-llama--Llama-3.2-3B-Instruct. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.\nTo support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development\n  warnings.warn(message)model.safetensors.index.json:   0%|          | 0.00/20.9k [00:00<?, ?B/s]Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]model-00001-of-00002.safetensors:   0%|          | 0.00/4.97G [00:00<?, ?B/s]model-00002-of-00002.safetensors:   0%|          | 0.00/1.46G [00:00<?, ?B/s]generation_config.json:   0%|          | 0.00/189 [00:00<?, ?B/s]tokenizer_config.json:   0%|          | 0.00/54.5k [00:00<?, ?B/s]tokenizer.json:   0%|          | 0.00/9.09M [00:00<?, ?B/s]special_tokens_map.json:   0%|          | 0.00/296 [00:00<?, ?B/s]Device set to use cuda"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "SYSTEM_PROMPT = \"\"\"You are a strict content moderation classifier.\nReturn ONLY one label id: 0, 1, or 2.\n\nLabels:\n0 = hate speech (attacks a protected group or uses hateful slurs targeting group identity)\n1 = offensive language (insults/profanity/abuse but not targeted hate speech)\n2 = neither (not offensive and not hate speech)\n\nReturn only the digit (0/1/2). No words, no explanations.\"\"\"",
+   "execCount": 38,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "import re\n\ndef llm_predict(text: str) -> int:\n    messages = [\n        {\"role\": \"system\", \"content\": SYSTEM_PROMPT},\n        {\"role\": \"user\", \"content\": f\"Tweet: {text}\\nLabel:\"}\n    ]\n    \n    out = pipe(\n        messages,\n        max_new_tokens=5,\n        do_sample=False,\n        temperature=0.0,\n        return_full_text=False\n    )\n    generated = out[0][\"generated_text\"].strip()\n    m = re.findall(r\"\\b([0-2])\\b\", generated)\n    return int(m[-1]) if m else 2",
+   "execCount": 62,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "y_true = df_sample[\"label\"].tolist()\ny_pred = [llm_predict(t) for t in df_sample[\"tweet\"].tolist()]\n\nprint(\"Predicciones completadas\")",
+   "execCount": 63,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "Predicciones completadas"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "LABEL_NAMES = [\"hate_speech(0)\", \"offensive(1)\", \"neither(2)\"]\n\nprint(classification_report(y_true, y_pred, target_names=LABEL_NAMES, digits=4))\n\np_macro, r_macro, f1_macro, _ = precision_recall_fscore_support(y_true, y_pred, average=\"macro\", zero_division=0)\np_micro, r_micro, f1_micro, _ = precision_recall_fscore_support(y_true, y_pred, average=\"micro\", zero_division=0)\n\nprint(\"\\nGLOBAL:\")\nprint(\"Precision Macro:\", round(p_macro, 4))\nprint(\"Recall Macro:\", round(r_macro, 4))\nprint(\"F1 Macro:\", round(f1_macro, 4))\nprint(\"Precision Micro:\", round(p_micro, 4))\nprint(\"Recall Micro:\", round(r_micro, 4))\nprint(\"F1 Micro:\", round(f1_micro, 4))",
+   "execCount": null,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "precision    recall  f1-score   support\n\nhate_speech(0)     1.0000    0.1000    0.1818        20\n  offensive(1)     0.4222    0.9500    0.5846        20\n    neither(2)     0.9231    0.6000    0.7273        20\n\n      accuracy                         0.5500        60\n     macro avg     0.7818    0.5500    0.4979        60\n  weighted avg     0.7818    0.5500    0.4979        60\n\nGLOBAL:\nPrecision Macro: 0.7818\nRecall Macro: 0.55\nF1 Macro: 0.4979\nPrecision Micro: 0.55\nRecall Micro: 0.55\nF1 Micro: 0.55"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>El modelo LLM en modo zero-shot obtiene un rendimiento global limitado (accuracy 0.55, macro-F1 0.50). En particular, la clase hate speech presenta un recall extremadamente bajo (0.10), lo que indica que el modelo casi nunca asigna dicha categoría, probablemente por ser una etiqueta sensible y ambigua. Por otro lado, offensive presenta recall alto (0.95) pero precisión baja (0.42), evidenciando que el modelo tiende a clasificar como ofensivo la mayoría de textos agresivos, incluyendo casos neutrales y de odio. En general, estos resultados muestran que un enfoque zero-shot puede ser útil como baseline rápido, pero es menos confiable que un modelo fine-tuned como RoBERTa para distinguir clases cercanas.</p>\n<p>El prompt fue diseñado con los siguientes criterios:</p>\n<ul>\n<li><p>Definición clara de las clases: se describió cada categoría (hate speech, offensive, neither) para reducir ambiguedad, especialmente entre hate speech y offensive, que suelen ser clases cercanas.</p>\n</li>\n<li><p>Formato de salida controlado: se solicitó explícitamente que el modelo respondiera únicamente con un dígito (0, 1 o 2), evitando explicaciones o texto adicional. Esto facilita el procesamiento automático de predicciones y el cálculo de métricas.</p>\n</li>\n<li><p>Zero-shot real: no se incluyen ejemplos etiquetados en el prompt. De esta forma, el modelo realiza la clasificación usando únicamente la instrucción y su conocimiento general.</p>\n</li>\n<li><p>Reproducibilidad: se utilizó inferencia determinista (temperature=0 y do_sample=False) para obtener resultados consistentes en múltiples ejecuciones.</p>\n</li>\n</ul>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>3 - Uso de LLM como clasificador: Few-shot (8 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Utilice el modelo <code>meta-llama/Llama-3.2-3B-Instruct</code> para obtener predicciones sobre los 60 comentarios seleccionados. Especifique el prompt utilizado, indicando los criterios para seleccionar los ejemplos que serán incluidos en el prompt.</p>\n<p>Calcule las métricas Precision, Recall y F1-score para el conjunto analizado (general y por clase). Comente los resultados.</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "code",
+   "source": "FEWSHOT_SYSTEM_PROMPT = \"\"\"You are a strict content moderation classifier.\nReturn ONLY one label id: 0, 1, or 2.\n\nLabels:\n0 = hate speech (attacks a protected group or uses hateful slurs targeting group identity)\n1 = offensive language (insults/profanity/abuse but not targeted hate speech)\n2 = neither (not offensive and not hate speech)\n\nReturn only the digit (0/1/2). No words, no explanations.\"\"\"",
+   "execCount": null,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "df_sample = (\n    df_test.groupby(\"label\", group_keys=False)\n    .apply(lambda x: x.sample(n=20, random_state=42))\n    .reset_index(drop=True)\n)",
+   "execCount": 43,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "fewshot_examples = (\n    df_train.groupby(\"label\", group_keys=False)\n    .apply(lambda x: x.sample(n=2, random_state=123))\n    .reset_index(drop=True)\n)\n\nfewshot_examples",
+   "execCount": 44,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "def build_fewshot_block(df_examples):\n    lines = []\n    for _, row in df_examples.iterrows():\n        lines.append(f\"Tweet: {row['tweet']}\\nLabel: {row['label']}\\n\")\n    return \"\\n\".join(lines)\n\nfewshot_block = build_fewshot_block(fewshot_examples)\nprint(fewshot_block)",
+   "execCount": 45,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "print(pipe.model.config._name_or_path)\nprint(pipe.model.device)",
+   "execCount": null,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "meta-llama/Llama-3.2-3B-Instruct\ncuda:0"
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "import re\n\ndef llama_predict_fewshot(text: str) -> int:\n    user_prompt = f\"\"\"\n        We will do few-shot classification.\n\n        Here are labeled examples:\n        {fewshot_block}\n\n        Now classify this tweet:\n        Tweet: {text}\n        Return ONLY the digit 0, 1, or 2.\n        Label:\n    \"\"\".strip()\n\n    messages = [\n        {\"role\": \"system\", \"content\": FEWSHOT_SYSTEM_PROMPT},\n        {\"role\": \"user\", \"content\": user_prompt}\n    ]\n\n    out = pipe(\n        messages,\n        max_new_tokens=5,\n        do_sample=False,\n        temperature=0.0,\n        return_full_text=False\n    )\n\n    generated = out[0][\"generated_text\"].strip()\n    m = re.findall(r\"\\b([0-2])\\b\", generated)\n    return int(m[-1]) if m else 2",
+   "execCount": 58,
+   "outputs": []
+  },
+  {
+   "kind": "code",
+   "source": "y_true = df_sample[\"label\"].tolist()\ny_pred = [llama_predict_fewshot(t) for t in df_sample[\"tweet\"].tolist()]",
+   "execCount": 59,
+   "outputs": [
+    {
+     "type": "text",
+     "text": ""
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "source": "LABEL_NAMES = [\"hate_speech(0)\", \"offensive(1)\", \"neither(2)\"]\n\nprint(classification_report(y_true, y_pred, target_names=LABEL_NAMES, digits=4))\n\np_macro, r_macro, f1_macro, _ = precision_recall_fscore_support(y_true, y_pred, average=\"macro\", zero_division=0)\np_micro, r_micro, f1_micro, _ = precision_recall_fscore_support(y_true, y_pred, average=\"micro\", zero_division=0)\n\nprint(\"\\nGLOBAL:\")\nprint(\"Precision Macro:\", round(p_macro, 4))\nprint(\"Recall Macro:\", round(r_macro, 4))\nprint(\"F1 Macro:\", round(f1_macro, 4))\nprint(\"Precision Micro:\", round(p_micro, 4))\nprint(\"Recall Micro:\", round(r_micro, 4))\nprint(\"F1 Micro:\", round(f1_micro, 4))",
+   "execCount": 50,
+   "outputs": [
+    {
+     "type": "text",
+     "text": "precision    recall  f1-score   support\n\nhate_speech(0)     1.0000    0.1000    0.1818        20\n  offensive(1)     0.4130    0.9500    0.5758        20\n    neither(2)     0.7500    0.4500    0.5625        20\n\n      accuracy                         0.5000        60\n     macro avg     0.7210    0.5000    0.4400        60\n  weighted avg     0.7210    0.5000    0.4400        60\n\nGLOBAL:\nPrecision Macro: 0.721\nRecall Macro: 0.5\nF1 Macro: 0.44\nPrecision Micro: 0.5\nRecall Micro: 0.5\nF1 Micro: 0.5"
+    }
+   ]
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>En la configuración few-shot, se incluyeron ejemplos balanceados por clase seleccionados desde el conjunto de entrenamiento con el objetivo de guiar al modelo en la frontera entre hate speech, offensive language y texto neutral. Sin embargo, los resultados muestran que few-shot no mejora el desempeño global respecto a zero-shot (accuracy 0.50 vs 0.55; macro-F1 0.44 vs 0.50). La clase hate speech mantiene un recall muy bajo (0.10), lo que indica que el modelo sigue siendo conservador al asignar esta etiqueta. La principal degradación ocurre en la clase neither, cuyo recall disminuye de 0.60 a 0.45, sugiriendo que el modelo tiende a clasificar más textos neutrales como ofensivos luego de observar los Attachment ejemplos. Esto evidencia que few-shot puede ser sensible a la selección de ejemplos y que una mala representatividad o un número reducido de demostraciones puede perjudicar el rendimiento en clases no dominantes.</p>\n<p>Los ejemplos usados dentro del prompt fueron seleccionados bajo los siguientes criterios:</p>\n<ul>\n<li><p>Los ejemplos few-shot fueron extraídos exclusivamente del conjunto de entrenamiento (df_train) y no del conjunto de test, evitando que el modelo vea instancias del conjunto evaluado.</p>\n</li>\n<li><p>Balance entre clases, se seleccionó el mismo número de ejemplos para cada clase (por ejemplo, 2 ejemplos por clase), con el fin de no inducir un sesgo hacia una categoría dominante.</p>\n</li>\n<li><p>Ejemplos representativos y claros, se priorizaron tweets con características evidentes para cada clase, evitando ejemplos ambiguos que podrían confundir el criterio del modelo. Hate speech (0), Offensive (1), Neither (2).</p>\n</li>\n</ul>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<h1>4 - Conclusiones (4 puntos)</h1>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<ul>\n<li>Compare los resultados obtenidos por cada modelo implementado.</li>\n<li>Indique aspectos positivos y negativos de cada enfoque de solución.</li>\n</ul>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>Respuesta:</p>\n"
+  },
+  {
+   "kind": "markdown",
+   "html": "<p>En este trabajo probamos tres enfoques distintos para clasificar tweets en hate speech (0), offensive (1) y neither (2): un modelo supervisado entrenado (RoBERTa) y dos estrategias con LLM (zero-shot y few-shot).</p>\n<p>En términos generales, el mejor rendimiento lo obtuvo RoBERTa fine-tuned, con un accuracy cercano a 0.92 y un macro-F1 de ~0.77. Este resultado era esperable, porque el modelo fue entrenado directamente con ejemplos del dataset y logró aprender patrones típicos y propios del lenguaje en Twitter (insultos, expresiones comunes, tono informal, funadas, etc.). Además, ilustro un desempeño consistente en las clases offensive (F1≈0.95) y neither (F1≈0.91). Sin embargo, el punto más débil sigue siendo la clase hate speech, con un F1≈0.46, lo cual se explica principalmente por el desbalance de clases y por la dificultad natural de separar odio de lenguaje ofensivo cuando ambos pueden tener vocabulario agresivo muy similar.</p>\n<p>Por otro lado, al usar el LLM en modo zero-shot, el desempeño bajó bastante (accuracy 0.55, macro-F1 ~0.50). El modelo fue particularmente conservador con la clase hate speech: alcanzó una precisión muy alta, pero con un recall extremadamente bajo (solo detectó una pequeña fracción de los casos reales). En la práctica esto significa que el LLM evitó etiquetar tweets como hate speech salvo cuando el caso era muy evidente. Además, se notó una tendencia a usar la etiqueta offensive como categoría por defecto cuando el texto tenía tono agresivo, lo que llevó a confundir parte de los tweets neutrales o de odio dentro de esa clase.</p>\n<p>En el caso few-shot, la idea era que al mostrarle ejemplos etiquetados dentro del prompt, el modelo debería mejorar la separación entre clases. Sin embargo, en esta ejecución ocurrió lo contrario: el desempeño fue incluso un poco menor (accuracy 0.50, macro-F1 ~0.44). La clase hate speech se mantuvo igual de difícil (recall 0.10), y la degradación más grande se vio en la clase neither, donde el modelo empezó a confundir más textos neutrales como ofensivos. Esto deja en evidencia algo importante: el few-shot puede ser útil, pero es muy sensible a la selección de ejemplos. Si los ejemplos no son lo suficientemente representativos, o si son pocos y sesgan el tono del prompt, el modelo puede aprender muy mal la frontera entre categorías.</p>\n<p>En resumen, RoBERTa entrenado es claramente la mejor solución si el objetivo es obtener un clasificador confiable y con buen rendimiento. Los enfoques con LLM (zero-shot/few-shot) son atractivos porque son rápidos y no requieren entrenamiento, pero en este problema específico muestran limitaciones fuertes, especialmente al distinguir hate speech de offensive. En este caso, el few-shot no logró ayudar y reafirmó que, para tareas sensibles y con clases cercanas, el entrenamiento supervisado sigue siendo la estrategia más robusta.</p>\n"
+  }
+ ]
+}

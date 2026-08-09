@@ -12,6 +12,12 @@ const projects = [
     href: "/projects/rag-fever-fact-checking",
   },
   {
+    title: "Fine-tuning vs LLMs: moderación de contenido",
+    desc: "RoBERTa fine-tuneado (92% accuracy) contra Llama-3.2-3B zero-shot y few-shot clasificando hate speech. El modelo pequeño gana — con notebook verificable.",
+    tag: "NLP / Fine-tuning",
+    href: "/projects/hate-speech-roberta-vs-llm",
+  },
+  {
     title: "RAG para documentos",
     desc: "Búsqueda semántica y respuestas con contexto sobre documentos PDF, orientado a casos reales.",
     tag: "LLMs / RAG",

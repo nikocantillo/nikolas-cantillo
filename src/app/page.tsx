@@ -207,18 +207,18 @@ export default function Home() {
             </Reveal>
             <Reveal delay={240}>
               <Link
-                href="/projects"
+                href="/projects/hate-speech-roberta-vs-llm"
                 className="group relative block rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
               >
                 <ArrowUpRight className="absolute top-6 right-6 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet">
-                  Data Engineering
+                  NLP · Fine-tuning
                 </p>
                 <h3 className="font-display text-lg md:text-xl mt-3 leading-snug pr-8">
-                  Data Quality & pipelines Spark
+                  Fine-tuning vs LLMs: el modelo pequeño gana
                 </h3>
                 <p className="text-sm text-muted-foreground mt-2 leading-6">
-                  Validaciones, trazabilidad y procesamiento masivo en producción.
+                  RoBERTa 92% vs Llama-3.2-3B 55% en moderación de contenido.
                 </p>
               </Link>
             </Reveal>

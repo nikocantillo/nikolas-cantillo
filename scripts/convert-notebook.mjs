@@ -1,16 +1,22 @@
 // Convierte un notebook .ipynb en JSON curado para el visor del sitio.
-// Uso: node scripts/convert-notebook.mjs <ruta.ipynb> <salida.json>
+// Uso: node scripts/convert-notebook.mjs <ruta.ipynb> <salida.json> [regexOutputsOmitidos]
 // Omite celdas de instrucciones del curso y credenciales; trunca outputs largos.
+// El tercer argumento (opcional) es un regex sobre el código de la celda: si
+// matchea, sus outputs se reemplazan por una nota (útil cuando los outputs
+// muestran datos crudos sensibles u ofensivos que no deben publicarse).
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
 import { dirname } from "node:path"
 import { marked } from "marked"
 
-const [, , inputPath, outputPath] = process.argv
+const [, , inputPath, outputPath, omitOutputsPattern] = process.argv
 if (!inputPath || !outputPath) {
-  console.error("Uso: node scripts/convert-notebook.mjs <ruta.ipynb> <salida.json>")
+  console.error("Uso: node scripts/convert-notebook.mjs <ruta.ipynb> <salida.json> [regexOutputsOmitidos]")
   process.exit(1)
 }
+
+const omitOutputsRe = omitOutputsPattern ? new RegExp(omitOutputsPattern, "m") : null
+const OMITTED_NOTE = "(output omitido en la versión web: contiene ejemplos crudos del dataset)"
 
 const MAX_TEXT_OUTPUT = 3500
 
@@ -37,6 +43,16 @@ for (const [index, cell] of nb.cells.entries()) {
 
   if (cell.cell_type !== "code") continue
   if (SKIP_CODE_PATTERNS.some((re) => re.test(source))) continue
+
+  if (omitOutputsRe && omitOutputsRe.test(source)) {
+    cells.push({
+      kind: "code",
+      source,
+      execCount: cell.execution_count ?? null,
+      outputs: (cell.outputs ?? []).length > 0 ? [{ type: "text", text: OMITTED_NOTE }] : [],
+    })
+    continue
+  }
 
   // Ruido de progreso (tqdm, contadores) y warnings repetidos de transformers.
   const NOISE_PATTERNS = [
