@@ -144,13 +144,13 @@
   }
 }
 
-/* Glow del acento */
+/* Glow del acento (contenido: un experto susurra) */
 @utility shadow-glow {
-  box-shadow: 0 0 32px oklch(0.84 0.13 185 / 30%);
+  box-shadow: 0 0 22px oklch(0.84 0.13 185 / 20%);
 }
 
 @utility shadow-glow-strong {
-  box-shadow: 0 6px 44px oklch(0.84 0.13 185 / 50%);
+  box-shadow: 0 4px 30px oklch(0.84 0.13 185 / 34%);
 }
 
 /* Punto con pulso */

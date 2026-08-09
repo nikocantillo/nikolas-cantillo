@@ -3,17 +3,10 @@ import Link from "next/link"
 import { ArrowUpRight, Brain, Database, Boxes } from "lucide-react"
 import { posts } from "@/lib/posts"
 import { HeroCanvas } from "@/components/effects/hero-canvas"
-import { Typewriter } from "@/components/effects/typewriter"
 import { Reveal } from "@/components/effects/reveal"
 import { CountUp } from "@/components/effects/count-up"
 import { GraphMandala } from "@/components/effects/graph-mandala"
-
-const roles = [
-  "PySpark · OCI Dataflow · Oracle Cloud",
-  "RAG · LangChain · FAISS · LLMs",
-  "Data Quality · governance · trazabilidad",
-  "Magíster en Ciencia de Datos · UC Chile",
-]
+import { experience } from "@/lib/experience"
 
 const offerings = [
   {
@@ -59,9 +52,9 @@ export default function Home() {
               sobreviven a producción.
             </h1>
 
-            <div className="mt-6 min-h-7">
-              <Typewriter phrases={roles} />
-            </div>
+            <p className="mt-6 font-mono text-[13px] md:text-sm text-muted-foreground">
+              PySpark · OCI · RAG y LLMs · Data Quality — Magíster en Ciencia de Datos
+            </p>
 
             <p className="mt-4 max-w-xl text-muted-foreground leading-7">
               Soy Nikolas Cantillo. Cinco años entre pipelines, migraciones cloud y LLMs —
@@ -133,6 +126,41 @@ export default function Home() {
             <CountUp value={5} className="text-accent" />+
           </p>
           <p className="text-sm text-muted-foreground mt-1.5">años: de freelance a Oracle</p>
+        </Reveal>
+      </section>
+
+      {/* TRAYECTORIA */}
+      <section className="mx-auto max-w-6xl px-5 md:px-8 pt-16">
+        <Reveal>
+          <p className="text-center text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">
+            Trayectoria
+          </p>
+          <div className="mt-6 flex flex-wrap items-stretch justify-center gap-3">
+            {experience
+              .filter((e) => e.logo)
+              .map((e) => (
+                <Link
+                  key={e.company}
+                  href="/about"
+                  className="flex items-center gap-3 rounded-xl border border-border bg-secondary/60 px-4 py-2.5 hover:border-accent/40 transition-colors"
+                >
+                  <span className="relative size-8 rounded-md bg-white overflow-hidden shrink-0">
+                    <Image
+                      src={e.logo!}
+                      alt={`Logo de ${e.company}`}
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </span>
+                  <span className="text-left">
+                    <span className="block text-sm font-semibold leading-tight">{e.company}</span>
+                    <span className="block text-xs text-muted-foreground leading-tight">
+                      {e.roles[0].title}
+                    </span>
+                  </span>
+                </Link>
+              ))}
+          </div>
         </Reveal>
       </section>
 

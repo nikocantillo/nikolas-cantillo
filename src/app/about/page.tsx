@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -60,6 +61,50 @@ export default function AboutPage() {
 
         <div className="max-w-4xl">
           <ExperienceTimeline />
+        </div>
+      </section>
+
+      <Separator className="my-12" />
+
+      {/* FORMACIÓN */}
+      <section>
+        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Formación</h2>
+        <div className="mt-6 max-w-4xl">
+          <Card>
+            <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center gap-5">
+              <div className="relative size-14 rounded-xl bg-white overflow-hidden shrink-0">
+                <Image
+                  src="/logos/uc.png"
+                  alt="Escudo de la Pontificia Universidad Católica de Chile"
+                  fill
+                  className="object-contain p-1.5"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg">Magíster en Ciencia de Datos</h3>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Pontificia Universidad Católica de Chile
+                </p>
+                <p className="text-sm text-muted-foreground mt-3 leading-6">
+                  Trabajos de los cursos publicados como casos verificables en este sitio:
+                </p>
+                <div className="mt-2 flex flex-wrap gap-3 text-sm">
+                  <Link
+                    href="/projects/rag-fever-fact-checking"
+                    className="text-accent hover:underline underline-offset-4"
+                  >
+                    Fact-checking con RAG (FEVER) →
+                  </Link>
+                  <Link
+                    href="/projects/hate-speech-roberta-vs-llm"
+                    className="text-accent hover:underline underline-offset-4"
+                  >
+                    Fine-tuning vs LLMs →
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
