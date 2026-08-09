@@ -84,25 +84,17 @@ export default function Home() {
             </div>
           </div>
 
-          {/* FOTO como centro del mandala */}
+          {/* FOTO */}
           <div className="flex justify-center md:justify-end">
-            <div className="relative flex items-center justify-center">
-              <div
-                aria-hidden
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(430px,96vw)] md:w-[540px] lg:w-[620px] aspect-square pointer-events-none opacity-60"
-              >
-                <GraphMandala />
-              </div>
-              <div className="relative rounded-full bg-gradient-to-tr from-[color:var(--cyan)] via-[color:var(--violet)] to-[color:var(--amber)] p-[3px] shadow-glow">
-                <div className="relative size-44 md:size-56 lg:size-72 rounded-full overflow-hidden border-4 border-background">
-                  <Image
-                    src="/nikolascantillo.jpeg"
-                    alt="Nikolas Cantillo – Data Science & AI"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
+            <div className="rounded-full bg-gradient-to-tr from-[color:var(--cyan)] via-[color:var(--violet)] to-[color:var(--amber)] p-[3px] shadow-glow">
+              <div className="relative size-48 md:size-64 lg:size-80 rounded-full overflow-hidden border-4 border-background">
+                <Image
+                  src="/nikolascantillo.jpeg"
+                  alt="Nikolas Cantillo – Data Science & AI"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
             </div>
           </div>
