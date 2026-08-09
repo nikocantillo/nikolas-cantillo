@@ -6,6 +6,12 @@ import { Separator } from "@/components/ui/separator"
 
 const projects = [
   {
+    title: "Fact-checking con RAG (FEVER)",
+    desc: "Verificación de afirmaciones con Llama-3.2-3B: baseline zero-shot vs pipeline RAG con Wikipedia y FAISS. Caso del Magíster en Ciencia de Datos (UC Chile), con notebook verificable.",
+    tag: "NLP / RAG",
+    href: "/projects/rag-fever-fact-checking",
+  },
+  {
     title: "RAG para documentos",
     desc: "Búsqueda semántica y respuestas con contexto sobre documentos PDF, orientado a casos reales.",
     tag: "LLMs / RAG",

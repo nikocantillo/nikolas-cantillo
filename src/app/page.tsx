@@ -26,20 +26,27 @@ const offerings = [
 const projects = [
   {
     n: "01",
+    title: "Fact-checking con RAG (FEVER)",
+    desc: "Zero-shot vs RAG con Llama-3.2-3B, Wikipedia y FAISS — con notebook verificable del Magíster UC Chile.",
+    tag: "NLP / RAG",
+    href: "/projects/rag-fever-fact-checking",
+  },
+  {
+    n: "02",
     title: "RAG para documentos",
     desc: "Búsqueda semántica y respuestas con contexto sobre PDFs.",
     tag: "LLMs / RAG",
     href: "/projects/rag-documents",
   },
   {
-    n: "02",
+    n: "03",
     title: "Data Quality & Governance",
     desc: "Validaciones, reglas y trazabilidad en pipelines reales.",
     tag: "Data Engineering",
     href: "/projects",
   },
   {
-    n: "03",
+    n: "04",
     title: "Pipelines escalables",
     desc: "Procesamiento masivo con Spark y cargas incrementales.",
     tag: "Big Data",
