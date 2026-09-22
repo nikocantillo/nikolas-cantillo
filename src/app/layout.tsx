@@ -1,17 +1,19 @@
 import type { Metadata } from "next"
-import { Inter_Tight, Geist_Mono } from "next/font/google"
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
 })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  weight: ["400", "500"],
   subsets: ["latin"],
   display: "swap",
 })
@@ -30,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${interTight.variable} ${geistMono.variable} min-h-screen font-sans antialiased flex flex-col`}
+        className={`${plexSans.variable} ${plexMono.variable} min-h-screen font-sans antialiased flex flex-col`}
       >
         <Navbar />
         <div className="flex-1">{children}</div>
