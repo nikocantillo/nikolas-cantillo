@@ -18,6 +18,12 @@ const projects = [
     href: "/projects/hate-speech-roberta-vs-llm",
   },
   {
+    title: "Predicción del IMC con salud pública (NHANES)",
+    desc: "Pipeline end-to-end sobre la encuesta NHANES 2015-2016: limpieza, regresión para predecir el índice de masa corporal (R² 0.99) y segmentación de la población con KMeans. Caso del Magíster en Ciencia de Datos (UC Chile), con notebook verificable.",
+    tag: "ML · Supervisado + Clustering",
+    href: "/projects/nhanes-bmi-ml",
+  },
+  {
     title: "RAG para documentos",
     desc: "Búsqueda semántica y respuestas con contexto sobre documentos PDF, orientado a casos reales.",
     tag: "LLMs / RAG",
