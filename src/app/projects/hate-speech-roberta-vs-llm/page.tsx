@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { Reveal } from "@/components/effects/reveal"
-import { CountUp } from "@/components/effects/count-up"
 
 const approaches = [
   {
@@ -40,7 +39,7 @@ export default function HateSpeechRobertaVsLlmPage() {
           </span>
         </div>
         <h1 className="font-display text-3xl md:text-6xl mt-6 max-w-4xl text-balance">
-          Fine-tuning vs LLMs: el modelo <span className="text-shimmer">pequeño</span> gana
+          Fine-tuning vs LLMs: el modelo pequeño gana
         </h1>
         <p className="mt-6 max-w-3xl leading-7 text-muted-foreground">
           Clasificación de tweets en tres clases — hate speech, ofensivo o ninguno — comparando
@@ -76,7 +75,7 @@ export default function HateSpeechRobertaVsLlmPage() {
             <Reveal
               key={a.n}
               delay={i * 100}
-              className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
+              className="rounded-2xl border border-border bg-secondary/30 p-6 hover:border-accent/40 transition-colors"
             >
               <span className="font-mono text-sm text-violet">{a.n}</span>
               <h3 className="font-display text-base mt-3">{a.title}</h3>
@@ -96,37 +95,37 @@ export default function HateSpeechRobertaVsLlmPage() {
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-7">
-          <Reveal className="rounded-2xl border border-accent/40 bg-gradient-to-br from-accent/10 to-transparent p-6 md:p-8">
+          <Reveal className="rounded-2xl border border-accent/40 bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               RoBERTa fine-tuneado
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={92} className="text-accent" />%
+              <span className="text-accent">92</span>%
             </p>
             <p className="mt-2 text-sm text-muted-foreground">accuracy · 4.957 tweets de test</p>
           </Reveal>
-          <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+          <Reveal delay={120} className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               Llama-3.2-3B zero-shot
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={55} className="text-violet" />%
+              <span className="text-violet">55</span>%
             </p>
             <p className="mt-2 text-sm text-muted-foreground">accuracy · muestra balanceada</p>
           </Reveal>
-          <Reveal delay={240} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+          <Reveal delay={240} className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               Llama-3.2-3B few-shot
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={50} className="text-amber" />%
+              <span className="text-amber">50</span>%
             </p>
             <p className="mt-2 text-sm text-muted-foreground">accuracy · con ejemplos, y peor</p>
           </Reveal>
         </div>
 
         {/* Barras comparativas */}
-        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8 mt-4">
+        <Reveal className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8 mt-4">
           <div className="flex flex-wrap gap-5 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-2">
               <span className="inline-block w-6 h-2 rounded-full bg-accent" />
@@ -190,7 +189,7 @@ export default function HateSpeechRobertaVsLlmPage() {
       <Reveal className="mt-16">
         <Link
           href="/projects/hate-speech-roberta-vs-llm/notebook"
-          className="group relative block rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+          className="group relative block rounded-2xl border border-border bg-secondary/30 p-7 md:p-10 transition-colors hover:border-accent/40"
         >
           <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">

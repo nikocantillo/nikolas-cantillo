@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { Reveal } from "@/components/effects/reveal"
-import { CountUp } from "@/components/effects/count-up"
 
 const pipeline = [
   {
@@ -49,8 +48,7 @@ export default function RagFeverFactCheckingPage() {
           </span>
         </div>
         <h1 className="font-display text-3xl md:text-6xl mt-6 max-w-4xl text-balance">
-          Fact-checking con RAG: cuando la <span className="text-shimmer">evidencia</span> no
-          ayuda
+          Fact-checking con RAG: cuando la evidencia no ayuda
         </h1>
         <p className="mt-6 max-w-3xl leading-7 text-muted-foreground">
           Verificación automática de afirmaciones sobre el dataset FEVER: un baseline zero-shot
@@ -72,7 +70,7 @@ export default function RagFeverFactCheckingPage() {
 
       {/* CONTEXTO */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
-        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7">
+        <Reveal className="rounded-2xl border border-border bg-secondary/30 p-7">
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
             El problema
           </p>
@@ -85,7 +83,7 @@ export default function RagFeverFactCheckingPage() {
             métrica se infla por desbalance.
           </p>
         </Reveal>
-        <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7">
+        <Reveal delay={120} className="rounded-2xl border border-border bg-secondary/30 p-7">
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
             El experimento
           </p>
@@ -111,7 +109,7 @@ export default function RagFeverFactCheckingPage() {
             <Reveal
               key={step.n}
               delay={i * 100}
-              className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
+              className="rounded-2xl border border-border bg-secondary/30 p-6 hover:border-accent/40 transition-colors"
             >
               <span className="font-mono text-sm text-violet">{step.n}</span>
               <h3 className="font-display text-base mt-3">{step.title}</h3>
@@ -132,28 +130,28 @@ export default function RagFeverFactCheckingPage() {
 
         {/* Cifras principales */}
         <div className="grid grid-cols-2 gap-4 mt-7">
-          <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+          <Reveal className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               Zero-shot · accuracy
             </p>
             <p className="font-display text-4xl md:text-6xl mt-3 tabular-nums">
-              <CountUp value={65.4} decimals={1} className="text-violet" />%
+              <span className="text-violet">65.4</span>%
             </p>
             <p className="mt-2 text-sm text-muted-foreground">solo conocimiento paramétrico</p>
           </Reveal>
-          <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+          <Reveal delay={120} className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               RAG · accuracy
             </p>
             <p className="font-display text-4xl md:text-6xl mt-3 tabular-nums">
-              <CountUp value={64.0} decimals={1} className="text-accent" />%
+              <span className="text-accent">64.0</span>%
             </p>
             <p className="mt-2 text-sm text-muted-foreground">con evidencia de Wikipedia</p>
           </Reveal>
         </div>
 
         {/* Comparación por métrica */}
-        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8 mt-4">
+        <Reveal className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8 mt-4">
           <div className="flex flex-wrap gap-5 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-2">
               <span className="inline-block w-6 h-2 rounded-full bg-violet" />
@@ -209,7 +207,7 @@ export default function RagFeverFactCheckingPage() {
       <Reveal className="mt-16">
         <Link
           href="/projects/rag-fever-fact-checking/notebook"
-          className="group relative block rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+          className="group relative block rounded-2xl border border-border bg-secondary/30 p-7 md:p-10 transition-colors hover:border-accent/40"
         >
           <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">

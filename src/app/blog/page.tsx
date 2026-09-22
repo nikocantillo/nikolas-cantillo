@@ -24,7 +24,7 @@ export default function BlogPage() {
           Blog técnico
         </p>
         <h1 className="font-display text-4xl md:text-6xl mt-3">
-          Aprendizajes <span className="text-shimmer">documentados</span>.
+          Aprendizajes documentados.
         </h1>
         <p className="mt-5 max-w-2xl text-muted-foreground leading-7">
           Artículos prácticos sobre Data, AI Engineering y sistemas reales. Sin humo:
@@ -42,7 +42,7 @@ export default function BlogPage() {
             className={cn(
               "rounded-full border px-4 py-1.5 text-[13px] transition-all",
               activeTag === tag
-                ? "border-accent bg-accent text-accent-foreground font-semibold shadow-glow"
+                ? "border-accent bg-accent text-accent-foreground font-semibold"
                 : "border-border text-muted-foreground hover:text-foreground hover:border-accent/40"
             )}
           >
@@ -55,7 +55,7 @@ export default function BlogPage() {
       {showFeatured && (
         <Link
           href={featured.href}
-          className="group relative block mt-8 rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+          className="group relative block mt-8 rounded-2xl border border-border bg-secondary/30 p-7 md:p-10 transition-colors hover:border-accent/40"
         >
           <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           <div className="flex items-center gap-3 flex-wrap">
@@ -80,7 +80,7 @@ export default function BlogPage() {
           <Link
             key={post.href}
             href={post.href}
-            className="group relative block rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-7 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+            className="group relative block rounded-2xl border border-border bg-secondary/30 p-6 md:p-7 transition-colors hover:border-accent/40"
           >
             <ArrowUpRight className="absolute top-6 right-6 size-4 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             <div className="flex items-center gap-3 flex-wrap">
@@ -120,7 +120,7 @@ export default function BlogPage() {
         </div>
         <Link
           href="/contact"
-          className="shrink-0 rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 transition-all"
+          className="shrink-0 rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           Proponer tema
         </Link>

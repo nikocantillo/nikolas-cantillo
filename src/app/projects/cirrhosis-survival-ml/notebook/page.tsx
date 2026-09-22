@@ -14,7 +14,7 @@ export default function CirrhosisNotebookPage() {
       breadcrumb={{ label: "Caso cirrosis", href: "/projects/cirrhosis-survival-ml" }}
       title={
         <>
-          El notebook, <span className="text-shimmer">celda por celda</span>
+          El notebook, celda por celda
         </>
       }
       meta="scikit-learn · SMOTE · K-Prototypes"

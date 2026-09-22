@@ -14,7 +14,7 @@ export default function HateSpeechNotebookPage() {
       breadcrumb={{ label: "Caso moderación", href: "/projects/hate-speech-roberta-vs-llm" }}
       title={
         <>
-          El notebook, <span className="text-shimmer">celda por celda</span>
+          El notebook, celda por celda
         </>
       }
       meta="RoBERTa · Llama-3.2-3B"

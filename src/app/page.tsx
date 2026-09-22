@@ -4,34 +4,38 @@ import { ArrowUpRight, Brain, Database, Boxes } from "lucide-react"
 import { posts } from "@/lib/posts"
 import { HeroCanvas } from "@/components/effects/hero-canvas"
 import { Reveal } from "@/components/effects/reveal"
-import { CountUp } from "@/components/effects/count-up"
 import { GraphMandala } from "@/components/effects/graph-mandala"
 import { experience } from "@/lib/experience"
 
 const offerings = [
   {
     title: "IA aplicada",
-    desc: "LLMs, RAG, asistentes y automatización con enfoque práctico.",
+    desc: "LLMs, RAG y asistentes — con evaluación honesta de cuándo aportan y cuándo no.",
     icon: Brain,
   },
   {
     title: "Ciencia de datos",
-    desc: "EDA, modelado, evaluación y experimentación con criterio.",
+    desc: "EDA, modelado y validación con la métrica correcta para cada problema.",
     icon: Database,
   },
   {
     title: "Arquitectura",
-    desc: "Sistemas escalables, APIs y operación: lo que pasa después del modelo.",
+    desc: "Lo que pasa después del modelo: APIs, escala y operación en producción.",
     icon: Boxes,
   },
 ]
 
-const skills = [
-  "PySpark · procesamiento a escala",
-  "OCI Dataflow · Oracle Cloud",
-  "RAG / LLMs · LangChain · FAISS",
-  "Data Quality · governance",
-  "Python · APIs · Django",
+const skillGroups = [
+  { head: "Procesamiento", items: ["PySpark", "OCI Dataflow", "cargas incrementales"] },
+  { head: "IA / LLMs", items: ["RAG", "LangChain", "FAISS", "fine-tuning"] },
+  { head: "Datos", items: ["Data Quality", "governance", "Python", "APIs · Django"] },
+]
+
+// Resultados medidos en los casos, con su fuente. No son adornos: cada uno enlaza al notebook.
+const results = [
+  { value: "0.83", label: "F1 macro · clasificación de desenlace en cirrosis", href: "/projects/cirrhosis-survival-ml" },
+  { value: "92%", label: "accuracy de RoBERTa fine-tuneado vs 55% del LLM", href: "/projects/hate-speech-roberta-vs-llm" },
+  { value: "65.4%", label: "baseline zero-shot en fact-checking (FEVER)", href: "/projects/rag-fever-fact-checking" },
 ]
 
 export default function Home() {
@@ -42,14 +46,13 @@ export default function Home() {
         <HeroCanvas />
         <div className="relative mx-auto max-w-6xl px-5 md:px-8 w-full py-24 grid grid-cols-1 md:grid-cols-[1.4fr_1fr] items-center gap-12">
           <div>
-            <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-accent/5 px-4 py-1.5 text-[13px] text-muted-foreground">
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-secondary/50 px-4 py-1.5 text-[13px] text-muted-foreground">
               <span className="size-2 rounded-full bg-accent animate-pulse-dot" />
               Principal Consultant · Oracle
             </span>
 
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mt-7 max-w-[16ch] text-balance">
-              Construyo sistemas de <span className="text-shimmer">datos e IA</span> que
-              sobreviven a producción.
+              Construyo sistemas de datos e IA que sobreviven a producción.
             </h1>
 
             <p className="mt-6 font-mono text-[13px] md:text-sm text-muted-foreground">
@@ -57,29 +60,30 @@ export default function Home() {
             </p>
 
             <p className="mt-4 max-w-xl text-muted-foreground leading-7">
-              Soy Nikolas Cantillo. Cinco años entre pipelines, migraciones cloud y LLMs —
-              documentando lo que funciona y, sobre todo, lo que no.
+              Soy Nikolas Cantillo. Cinco años entre pipelines, migraciones cloud y LLMs,
+              documentando lo que funciona y, sobre todo, lo que no. Trabajo con equipos que
+              necesitan pasar de un modelo a un sistema que se sostiene.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
               <Link
                 href="/projects"
-                className="rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 transition-all"
+                className="rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
               >
                 Ver mi trabajo
               </Link>
               <Link
-                href="/blog"
+                href="/contact"
                 className="rounded-xl border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-accent hover:text-accent transition-colors"
               >
-                Leer el blog
+                Trabajemos juntos
               </Link>
             </div>
           </div>
 
           {/* FOTO */}
           <div className="flex justify-center md:justify-end">
-            <div className="rounded-full bg-gradient-to-tr from-[color:var(--cyan)] via-[color:var(--violet)] to-[color:var(--amber)] p-[3px] shadow-glow">
+            <div className="rounded-full border border-accent/25 p-[3px]">
               <div className="relative size-48 md:size-64 lg:size-80 rounded-full overflow-hidden border-4 border-background">
                 <Image
                   src="/nikolascantillo.jpeg"
@@ -95,37 +99,38 @@ export default function Home() {
 
         <span
           aria-hidden
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground animate-bounce"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
         >
           Scroll
         </span>
       </section>
 
-      {/* STATS */}
-      <section className="mx-auto max-w-6xl px-5 md:px-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors">
-          <p className="font-display text-4xl tabular-nums">
-            <CountUp value={65.4} decimals={1} className="text-accent" />%
-          </p>
-          <p className="text-sm text-muted-foreground mt-1.5">accuracy zero-shot · caso FEVER</p>
-        </Reveal>
-        <Reveal
-          delay={120}
-          className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
-        >
-          <p className="font-display text-4xl tabular-nums">
-            <CountUp value={4125} className="text-accent" />
-          </p>
-          <p className="text-sm text-muted-foreground mt-1.5">chunks indexados en FAISS</p>
-        </Reveal>
-        <Reveal
-          delay={240}
-          className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
-        >
-          <p className="font-display text-4xl tabular-nums">
-            <CountUp value={5} className="text-accent" />+
-          </p>
-          <p className="text-sm text-muted-foreground mt-1.5">años: de freelance a Oracle</p>
+      {/* RESULTADOS MEDIDOS */}
+      <section className="mx-auto max-w-6xl px-5 md:px-8">
+        <Reveal className="rounded-2xl border border-border overflow-hidden">
+          <div className="border-b border-border px-6 py-3">
+            <p className="font-mono text-xs text-muted-foreground">
+              Resultados medidos · cada uno con su notebook verificable
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
+            {results.map((r) => (
+              <Link
+                key={r.href}
+                href={r.href}
+                className="group px-6 py-6 hover:bg-secondary/40 transition-colors"
+              >
+                <p className="font-display text-3xl md:text-4xl tabular-nums text-foreground">
+                  {r.value}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2 leading-6">{r.label}</p>
+                <span className="mt-3 inline-flex items-center gap-1 font-mono text-xs text-accent">
+                  ver caso
+                  <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </Link>
+            ))}
+          </div>
         </Reveal>
       </section>
 
@@ -179,7 +184,7 @@ export default function Home() {
           <Reveal>
             <Link
               href="/projects/rag-fever-fact-checking"
-              className="group relative block h-full rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+              className="group relative block h-full rounded-2xl border border-border bg-secondary/30 p-7 transition-colors hover:border-accent/40"
             >
               <ArrowUpRight className="absolute top-6 right-6 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet">
@@ -219,25 +224,25 @@ export default function Home() {
           <div className="grid gap-4">
             <Reveal delay={120}>
               <Link
-                href="/projects/rag-documents"
-                className="group relative block rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+                href="/projects/cirrhosis-survival-ml"
+                className="group relative block rounded-2xl border border-border bg-secondary/30 p-7 transition-colors hover:border-accent/40"
               >
                 <ArrowUpRight className="absolute top-6 right-6 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet">
-                  LLMs · RAG
+                  ML clínico · Clasificación
                 </p>
                 <h3 className="font-display text-lg md:text-xl mt-3 leading-snug pr-8">
-                  RAG para documentos
+                  Predicción del desenlace en cirrosis
                 </h3>
                 <p className="text-sm text-muted-foreground mt-2 leading-6">
-                  Búsqueda semántica y respuestas con contexto sobre PDFs — con demo.
+                  SMOTE + 5 modelos para clasificar el desenlace del paciente; Random Forest al 83%.
                 </p>
               </Link>
             </Reveal>
             <Reveal delay={240}>
               <Link
                 href="/projects/hate-speech-roberta-vs-llm"
-                className="group relative block rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-7 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+                className="group relative block rounded-2xl border border-border bg-secondary/30 p-7 transition-colors hover:border-accent/40"
               >
                 <ArrowUpRight className="absolute top-6 right-6 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet">
@@ -255,11 +260,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* EN QUÉ TRABAJO */}
+      {/* CÓMO PUEDO AYUDAR */}
       <section className="mx-auto max-w-6xl px-5 md:px-8 pt-20">
         <Reveal>
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
-            En qué trabajo
+            Cómo puedo ayudar
           </p>
         </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -267,7 +272,7 @@ export default function Home() {
             <Reveal
               key={o.title}
               delay={i * 120}
-              className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
+              className="rounded-2xl border border-border bg-secondary/30 p-6 hover:border-accent/40 transition-colors"
             >
               <div className="size-10 rounded-xl bg-accent/10 flex items-center justify-center">
                 <o.icon className="size-5 text-accent" />
@@ -279,20 +284,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SKILLS MARQUEE */}
-      <div className="mt-20 border-y border-border overflow-hidden py-4 select-none">
-        <div className="animate-marquee flex gap-10 w-max text-sm text-muted-foreground whitespace-nowrap">
-          {[...skills, ...skills].map((s, i) => {
-            const [head, ...rest] = s.split(" · ")
-            return (
-              <span key={i}>
-                <span className="text-accent font-medium">{head}</span>
-                {rest.length > 0 && ` · ${rest.join(" · ")}`}
-              </span>
-            )
-          })}
+      {/* STACK */}
+      <section className="mx-auto max-w-6xl px-5 md:px-8 pt-16">
+        <div className="rounded-2xl border border-border divide-y divide-border">
+          {skillGroups.map((g) => (
+            <div key={g.head} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-3 px-6 py-4">
+              <p className="text-sm font-semibold text-foreground">{g.head}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-sm text-muted-foreground">
+                {g.items.map((it) => (
+                  <span key={it}>{it}</span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
 
       {/* BLOG */}
       <section className="mx-auto max-w-6xl px-5 md:px-8 pt-20">
@@ -313,7 +319,7 @@ export default function Home() {
             <Reveal key={post.href} delay={i * 120}>
               <Link
                 href={post.href}
-                className="group relative block h-full rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+                className="group relative block h-full rounded-2xl border border-border bg-secondary/30 p-6 transition-colors hover:border-accent/40"
               >
                 <ArrowUpRight className="absolute top-5 right-5 size-4 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 <p className="font-mono text-xs text-muted-foreground">
@@ -333,7 +339,7 @@ export default function Home() {
       <section className="relative mx-auto max-w-6xl px-5 md:px-8 py-28 md:py-40 text-center overflow-hidden">
         <div
           aria-hidden
-          className="absolute inset-0 flex items-center justify-center opacity-45 pointer-events-none"
+          className="absolute inset-0 flex items-center justify-center opacity-35 pointer-events-none"
         >
           <div className="w-[min(620px,90vw)] aspect-square">
             <GraphMandala />
@@ -341,16 +347,17 @@ export default function Home() {
         </div>
         <Reveal className="relative">
           <h2 className="font-display text-4xl md:text-6xl text-balance">
-            ¿Hablamos de <span className="text-shimmer">datos</span>?
+            ¿Tienes un problema de datos?
           </h2>
-          <p className="text-muted-foreground mt-4">
-            Ideas técnicas, feedback a una demo o el próximo proyecto.
+          <p className="text-muted-foreground mt-4 max-w-xl mx-auto leading-7">
+            Disponible para consultoría y colaboración. Cuéntame el problema y te digo con
+            franqueza si puedo ayudar y cómo lo abordaría.
           </p>
           <Link
             href="/contact"
-            className="inline-block mt-8 rounded-xl bg-accent text-accent-foreground px-8 py-3.5 text-sm font-semibold shadow-glow hover:shadow-glow-strong hover:-translate-y-0.5 transition-all"
+            className="inline-block mt-8 rounded-xl bg-accent text-accent-foreground px-8 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity"
           >
-            Escríbeme →
+            Escríbeme
           </Link>
         </Reveal>
       </section>

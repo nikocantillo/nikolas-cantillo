@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { Reveal } from "@/components/effects/reveal"
-import { CountUp } from "@/components/effects/count-up"
 
 const stages = [
   {
@@ -44,7 +43,7 @@ export default function CirrhosisSurvivalMlPage() {
           </span>
         </div>
         <h1 className="font-display text-3xl md:text-6xl mt-6 max-w-4xl text-balance">
-          Predecir el <span className="text-shimmer">desenlace</span> de pacientes con cirrosis
+          Predecir el desenlace de pacientes con cirrosis
         </h1>
         <p className="mt-6 max-w-3xl leading-7 text-muted-foreground">
           Sobre el dataset clínico de cirrosis biliar de Mayo Clinic, un pipeline que clasifica el
@@ -83,7 +82,7 @@ export default function CirrhosisSurvivalMlPage() {
             <Reveal
               key={a.n}
               delay={i * 100}
-              className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 hover:border-accent/40 transition-colors"
+              className="rounded-2xl border border-border bg-secondary/30 p-6 hover:border-accent/40 transition-colors"
             >
               <span className="font-mono text-sm text-violet">{a.n}</span>
               <h3 className="font-display text-base mt-3">{a.title}</h3>
@@ -105,37 +104,37 @@ export default function CirrhosisSurvivalMlPage() {
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-7">
-          <Reveal className="rounded-2xl border border-accent/40 bg-gradient-to-br from-accent/10 to-transparent p-6 md:p-8">
+          <Reveal className="rounded-2xl border border-accent/40 bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               Accuracy
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={82.9} decimals={1} className="text-accent" />%
+              <span className="text-accent">82.9</span>%
             </p>
             <p className="mt-2 text-sm text-muted-foreground">Random Forest · 3 clases</p>
           </Reveal>
-          <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+          <Reveal delay={120} className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               F1 macro
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={0.83} decimals={2} className="text-violet" />
+              <span className="text-violet">0.83</span>
             </p>
             <p className="mt-2 text-sm text-muted-foreground">promedio no ponderado entre clases</p>
           </Reveal>
-          <Reveal delay={240} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
+          <Reveal delay={240} className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               Modelos comparados
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={5} className="text-amber" />
+              <span className="text-amber">5</span>
             </p>
             <p className="mt-2 text-sm text-muted-foreground">sobre clases balanceadas con SMOTE</p>
           </Reveal>
         </div>
 
         {/* Barras comparativas de F1 macro */}
-        <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8 mt-4">
+        <Reveal className="rounded-2xl border border-border bg-secondary/30 p-6 md:p-8 mt-4">
           <p className="text-xs font-semibold uppercase tracking-widest">
             F1 macro por modelo · mayor es mejor
           </p>
@@ -197,7 +196,7 @@ export default function CirrhosisSurvivalMlPage() {
       <Reveal className="mt-16">
         <Link
           href="/projects/cirrhosis-survival-ml/notebook"
-          className="group relative block rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
+          className="group relative block rounded-2xl border border-border bg-secondary/30 p-7 md:p-10 transition-colors hover:border-accent/40"
         >
           <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">

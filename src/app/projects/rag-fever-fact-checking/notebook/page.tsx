@@ -14,7 +14,7 @@ export default function RagFeverNotebookPage() {
       breadcrumb={{ label: "Caso FEVER", href: "/projects/rag-fever-fact-checking" }}
       title={
         <>
-          El notebook, <span className="text-shimmer">celda por celda</span>
+          El notebook, celda por celda
         </>
       }
       meta="Ejecutado · Tesla T4"

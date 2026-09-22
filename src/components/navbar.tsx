@@ -44,7 +44,7 @@ export function Navbar() {
             href="/contact"
             className={cn(
               "ml-1 md:ml-2 rounded-full px-3.5 md:px-4 py-1.5 text-[13px] md:text-sm font-semibold transition-all",
-              "bg-accent text-accent-foreground shadow-glow hover:shadow-glow-strong"
+              "bg-accent text-accent-foreground hover:opacity-90"
             )}
           >
             Contacto
