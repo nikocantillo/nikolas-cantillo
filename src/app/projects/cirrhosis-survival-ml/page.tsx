@@ -6,57 +6,55 @@ import { CountUp } from "@/components/effects/count-up"
 const stages = [
   {
     n: "01",
-    title: "Exploración y limpieza",
-    desc: "NHANES 2015-2016: análisis de nulos (se descartan variables con >25% de NaN), tratamiento de outliers por IQR, correlaciones, ANOVA y pairplots sobre variables clínicas y demográficas.",
+    title: "Exploración clínica",
+    desc: "Dataset de cirrosis de Mayo Clinic: análisis de variables numéricas (bilirrubina, albúmina, protrombina) y categóricas frente al desenlace del paciente, con correlaciones y selección de predictores.",
   },
   {
     n: "02",
-    title: "Regresión supervisada",
-    desc: "Se compara Linear Regression, Random Forest, Gradient Boosting, SVM y KNN con validación cruzada de 5 pliegues, y se ajustan hiperparámetros con GridSearchCV para predecir el IMC.",
+    title: "Clasificación con desbalance",
+    desc: "Se aplica SMOTE para balancear las clases y se comparan cinco clasificadores —Logistic Regression, Random Forest, Decision Tree, Gradient Boosting y SVM— midiendo accuracy y F1 macro.",
   },
   {
     n: "03",
-    title: "Segmentación no supervisada",
-    desc: "KMeans sobre variables escaladas, con número de clústeres elegido por método del codo y silueta, y visualización en 2D vía PCA para perfilar los grupos de población.",
+    title: "Segmentación de pacientes",
+    desc: "KMeans y K-Prototypes (para datos mixtos numérico-categóricos), con visualización en 2D vía PCA, para descubrir perfiles de paciente sin usar la etiqueta de desenlace.",
   },
 ]
 
-// MSE por validación cruzada (menor es mejor).
-const modelScores = [
-  { name: "Linear Regression", mse: 0.3855, color: "bg-accent" },
-  { name: "Gradient Boosting", mse: 0.6349, color: "bg-violet" },
-  { name: "Random Forest", mse: 0.7244, color: "bg-violet" },
-  { name: "Support Vector Machine", mse: 0.7286, color: "bg-violet" },
-  { name: "K-Nearest Neighbors", mse: 2.9682, color: "bg-amber" },
+// Comparación de clasificadores con SMOTE (test). Accuracy y F1 macro.
+const models = [
+  { name: "Random Forest", acc: 0.829, f1: 0.829, color: "bg-accent" },
+  { name: "Gradient Boosting", acc: 0.776, f1: 0.775, color: "bg-violet" },
+  { name: "Decision Tree", acc: 0.664, f1: 0.662, color: "bg-violet" },
+  { name: "Support Vector Machine", acc: 0.579, f1: 0.553, color: "bg-violet" },
+  { name: "Logistic Regression", acc: 0.566, f1: 0.565, color: "bg-amber" },
 ]
 
-const maxMse = 2.9682
-
-export default function NhanesBmiMlPage() {
+export default function CirrhosisSurvivalMlPage() {
   return (
     <main className="mx-auto max-w-6xl px-5 md:px-8 py-14">
       {/* CABECERA */}
       <section>
         <div className="flex items-center gap-3 flex-wrap">
           <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-accent">
-            Caso · ML end-to-end
+            Caso · ML clínico
           </span>
           <span className="font-mono text-xs text-muted-foreground">
-            NHANES 2015-2016 · salud pública · supervisado + no supervisado
+            Cirrosis · Mayo Clinic · clasificación multiclase + clustering
           </span>
         </div>
         <h1 className="font-display text-3xl md:text-6xl mt-6 max-w-4xl text-balance">
-          Prediciendo el <span className="text-shimmer">índice de masa corporal</span> con datos de salud pública
+          Predecir el <span className="text-shimmer">desenlace</span> de pacientes con cirrosis
         </h1>
         <p className="mt-6 max-w-3xl leading-7 text-muted-foreground">
-          Un pipeline completo sobre la encuesta NHANES del CDC: desde la limpieza de una base
-          real con miles de encuestados hasta un modelo de regresión que predice el IMC y una
-          segmentación de la población en perfiles de salud. Dos enfoques paralelos —uno que
-          elimina los datos faltantes y otro que los conserva como categoría— para medir cuánto
-          cambia el resultado según cómo se traten los NaN.
+          Sobre el dataset clínico de cirrosis biliar de Mayo Clinic, un pipeline que clasifica el
+          desenlace de cada paciente en tres estados —sigue vivo, recibió trasplante o falleció— a
+          partir de variables de laboratorio y clínicas. Un problema desbalanceado y real: se usa
+          SMOTE para equilibrar las clases, se comparan cinco modelos y, en paralelo, se segmenta a
+          los pacientes con clustering para encontrar perfiles sin mirar la etiqueta.
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
-          {["scikit-learn", "KMeans", "PCA", "GridSearchCV", "pandas", "ANOVA"].map((t) => (
+          {["scikit-learn", "SMOTE", "Random Forest", "K-Prototypes", "PCA", "imbalanced-learn"].map((t) => (
             <span
               key={t}
               className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
@@ -65,16 +63,19 @@ export default function NhanesBmiMlPage() {
             </span>
           ))}
         </div>
+        <p className="mt-5 font-mono text-xs text-muted-foreground">
+          Proyecto de curso en equipo · Magíster en Ciencia de Datos, UC Chile
+        </p>
       </section>
 
       {/* ETAPAS */}
       <section className="mt-14">
         <Reveal>
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
-            Tres etapas, una base de datos
+            El problema, en tres frentes
           </p>
           <h2 className="font-display text-2xl md:text-3xl mt-2.5">
-            Limpiar, predecir, y luego segmentar.
+            Explorar, clasificar, y segmentar.
           </h2>
         </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-7">
@@ -92,37 +93,35 @@ export default function NhanesBmiMlPage() {
         </div>
       </section>
 
-      {/* RESULTADOS SUPERVISADO */}
+      {/* RESULTADOS CLASIFICACIÓN */}
       <section className="mt-16">
         <Reveal>
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
-            Regresión
+            Clasificación
           </p>
           <h2 className="font-display text-2xl md:text-3xl mt-2.5">
-            El modelo más simple ganó.
+            Random Forest, por amplio margen.
           </h2>
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-7">
           <Reveal className="rounded-2xl border border-accent/40 bg-gradient-to-br from-accent/10 to-transparent p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-              R² en test
+              Accuracy
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={98.9} decimals={1} className="text-accent" />%
+              <CountUp value={82.9} decimals={1} className="text-accent" />%
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              varianza del IMC explicada · Linear Regression
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">Random Forest · 3 clases</p>
           </Reveal>
           <Reveal delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-              MSE en test
+              F1 macro
             </p>
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
-              <CountUp value={0.37} decimals={2} className="text-violet" />
+              <CountUp value={0.83} decimals={2} className="text-violet" />
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">error cuadrático medio sobre el IMC</p>
+            <p className="mt-2 text-sm text-muted-foreground">promedio no ponderado entre clases</p>
           </Reveal>
           <Reveal delay={240} className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
@@ -131,26 +130,26 @@ export default function NhanesBmiMlPage() {
             <p className="font-display text-4xl md:text-5xl mt-3 tabular-nums">
               <CountUp value={5} className="text-amber" />
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">evaluados con 5-fold cross-validation</p>
+            <p className="mt-2 text-sm text-muted-foreground">sobre clases balanceadas con SMOTE</p>
           </Reveal>
         </div>
 
-        {/* Barras comparativas de MSE */}
+        {/* Barras comparativas de F1 macro */}
         <Reveal className="rounded-2xl border border-border bg-gradient-to-br from-secondary to-transparent p-6 md:p-8 mt-4">
           <p className="text-xs font-semibold uppercase tracking-widest">
-            MSE por validación cruzada · menor es mejor
+            F1 macro por modelo · mayor es mejor
           </p>
           <div className="mt-6 space-y-3 max-w-3xl">
-            {modelScores.map((m) => (
+            {models.map((m) => (
               <div key={m.name} className="flex items-center gap-3">
                 <span className="w-48 shrink-0 text-xs text-muted-foreground">{m.name}</span>
                 <div className="flex-1 flex items-center gap-3">
                   <div
                     className={`h-2 rounded-full ${m.color}`}
-                    style={{ width: `${(m.mse / maxMse) * 100}%` }}
+                    style={{ width: `${m.f1 * 100}%` }}
                   />
                   <span className="font-mono text-xs text-muted-foreground shrink-0 tabular-nums">
-                    {m.mse.toFixed(4)}
+                    {m.f1.toFixed(3)}
                   </span>
                 </div>
               </div>
@@ -160,18 +159,14 @@ export default function NhanesBmiMlPage() {
 
         <Reveal className="max-w-3xl mt-8">
           <p className="leading-7 text-muted-foreground">
-            La regresión lineal batió a Random Forest, Gradient Boosting, SVM y KNN. Tiene una
-            explicación honesta: entre los predictores están el peso, la altura, la circunferencia
-            de cintura y el perímetro de brazo — variables que definen o correlacionan casi
-            mecánicamente con el IMC. Con relaciones tan lineales, un modelo lineal no solo basta:
-            gana en sesgo, en costo y en interpretabilidad frente a los ensembles.
-          </p>
-          <p className="mt-4 leading-7 text-muted-foreground">
-            El segundo enfoque —que conserva las respuestas "no sabe / no responde" como categoría
-            en lugar de borrarlas— llegó a un R² de <strong className="text-foreground">0.9894</strong>,
-            prácticamente idéntico. La lección de ingeniería: cuando la señal es fuerte, la decisión
-            sobre los faltantes casi no mueve la aguja predictiva, pero sí conserva tamaño muestral y
-            representatividad de subgrupos, que es lo que importa en datos de salud pública.
+            Random Forest superó a Gradient Boosting, árbol de decisión, SVM y regresión logística
+            en las cuatro métricas. La clave no fue solo el modelo: la clase "fallecido" y la de
+            "trasplante" estaban fuertemente subrepresentadas frente a la de pacientes vivos, y sin
+            corregir ese desbalance cualquier clasificador tiende a apostar siempre por la clase
+            mayoritaria. <strong className="text-foreground">SMOTE</strong> generó ejemplos
+            sintéticos de las clases minoritarias y elevó el F1 macro, que es la métrica honesta
+            cuando importan todas las clases por igual —y en un contexto clínico, la clase que
+            menos aparece suele ser la que más pesa.
           </p>
         </Reveal>
       </section>
@@ -182,16 +177,18 @@ export default function NhanesBmiMlPage() {
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
             Segmentación
           </p>
-          <h2 className="font-display text-2xl md:text-3xl mt-2.5">Cuatro perfiles de población.</h2>
+          <h2 className="font-display text-2xl md:text-3xl mt-2.5">Perfiles que la clínica reconoce.</h2>
         </Reveal>
         <Reveal className="max-w-3xl mt-6">
           <p className="leading-7 text-muted-foreground">
-            Con el número de clústeres elegido por método del codo y puntuación de silueta, KMeans
-            separó a los encuestados en cuatro grupos, proyectados en 2D con PCA. Los perfiles no son
-            arbitrarios: un clúster concentra el ingreso familiar más alto y mayor nivel educativo,
-            mientras otro agrupa a la población de mayor edad con la presión sistólica más elevada. La
-            edad, el ingreso, la educación y el acceso a seguro médico son las variables que más
-            diferencian a los grupos — un mapa útil para orientar políticas de salud por segmento.
+            En paralelo, sin usar la etiqueta de desenlace, se segmentó a los pacientes con KMeans y
+            con <strong className="text-foreground">K-Prototypes</strong> —que maneja variables
+            numéricas y categóricas a la vez, algo que KMeans no puede—. Al proyectar los grupos con
+            PCA, la primera componente principal queda dominada por la{" "}
+            <strong className="text-foreground">bilirrubina, la protrombina y la albúmina</strong>:
+            exactamente los marcadores de función hepática que un especialista usaría para estratificar
+            gravedad. Que el modelo no supervisado redescubra esa estructura clínica es la mejor señal
+            de que la segmentación captura algo real, no ruido.
           </p>
         </Reveal>
       </section>
@@ -199,7 +196,7 @@ export default function NhanesBmiMlPage() {
       {/* VERIFICABLE */}
       <Reveal className="mt-16">
         <Link
-          href="/projects/nhanes-bmi-ml/notebook"
+          href="/projects/cirrhosis-survival-ml/notebook"
           className="group relative block rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-10 transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow"
         >
           <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -210,8 +207,8 @@ export default function NhanesBmiMlPage() {
             Ver el notebook, celda por celda →
           </p>
           <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
-            Limpieza, gráficos exploratorios, comparación de modelos y clustering renderizados aquí
-            mismo con el código y los resultados reales.
+            Exploración, balanceo con SMOTE, comparación de clasificadores y clustering renderizados
+            aquí mismo con el código y los resultados reales.
           </p>
         </Link>
       </Reveal>

@@ -18,10 +18,10 @@ const projects = [
     href: "/projects/hate-speech-roberta-vs-llm",
   },
   {
-    title: "Predicción del IMC con salud pública (NHANES)",
-    desc: "Pipeline end-to-end sobre la encuesta NHANES 2015-2016: limpieza, regresión para predecir el índice de masa corporal (R² 0.99) y segmentación de la población con KMeans. Caso del Magíster en Ciencia de Datos (UC Chile), con notebook verificable.",
-    tag: "ML · Supervisado + Clustering",
-    href: "/projects/nhanes-bmi-ml",
+    title: "Predicción del desenlace en cirrosis",
+    desc: "Clasificación multiclase del desenlace de pacientes con cirrosis (vivo / trasplante / fallecido) sobre datos clínicos de Mayo Clinic: SMOTE para el desbalance, Random Forest al 83% y segmentación con K-Prototypes. Caso del Magíster en Ciencia de Datos (UC Chile), con notebook verificable.",
+    tag: "ML clínico · Clasificación",
+    href: "/projects/cirrhosis-survival-ml",
   },
   {
     title: "RAG para documentos",
