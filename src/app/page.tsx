@@ -131,12 +131,6 @@ export default function Home() {
           >
             Ver trabajos
           </Link>
-          <Link
-            href="/contact"
-            className="rounded-lg border border-ink px-4 py-2.5 text-sm font-semibold hover:border-accent hover:text-accent transition-colors"
-          >
-            Trabajemos juntos
-          </Link>
         </div>
       </section>
 
