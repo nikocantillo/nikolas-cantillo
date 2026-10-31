@@ -2,7 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { Github, Mail } from "lucide-react"
 import { SectionNav } from "@/components/section-nav"
-import { PostSearch } from "@/components/post-search"
+import { SiteSearch, type SearchItem } from "@/components/site-search"
+import { posts } from "@/lib/posts"
 
 type Metric = { k: string; v: string }
 type Project = {
@@ -104,6 +105,21 @@ const stack = [
   { label: "Datos", items: ["Data Quality", "governance", "Python", "APIs · Django"] },
 ]
 
+const searchItems: SearchItem[] = [
+  ...projects.map((p) => ({
+    title: p.title,
+    href: p.href,
+    kind: "Trabajo",
+    text: `${p.kind} ${p.desc} ${p.tags.join(" ")}`,
+  })),
+  ...posts.map((p) => ({
+    title: p.title,
+    href: p.href,
+    kind: "Escrito",
+    text: `${p.tag} ${p.excerpt}`,
+  })),
+]
+
 
 export default function Home() {
   return (
@@ -150,6 +166,10 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="mx-auto mt-14 w-full max-w-[740px] lg:max-w-[1000px]">
+          <SiteSearch items={searchItems} />
         </div>
       </section>
 
@@ -240,11 +260,32 @@ export default function Home() {
       <section id="escritos" className="px-6 pb-[15vh]">
         <div className="mx-auto max-w-[740px] lg:max-w-[900px] xl:max-w-[1000px]">
           <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Escritos</h2>
-          <p className="mt-4 mb-10 max-w-[52ch] text-[clamp(1.05rem,1.3vw,1.25rem)] text-foreground/75">
+          <p className="mt-4 mb-14 max-w-[52ch] text-[clamp(1.05rem,1.3vw,1.25rem)] text-foreground/75">
             Artículos sobre datos, arquitectura e inteligencia artificial.
           </p>
 
-          <PostSearch />
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+            {posts.slice(0, 4).map((post) => (
+              <Link
+                key={post.href}
+                href={post.href}
+                className="group flex flex-col rounded-[1.25rem] border border-black/10 p-7 transition-colors hover:bg-card"
+              >
+                <span className="text-[13px] uppercase tracking-[0.08em] text-foreground/55">
+                  {post.tag}
+                </span>
+                <h3 className="font-display mt-3 text-[1.6rem] leading-tight group-hover:text-accent transition-colors">
+                  {post.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-foreground/70 line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <span className="mt-auto pt-5 text-[13.5px] text-foreground/55">
+                  {post.date} · {post.readTime}
+                </span>
+              </Link>
+            ))}
+          </div>
 
           <div className="mt-12">
             <Link href="/blog" className="pill-link">
