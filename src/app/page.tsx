@@ -1,8 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Github, Mail } from "lucide-react"
-import { posts } from "@/lib/posts"
 import { SectionNav } from "@/components/section-nav"
+import { PostSearch } from "@/components/post-search"
 
 type Metric = { k: string; v: string }
 type Project = {
@@ -115,8 +115,8 @@ export default function Home() {
         id="sobre-mi"
         className="px-6 pt-28 pb-[15vh] md:min-h-screen md:flex md:flex-col md:justify-center"
       >
-        <div className="mx-auto w-full max-w-[740px] lg:max-w-[900px]">
-          <div className="relative size-[160px] md:size-[200px] rounded-full overflow-hidden">
+        <div className="mx-auto w-full max-w-[740px] lg:max-w-[1000px] grid gap-10 md:grid-cols-[auto_1fr] md:items-center md:gap-14 lg:gap-20">
+          <div className="relative size-[160px] md:size-[240px] lg:size-[300px] rounded-full overflow-hidden">
             <Image
               src="/nikolascantillo.jpeg"
               alt="Nikolas Cantillo"
@@ -125,28 +125,30 @@ export default function Home() {
               priority
             />
           </div>
-          <h1 className="font-display mt-10 text-[clamp(2.75rem,5vw,4.5rem)]">Nikolas Cantillo</h1>
-          <p className="mt-6 max-w-[34ch] text-[clamp(1.25rem,1.9vw,1.75rem)] leading-snug">
-            Científico de datos. Construyo modelos que se sostienen fuera del notebook.
-          </p>
-          <p className="mt-5 max-w-[60ch] text-[clamp(1.05rem,1.3vw,1.25rem)] leading-relaxed text-foreground/75">
-            Principal Consultant en Oracle y Magíster en Ciencia de Datos por la Pontificia
-            Universidad Católica de Chile. Cinco años entre pipelines, migraciones cloud y modelos de
-            lenguaje.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            {socials.map(({ label, href, icon: Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel="noreferrer"
-                aria-label={label}
-                className="inline-flex items-center rounded-full border border-black/15 p-4 transition-colors hover:border-accent/30 hover:bg-accent/5"
-              >
-                <Icon className="size-4" />
-              </a>
-            ))}
+          <div>
+            <h1 className="font-display text-[clamp(2.75rem,5vw,4.5rem)]">Nikolas Cantillo</h1>
+            <p className="mt-6 max-w-[34ch] text-[clamp(1.25rem,1.9vw,1.75rem)] leading-snug">
+              Científico de datos. Construyo modelos que se sostienen fuera del notebook.
+            </p>
+            <p className="mt-5 max-w-[60ch] text-[clamp(1.05rem,1.3vw,1.25rem)] leading-relaxed text-foreground/75">
+              Principal Consultant en Oracle y Magíster en Ciencia de Datos por la Pontificia
+              Universidad Católica de Chile. Cinco años entre pipelines, migraciones cloud y modelos de
+              lenguaje.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              {socials.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="inline-flex items-center rounded-full border border-black/15 p-4 transition-colors hover:border-accent/30 hover:bg-accent/5"
+                >
+                  <Icon className="size-4" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -238,32 +240,11 @@ export default function Home() {
       <section id="escritos" className="px-6 pb-[15vh]">
         <div className="mx-auto max-w-[740px] lg:max-w-[900px] xl:max-w-[1000px]">
           <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Escritos</h2>
-          <p className="mt-4 mb-14 max-w-[52ch] text-[clamp(1.05rem,1.3vw,1.25rem)] text-foreground/75">
+          <p className="mt-4 mb-10 max-w-[52ch] text-[clamp(1.05rem,1.3vw,1.25rem)] text-foreground/75">
             Artículos sobre datos, arquitectura e inteligencia artificial.
           </p>
 
-          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
-            {posts.slice(0, 4).map((post) => (
-              <Link
-                key={post.href}
-                href={post.href}
-                className="group flex flex-col rounded-[1.25rem] border border-black/10 p-7 transition-colors hover:bg-card"
-              >
-                <span className="text-[13px] uppercase tracking-[0.08em] text-foreground/55">
-                  {post.tag}
-                </span>
-                <h3 className="font-display mt-3 text-[1.6rem] leading-tight group-hover:text-accent transition-colors">
-                  {post.title}
-                </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-foreground/70 line-clamp-3">
-                  {post.excerpt}
-                </p>
-                <span className="mt-auto pt-5 text-[13.5px] text-foreground/55">
-                  {post.date} · {post.readTime}
-                </span>
-              </Link>
-            ))}
-          </div>
+          <PostSearch />
 
           <div className="mt-12">
             <Link href="/blog" className="pill-link">
