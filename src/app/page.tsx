@@ -1,7 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Github } from "lucide-react"
+import { Github, Mail } from "lucide-react"
 import { posts } from "@/lib/posts"
+import { SectionNav } from "@/components/section-nav"
 
 type Metric = { k: string; v: string }
 type Project = {
@@ -83,38 +84,39 @@ const help = [
   { term: "Arquitectura de datos", desc: "Lo que pasa después del modelo: APIs, escala y operación en producción." },
 ]
 
+const sections = [
+  { id: "sobre-mi", label: "Sobre mí" },
+  { id: "trabajos", label: "Trabajos" },
+  { id: "escritos", label: "Escritos" },
+  { id: "enfoque", label: "Enfoque" },
+  { id: "biografia", label: "Biografía" },
+  { id: "contacto", label: "Contacto" },
+]
+
+const socials = [
+  { label: "GitHub", href: "https://github.com/nikocantillo", icon: Github },
+  { label: "Email", href: "mailto:nikolacantillo@gmail.com", icon: Mail },
+]
+
 const stack = [
   { label: "Procesamiento", items: ["PySpark", "OCI Dataflow", "cargas incrementales"] },
   { label: "IA / LLMs", items: ["RAG", "LangChain", "FAISS", "fine-tuning"] },
   { label: "Datos", items: ["Data Quality", "governance", "Python", "APIs · Django"] },
 ]
 
+
 export default function Home() {
   return (
-    <main className="mx-auto max-w-3xl px-6">
-      {/* HERO */}
-      <section className="pt-14 pb-10">
-        <div className="flex items-start justify-between gap-7">
-          <div>
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.08em] text-accent">
-              Científico de Datos
-            </p>
-            <h1 className="font-display text-4xl md:text-5xl mt-3.5 max-w-[15ch] text-balance">
-              Modelos que se sostienen fuera del notebook.
-            </h1>
-            <p className="mt-4 text-sm text-muted-foreground">
-              <strong className="text-foreground font-semibold">Nikolas Cantillo</strong> · Principal
-              Consultant en Oracle · Magíster en Ciencia de Datos, Pontificia Universidad Católica de
-              Chile.
-            </p>
-            <p className="mt-4 max-w-[60ch] leading-7 text-foreground/85">
-              Cinco años entre pipelines de datos, migraciones cloud y modelos de lenguaje. Trabajo
-              con método: mido con la métrica correcta, documento lo que funciona y —sobre todo— lo
-              que no. Cada caso de abajo enlaza a su notebook, ejecutable y verificable de principio a
-              fin.
-            </p>
-          </div>
-          <div className="relative hidden sm:block size-[68px] shrink-0 rounded-xl overflow-hidden border border-ink">
+    <main>
+      <SectionNav items={sections} />
+
+      {/* SOBRE MÍ — portada a pantalla completa */}
+      <section
+        id="sobre-mi"
+        className="bg-peach px-6 pt-28 pb-[15vh] md:min-h-screen md:flex md:flex-col md:justify-center"
+      >
+        <div className="mx-auto w-full max-w-[740px] lg:max-w-[900px]">
+          <div className="relative size-[160px] md:size-[200px] rounded-full overflow-hidden">
             <Image
               src="/nikolascantillo.jpeg"
               alt="Nikolas Cantillo"
@@ -123,178 +125,239 @@ export default function Home() {
               priority
             />
           </div>
-        </div>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Link
-            href="/projects"
-            className="rounded-lg bg-accent text-accent-foreground px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            Ver trabajos
-          </Link>
+          <h1 className="font-display mt-10 text-[clamp(2.75rem,5vw,4.5rem)]">Nikolas Cantillo</h1>
+          <p className="mt-6 max-w-[34ch] text-[clamp(1.25rem,1.9vw,1.75rem)] leading-snug">
+            Científico de datos. Construyo modelos que se sostienen fuera del notebook.
+          </p>
+          <p className="mt-5 max-w-[60ch] text-[clamp(1.05rem,1.3vw,1.25rem)] leading-relaxed text-foreground/75">
+            Principal Consultant en Oracle y Magíster en Ciencia de Datos por la Pontificia
+            Universidad Católica de Chile. Cinco años entre pipelines, migraciones cloud y modelos de
+            lenguaje.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-4">
+            {socials.map(({ label, href, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer"
+                aria-label={label}
+                className="inline-flex items-center rounded-full border border-black/15 p-4 transition-colors hover:border-accent/30 hover:bg-accent/5"
+              >
+                <Icon className="size-4" />
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* TRABAJOS */}
-      <section className="py-9 border-t border-border">
-        <div className="flex items-baseline justify-between gap-3 mb-5">
-          <h2 className="text-[15px] font-semibold">Trabajos seleccionados</h2>
-          <span className="font-mono text-[13px] text-muted-foreground/70">
-            4 casos · notebooks verificables
-          </span>
-        </div>
+      <section id="trabajos" className="px-6 py-[15vh]">
+        <div className="mx-auto max-w-[740px] lg:max-w-[900px] xl:max-w-[1000px]">
+          <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Trabajos</h2>
+          <p className="mt-4 mb-14 max-w-[52ch] text-[clamp(1.05rem,1.3vw,1.25rem)] text-foreground/75">
+            Casos de ciencia de datos e IA, cada uno con su notebook ejecutable y verificable de
+            principio a fin.
+          </p>
 
-        <div className="flex flex-col">
-          {projects.map((p, i) => (
-            <Link
-              key={p.href}
-              href={p.href}
-              className={`group block border-b border-border py-5 ${i === 0 ? "pt-0" : ""}`}
-            >
-              <div className="flex items-baseline justify-between gap-3.5 flex-wrap">
-                <span className="text-[19px] font-semibold tracking-tight group-hover:text-accent transition-colors">
-                  {p.title}
-                </span>
-                <span className="font-mono text-xs text-muted-foreground/70 whitespace-nowrap">
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+            {projects.map((p) => (
+              <Link
+                key={p.href}
+                href={p.href}
+                className="group flex flex-col rounded-[1.25rem] bg-card p-7 md:p-8 transition-transform duration-300 hover:-translate-y-1"
+              >
+                <span className="text-[13px] uppercase tracking-[0.08em] text-foreground/55">
                   {p.kind}
                 </span>
-              </div>
+                <h3 className="font-display mt-3 text-[1.75rem] leading-tight group-hover:text-accent transition-colors">
+                  {p.title}
+                </h3>
+                <p className="mt-3 text-[15.5px] leading-relaxed text-foreground/70">{p.desc}</p>
 
-              <p className="mt-2 max-w-[62ch] text-[15px] text-muted-foreground">{p.desc}</p>
+                {p.metrics && (
+                  <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[14px]">
+                    {p.metrics.map((m) => (
+                      <span key={m.k}>
+                        <span className="text-foreground/55">{m.k}</span>{" "}
+                        <span className="font-medium">{m.v}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
 
-              {p.metrics && (
-                <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2.5 font-mono text-[13px]">
-                  {p.metrics.map((m) => (
-                    <span key={m.k}>
-                      <span className="text-muted-foreground/70">{m.k}</span>{" "}
-                      <span className="text-foreground font-medium">{m.v}</span>
+                {p.bars && (
+                  <div className="mt-5 space-y-2">
+                    {p.bars.map((b) => (
+                      <div
+                        key={b.label}
+                        className="grid grid-cols-[84px_1fr_46px] items-center gap-3 text-[13px] text-foreground/60"
+                      >
+                        <span>{b.label}</span>
+                        <span className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <span
+                            className={`block h-full rounded-full ${b.on ? "bg-accent" : "bg-foreground/30"}`}
+                            style={{ width: `${b.value}%` }}
+                          />
+                        </span>
+                        <span className="text-right text-foreground">{b.value.toFixed(1)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {p.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-full bg-black/5 px-3 py-1 text-[12.5px] text-foreground/70"
+                    >
+                      {t}
                     </span>
                   ))}
                 </div>
-              )}
 
-              {p.bars && (
-                <div className="mt-3 space-y-2">
-                  {p.bars.map((b) => (
-                    <div
-                      key={b.label}
-                      className="grid grid-cols-[84px_1fr_46px] items-center gap-3 font-mono text-xs text-muted-foreground"
-                    >
-                      <span>{b.label}</span>
-                      <span className="h-1.5 rounded bg-muted overflow-hidden">
-                        <span
-                          className={`block h-full rounded ${b.on ? "bg-accent" : "bg-muted-foreground/50"}`}
-                          style={{ width: `${b.value}%` }}
-                        />
-                      </span>
-                      <span className="text-right text-foreground">{b.value.toFixed(1)}</span>
-                    </div>
+                <div className="mt-auto pt-6 flex flex-wrap gap-5 text-[14px] font-medium text-accent">
+                  {p.links.map((l) => (
+                    <span key={l.label}>{l.label}</span>
                   ))}
                 </div>
-              )}
+              </Link>
+            ))}
+          </div>
 
-              <div className="mt-3 flex flex-wrap gap-2">
-                {p.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="font-mono text-[11px] text-muted-foreground border border-ink rounded px-1.5 py-0.5"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-3.5 flex flex-wrap gap-4 font-mono text-[13px] text-accent">
-                {p.links.map((l) => (
-                  <span key={l.label}>{l.label}</span>
-                ))}
-              </div>
+          <div className="mt-12">
+            <Link href="/projects" className="pill-link">
+              Todos los proyectos
             </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* CÓMO PUEDO AYUDAR */}
-      <section className="py-9 border-t border-border">
-        <h2 className="text-[15px] font-semibold mb-5">Cómo puedo ayudar</h2>
-        <dl className="grid gap-5">
-          {help.map((h) => (
-            <div key={h.term} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-5">
-              <dt className="text-[15px] font-semibold">{h.term}</dt>
-              <dd className="text-[15px] text-muted-foreground">{h.desc}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      {/* STACK */}
-      <section className="py-9 border-t border-border">
-        <h2 className="text-[15px] font-semibold mb-5">Stack</h2>
-        <div className="rounded-xl border border-border overflow-hidden">
-          {stack.map((row) => (
-            <div
-              key={row.label}
-              className="grid grid-cols-1 sm:grid-cols-[150px_1fr] gap-1 sm:gap-4 px-4 py-3 border-t border-border first:border-t-0"
-            >
-              <span className="text-sm font-semibold">{row.label}</span>
-              <span className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[13.5px] text-muted-foreground">
-                {row.items.map((it) => (
-                  <span key={it}>{it}</span>
-                ))}
-              </span>
-            </div>
-          ))}
+          </div>
         </div>
       </section>
 
       {/* ESCRITOS */}
-      <section className="py-9 border-t border-border">
-        <div className="flex items-baseline justify-between gap-3 mb-5">
-          <h2 className="text-[15px] font-semibold">Escritos</h2>
-          <Link href="/blog" className="font-mono text-[13px] text-accent hover:underline underline-offset-4">
-            Ver todos →
-          </Link>
-        </div>
-        <div className="flex flex-col">
-          {posts.slice(0, 4).map((post) => (
-            <Link
-              key={post.href}
-              href={post.href}
-              className="group flex items-baseline justify-between gap-3.5 border-b border-border py-3.5"
-            >
-              <span className="text-[15.5px] font-medium group-hover:text-accent transition-colors">
-                {post.title}
-              </span>
-              <span className="font-mono text-[12.5px] text-muted-foreground/70 whitespace-nowrap">
-                {post.date}
-              </span>
+      <section id="escritos" className="px-6 pb-[15vh]">
+        <div className="mx-auto max-w-[740px] lg:max-w-[900px] xl:max-w-[1000px]">
+          <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Escritos</h2>
+          <p className="mt-4 mb-14 max-w-[52ch] text-[clamp(1.05rem,1.3vw,1.25rem)] text-foreground/75">
+            Artículos sobre datos, arquitectura e inteligencia artificial.
+          </p>
+
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+            {posts.slice(0, 4).map((post) => (
+              <Link
+                key={post.href}
+                href={post.href}
+                className="group flex flex-col rounded-[1.25rem] border border-black/10 p-7 transition-colors hover:bg-card"
+              >
+                <span className="text-[13px] uppercase tracking-[0.08em] text-foreground/55">
+                  {post.tag}
+                </span>
+                <h3 className="font-display mt-3 text-[1.6rem] leading-tight group-hover:text-accent transition-colors">
+                  {post.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-foreground/70 line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <span className="mt-auto pt-5 text-[13.5px] text-foreground/55">
+                  {post.date} · {post.readTime}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-12">
+            <Link href="/blog" className="pill-link">
+              Ver todos los escritos
             </Link>
-          ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ENFOQUE — bloque oscuro */}
+      <section id="enfoque" className="bg-night text-white px-6 py-[15vh]">
+        <div className="mx-auto max-w-[740px] lg:max-w-[900px] xl:max-w-[1000px]">
+          <h2 className="font-display text-[clamp(2.25rem,4vw,3.75rem)] max-w-[20ch]">
+            Mido con la métrica correcta y documento también lo que no funciona.
+          </h2>
+
+          <dl className="mt-14 grid gap-10 md:grid-cols-3">
+            {help.map((h) => (
+              <div key={h.term}>
+                <dt className="font-display text-[1.6rem]">{h.term}</dt>
+                <dd className="mt-2 text-[16px] leading-relaxed text-white/65">{h.desc}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-14 border-t border-white/15">
+            {stack.map((row) => (
+              <div
+                key={row.label}
+                className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-4 py-4 border-b border-white/15"
+              >
+                <span className="text-[15px] font-medium">{row.label}</span>
+                <span className="flex flex-wrap gap-x-5 gap-y-1 text-[15px] text-white/65">
+                  {row.items.map((it) => (
+                    <span key={it}>{it}</span>
+                  ))}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BIOGRAFÍA */}
+      <section id="biografia" className="bg-peach px-6 py-[15vh]">
+        <div className="mx-auto max-w-[740px] lg:max-w-[900px]">
+          <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Biografía</h2>
+          <div className="mt-8 space-y-6 text-[clamp(1.1rem,1.4vw,1.35rem)] leading-relaxed">
+            <p>
+              Nikolas Cantillo es científico de datos y Principal Consultant en Oracle, donde trabaja
+              con pipelines en PySpark y OCI Dataflow, cargas incrementales y migraciones de datos a
+              la nube.
+            </p>
+            <p>
+              Es Magíster en Ciencia de Datos por la Pontificia Universidad Católica de Chile. Sus
+              trabajos académicos —RAG para verificación de hechos, fine-tuning frente a LLMs
+              generalistas y ML clínico— están publicados en este sitio como{" "}
+              <Link
+                href="/projects"
+                className="text-accent underline underline-offset-4 decoration-rust-light"
+              >
+                casos verificables
+              </Link>
+              .
+            </p>
+            <p>
+              Hoy se mueve entre la ingeniería de datos y los modelos de lenguaje, con una obsesión:
+              que lo que funciona en el notebook también funcione en producción.
+            </p>
+          </div>
+          <div className="mt-10">
+            <Link href="/about" className="pill-link">
+              Trayectoria completa
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* CONTACTO */}
-      <section className="py-9 border-t border-border">
-        <h2 className="text-[15px] font-semibold mb-4">Contacto</h2>
-        <p className="max-w-[58ch] text-muted-foreground leading-7">
-          ¿Tienes un problema de datos? Cuéntame de qué se trata y te digo con franqueza si puedo
-          ayudar y cómo lo abordaría. Disponible para consultoría y colaboración.
-        </p>
-        <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-2 font-mono text-sm">
-          <a href="mailto:nikolacantillo@gmail.com" className="text-accent hover:underline underline-offset-4">
-            nikolacantillo@gmail.com
-          </a>
-          <a
-            href="https://github.com/nikocantillo"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-accent transition-colors"
-          >
-            <Github className="size-4" />
-            GitHub
-          </a>
-          <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
-            Formulario →
-          </Link>
+      <section id="contacto" className="px-6 py-[15vh]">
+        <div className="mx-auto max-w-[740px] lg:max-w-[900px]">
+          <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Contacto</h2>
+          <p className="mt-6 max-w-[52ch] text-[clamp(1.1rem,1.4vw,1.35rem)] leading-relaxed text-foreground/80">
+            ¿Tienes un problema de datos? Cuéntame de qué se trata y te digo con franqueza si puedo
+            ayudar y cómo lo abordaría. Disponible para consultoría y colaboración.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <a href="mailto:nikolacantillo@gmail.com" className="pill-link">
+              Escríbeme
+            </a>
+            <Link href="/contact" className="pill-link">
+              Formulario
+            </Link>
+          </div>
         </div>
       </section>
     </main>

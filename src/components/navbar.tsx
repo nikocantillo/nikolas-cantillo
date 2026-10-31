@@ -8,6 +8,7 @@ const navItems = [
   { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Blog", href: "/blog" },
+  { label: "Contacto", href: "/contact" },
 ]
 
 export function Navbar() {
@@ -17,40 +18,33 @@ export function Navbar() {
     pathname === href || pathname.startsWith(`${href}/`)
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="mx-auto max-w-6xl px-5 md:px-8 flex items-center justify-between h-16">
-        {/* Brand */}
-        <Link href="/" className="font-display text-[15px] hover:text-accent transition-colors">
-          nikolas<span className="text-accent">.</span>cantillo
+    <>
+    {/* En la home el header flota sobre la portada; en el resto reserva su alto */}
+    {pathname !== "/" && <div className="h-20" />}
+    <header className="absolute top-0 inset-x-0 z-50">
+      <div className="mx-auto max-w-[90rem] px-5 md:px-8 flex items-center justify-between h-20">
+        <Link href="/" className="font-display text-[22px] hover:text-accent transition-colors">
+          Nikolas Cantillo
         </Link>
 
-        {/* Links */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-4 md:gap-7 text-[14px] md:text-[15px]">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-full px-3 md:px-4 py-1.5 text-[13px] md:text-sm transition-colors",
+                "transition-opacity",
                 isActive(item.href)
-                  ? "text-foreground bg-secondary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  ? "opacity-100 font-medium"
+                  : "opacity-60 hover:opacity-100"
               )}
             >
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/contact"
-            className={cn(
-              "ml-1 md:ml-2 rounded-full px-3.5 md:px-4 py-1.5 text-[13px] md:text-sm font-semibold transition-all",
-              "bg-accent text-accent-foreground hover:opacity-90"
-            )}
-          >
-            Contacto
-          </Link>
         </nav>
       </div>
     </header>
+    </>
   )
 }

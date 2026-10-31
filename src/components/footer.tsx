@@ -1,78 +1,30 @@
-import Link from "next/link"
-import { Github } from "lucide-react"
-import { posts } from "@/lib/posts"
+import { Github, Mail } from "lucide-react"
 
-const navItems = [
-  { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
+const socials = [
+  { label: "GitHub", href: "https://github.com/nikocantillo", icon: Github },
+  { label: "Email", href: "mailto:nikolacantillo@gmail.com", icon: Mail },
 ]
 
 export function Footer() {
   return (
-    <footer className="border-t border-border mt-20">
-      <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div className="space-y-3">
-          <p className="font-display text-base">
-            nikolas<span className="text-accent">.</span>cantillo
-          </p>
-          <p className="text-sm text-muted-foreground leading-6 max-w-xs">
-            Data Science, AI Engineering y sistemas en producción. Proyectos reales y notebooks
-            verificables.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-            Navegación
-          </p>
-          <ul className="space-y-2 text-sm">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-muted-foreground hover:text-accent transition-colors"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-            Últimos artículos
-          </p>
-          <ul className="space-y-2 text-sm">
-            {posts.slice(0, 3).map((post) => (
-              <li key={post.href}>
-                <Link
-                  href={post.href}
-                  className="text-muted-foreground hover:text-accent transition-colors line-clamp-2"
-                >
-                  {post.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-5 md:px-8 py-4 flex items-center justify-between flex-wrap gap-3 text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} Nikolas Cantillo · Bogotá</span>
-          <a
-            href="https://github.com/nikocantillo"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-accent transition-colors"
-          >
-            <Github className="size-4" />
-            GitHub
-          </a>
-        </div>
+    <footer className="px-4 py-8">
+      <div className="flex items-center justify-center gap-6 text-[15px] text-foreground/75">
+        <p>Nikolas Cantillo © {new Date().getFullYear()}</p>
+        <ul className="flex gap-4">
+          {socials.map(({ label, href, icon: Icon }) => (
+            <li key={label}>
+              <a
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer"
+                aria-label={label}
+                className="flex size-5 items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
+              >
+                <Icon className="size-5" />
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </footer>
   )
