@@ -3,7 +3,8 @@ import Link from "next/link"
 import { Github, Mail } from "lucide-react"
 import { SectionNav } from "@/components/section-nav"
 import { SiteSearch, type SearchItem } from "@/components/site-search"
-import { posts } from "@/lib/posts"
+import { posts, issueNumber } from "@/lib/posts"
+import { ArticleCover } from "@/components/blog/article-cover"
 
 type Metric = { k: string; v: string }
 type Project = {
@@ -264,15 +265,12 @@ export default function Home() {
             Artículos sobre datos, arquitectura e inteligencia artificial.
           </p>
 
-          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+          <div className="grid gap-x-8 gap-y-12 md:grid-cols-2">
             {posts.slice(0, 4).map((post) => (
-              <Link
-                key={post.href}
-                href={post.href}
-                className="group flex flex-col rounded-[1.25rem] border border-black/10 p-7 transition-colors hover:bg-card"
-              >
-                <span className="text-[13px] uppercase tracking-[0.08em] text-foreground/55">
-                  {post.tag}
+              <Link key={post.href} href={post.href} className="group flex flex-col">
+                <ArticleCover seed={post.href} className="aspect-[16/10] w-full rounded-[1rem]" />
+                <span className="mt-5 text-[12.5px] uppercase tracking-[0.12em] text-foreground/55">
+                  Nº {issueNumber(post.href)} · {post.tag}
                 </span>
                 <h3 className="font-display mt-3 text-[1.6rem] leading-tight group-hover:text-accent transition-colors">
                   {post.title}
@@ -280,7 +278,7 @@ export default function Home() {
                 <p className="mt-3 text-[15px] leading-relaxed text-foreground/70 line-clamp-3">
                   {post.excerpt}
                 </p>
-                <span className="mt-auto pt-5 text-[13.5px] text-foreground/55">
+                <span className="mt-4 text-[13.5px] text-foreground/55">
                   {post.date} · {post.readTime}
                 </span>
               </Link>

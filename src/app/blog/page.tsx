@@ -2,9 +2,9 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { ArrowUpRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { posts } from "@/lib/posts"
+import { posts, issueNumber } from "@/lib/posts"
+import { ArticleCover } from "@/components/blog/article-cover"
 
 const tags = ["Todos", ...Array.from(new Set(posts.map((p) => p.tag)))]
 
@@ -17,113 +17,99 @@ export default function BlogPage() {
   const rest = showFeatured ? filtered.slice(1) : filtered
 
   return (
-    <main className="mx-auto max-w-6xl px-5 md:px-8 py-14">
+    <main className="mx-auto max-w-[1200px] px-6 pt-10 md:pt-16 pb-[12vh]">
       {/* CABECERA */}
-      <section>
-        <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-accent">
-          Blog técnico
+      <header className="text-center">
+        <p className="text-[13px] uppercase tracking-[0.14em] text-foreground/60">
+          {posts.length} escritos · datos, arquitectura e IA
         </p>
-        <h1 className="font-display text-4xl md:text-6xl mt-3">
-          Aprendizajes documentados.
-        </h1>
-        <p className="mt-5 max-w-2xl text-muted-foreground leading-7">
-          Artículos prácticos sobre Data, AI Engineering y sistemas reales. Sin humo:
-          lo que funciona y, sobre todo, lo que no.
+        <h1 className="font-display mt-5 text-[clamp(3rem,8vw,6.5rem)] leading-none">Escritos</h1>
+        <p className="mx-auto mt-6 max-w-[46ch] text-[clamp(1.1rem,1.5vw,1.35rem)] leading-snug text-foreground/70">
+          Artículos prácticos sobre datos e inteligencia artificial. Lo que funciona y, sobre todo,
+          lo que no.
         </p>
-      </section>
+      </header>
 
       {/* FILTRO */}
-      <div className="mt-8 flex flex-wrap gap-2">
+      <nav className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 border-y border-black/10 py-4 text-[14px]">
         {tags.map((tag) => (
           <button
             key={tag}
             type="button"
             onClick={() => setActiveTag(tag)}
             className={cn(
-              "rounded-full border px-4 py-1.5 text-[13px] transition-all",
+              "transition-opacity",
               activeTag === tag
-                ? "border-accent bg-accent text-accent-foreground font-semibold"
-                : "border-border text-muted-foreground hover:text-foreground hover:border-accent/40"
+                ? "font-medium opacity-100 text-accent"
+                : "opacity-60 hover:opacity-100"
             )}
           >
             {tag}
           </button>
         ))}
-      </div>
+      </nav>
 
       {/* DESTACADO */}
       {showFeatured && (
         <Link
           href={featured.href}
-          className="group relative block mt-8 rounded-2xl border border-border bg-secondary/30 p-7 md:p-10 transition-colors hover:border-accent/40"
+          className="group mt-14 grid items-center gap-8 md:grid-cols-[1.3fr_1fr] md:gap-12"
         >
-          <ArrowUpRight className="absolute top-7 right-7 size-5 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-accent">
-              Destacado
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              {featured.date} · {featured.readTime} · {featured.deco}
-            </span>
+          <ArticleCover seed={featured.href} className="aspect-[16/10] w-full rounded-[1.25rem]" />
+          <div>
+            <p className="text-[13px] uppercase tracking-[0.14em] text-foreground/60">
+              Nº {issueNumber(featured.href)} · {featured.tag}
+            </p>
+            <h2 className="font-display mt-4 text-[clamp(2rem,3.5vw,3.25rem)] leading-[1.08] group-hover:text-accent transition-colors">
+              {featured.title}
+            </h2>
+            <p className="mt-5 text-[17px] leading-relaxed text-foreground/70">{featured.excerpt}</p>
+            <p className="mt-6 text-[14px] text-foreground/55">
+              Por <em className="font-display text-[1.1em]">Nikolas Cantillo</em> · {featured.date}{" "}
+              · {featured.readTime}
+            </p>
           </div>
-          <h2 className="font-display text-2xl md:text-4xl mt-5 max-w-4xl leading-tight pr-8">
-            {featured.title}
-          </h2>
-          <p className="mt-4 max-w-3xl text-muted-foreground leading-7">{featured.excerpt}</p>
-          <p className="mt-6 text-sm font-semibold text-accent">Leer artículo →</p>
         </Link>
       )}
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+      {/* GRILLA */}
+      <div className="mt-16 grid gap-x-8 gap-y-14 border-t border-black/10 pt-14 md:grid-cols-2 lg:grid-cols-3">
         {rest.map((post) => (
-          <Link
-            key={post.href}
-            href={post.href}
-            className="group relative block rounded-2xl border border-border bg-secondary/30 p-6 md:p-7 transition-colors hover:border-accent/40"
-          >
-            <ArrowUpRight className="absolute top-6 right-6 size-4 text-muted-foreground transition-all group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-violet">
-                {post.tag}
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                {post.date} · {post.readTime}
-              </span>
-            </div>
-            <h3 className="font-display text-lg md:text-xl mt-4 leading-snug pr-6">
+          <Link key={post.href} href={post.href} className="group block">
+            <ArticleCover seed={post.href} className="aspect-[16/10] w-full rounded-[1rem]" />
+            <p className="mt-5 text-[12.5px] uppercase tracking-[0.12em] text-foreground/55">
+              Nº {issueNumber(post.href)} · {post.tag}
+            </p>
+            <h3 className="font-display mt-2 text-[1.7rem] leading-tight group-hover:text-accent transition-colors">
               {post.title}
             </h3>
-            <p className="mt-3 text-sm text-muted-foreground leading-6 line-clamp-3">
+            <p className="mt-3 text-[15.5px] leading-relaxed text-foreground/70 line-clamp-3">
               {post.excerpt}
             </p>
-            <p className="mt-4 font-mono text-xs text-accent">{post.deco}</p>
+            <p className="mt-4 text-[13.5px] text-foreground/55">
+              {post.date} · {post.readTime}
+            </p>
           </Link>
         ))}
       </div>
 
       {rest.length === 0 && !showFeatured && (
-        <p className="mt-14 text-center text-muted-foreground">
-          No hay artículos con ese tag todavía.
-        </p>
+        <p className="mt-14 text-center text-foreground/60">No hay escritos con ese tema todavía.</p>
       )}
 
-      {/* CTA */}
-      <section className="mt-16 rounded-2xl border border-border bg-gradient-to-r from-accent/5 via-transparent to-violet/5 p-7 md:p-9 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-        <div>
-          <h2 className="font-display text-xl md:text-2xl">
-            ¿Hay un tema que te gustaría leer aquí?
-          </h2>
-          <p className="text-muted-foreground mt-1.5 leading-7">
-            Proponme un tema de datos o IA y lo convierto en el próximo artículo.
-          </p>
+      {/* PROPONER TEMA */}
+      <section className="mt-24 border-t border-black/10 pt-14 text-center">
+        <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)]">
+          ¿Hay un tema que te gustaría leer aquí?
+        </h2>
+        <p className="mx-auto mt-3 max-w-[50ch] text-[17px] text-foreground/70">
+          Proponme un tema de datos o IA y lo convierto en el próximo escrito.
+        </p>
+        <div className="mt-8">
+          <Link href="/contact" className="pill-link">
+            Proponer tema
+          </Link>
         </div>
-        <Link
-          href="/contact"
-          className="shrink-0 rounded-xl bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
-        >
-          Proponer tema
-        </Link>
       </section>
     </main>
   )

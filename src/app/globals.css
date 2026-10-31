@@ -320,3 +320,80 @@
     color: #fff;
   }
 }
+
+/* Cuerpo de artículo tipo revista */
+@layer components {
+  .article-prose {
+    font-size: clamp(1.1rem, 1.3vw, 1.25rem);
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--foreground) 85%, transparent);
+  }
+  .article-prose section + section {
+    margin-top: 3.5rem;
+  }
+  .article-prose p + p,
+  .article-prose h2 + p,
+  .article-prose p + ul,
+  .article-prose ul + p {
+    margin-top: 1.4rem;
+  }
+  .article-prose > p:first-child::first-letter {
+    float: left;
+    font-family: var(--font-serif);
+    font-size: 4.6em;
+    line-height: 0.82;
+    margin: 0.08em 0.12em 0 0;
+    color: var(--cyan);
+  }
+  .article-prose h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--foreground);
+    margin-bottom: 1.25rem;
+  }
+  .article-prose ul {
+    list-style: disc;
+    padding-left: 1.4rem;
+  }
+  .article-prose li + li {
+    margin-top: 0.6rem;
+  }
+  .article-prose li::marker {
+    color: var(--cyan);
+  }
+  .article-prose strong {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .article-prose a {
+    color: var(--cyan);
+    text-decoration: underline;
+    text-decoration-color: var(--rust-light);
+    text-underline-offset: 4px;
+  }
+  /* Cita destacada: serif grande entre filetes, rompe la columna */
+  .article-prose blockquote {
+    margin: 3.5rem -2rem;
+    padding: 2rem 0;
+    border-block: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.2;
+    text-align: center;
+    color: var(--foreground);
+  }
+  @media (max-width: 767px) {
+    .article-prose blockquote {
+      margin-inline: 0;
+    }
+  }
+}
+@layer components {
+  .article-prose p + section,
+  .article-prose blockquote + section {
+    margin-top: 3.5rem;
+  }
+}

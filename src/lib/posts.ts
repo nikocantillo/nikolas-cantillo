@@ -50,3 +50,9 @@ export const posts: Post[] = [
     deco: "codigo ⇄ producto",
   },
 ]
+
+// Numeración tipo revista: el escrito más antiguo es el Nº 01.
+export function issueNumber(href: string) {
+  const i = posts.findIndex((p) => p.href === href)
+  return String(posts.length - i).padStart(2, "0")
+}

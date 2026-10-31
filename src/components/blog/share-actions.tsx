@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Copy, Share2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Check, Link2, Share2 } from "lucide-react"
 
 type ShareActionsProps = {
   title: string
@@ -43,16 +42,22 @@ export function ShareActions({ title, path }: ShareActionsProps) {
     await copyLink()
   }
 
+  const btn =
+    "inline-flex size-10 items-center justify-center rounded-full border border-black/15 text-foreground/70 transition-colors hover:border-accent/30 hover:bg-accent/5 hover:text-foreground"
+
   return (
-    <div className="flex flex-wrap items-center gap-2 pt-4">
-      <Button type="button" variant="outline" size="sm" onClick={shareLink}>
+    <div className="flex items-center gap-2">
+      <button type="button" onClick={shareLink} aria-label="Compartir" className={btn}>
         <Share2 className="size-4" />
-        Compartir
-      </Button>
-      <Button type="button" variant="outline" size="sm" onClick={copyLink}>
-        {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-        {copied ? "Copiado" : "Copy link"}
-      </Button>
+      </button>
+      <button
+        type="button"
+        onClick={copyLink}
+        aria-label={copied ? "Enlace copiado" : "Copiar enlace"}
+        className={btn}
+      >
+        {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
+      </button>
     </div>
   )
 }
