@@ -53,13 +53,13 @@
 }
 
 /*
-  Sistema "editorial": crema cálido + tinta negra, titulares en serif editorial
-  y un único acento óxido. Secciones que alternan crema, durazno y casi-negro;
+  Sistema "editorial": fondo blanco + tinta negra, titulares en serif editorial
+  y un único acento óxido. Un solo fondo continuo, sin bandas de color;
   jerarquía por tamaño tipográfico y aire, no por cajas ni sombras.
 */
 :root {
   --radius: 1.25rem;
-  --paper: #f8f2ee;
+  --paper: #ffffff;
   --peach: #f3e3dc;
   --night: #1a1919;
   --cyan: #c34109;
@@ -69,23 +69,23 @@
 
   --background: var(--paper);
   --foreground: #111010;
-  --card: #fffbf7;
+  --card: #f8f5f2;
   --card-foreground: #111010;
-  --popover: #fffbf7;
+  --popover: #ffffff;
   --popover-foreground: #111010;
   --primary: var(--cyan);
   --primary-foreground: #ffffff;
-  --secondary: #efe5de;
+  --secondary: #f3eeea;
   --secondary-foreground: #111010;
-  --muted: #efe5de;
+  --muted: #f3eeea;
   --muted-foreground: #5e5853;
   --accent: var(--cyan);
   --accent-foreground: #ffffff;
   --destructive: oklch(0.6 0.2 25);
-  --border: #e4d8d0;
-  --input: #e4d8d0;
+  --border: #ebe5e0;
+  --input: #ebe5e0;
   --ring: var(--cyan);
-  --ink: #d5c6bc;
+  --ink: #ddd4cd;
   --chart-1: var(--cyan);
   --chart-2: var(--violet);
   --chart-3: var(--amber);
@@ -95,9 +95,9 @@
   --sidebar-foreground: #111010;
   --sidebar-primary: var(--cyan);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #efe5de;
+  --sidebar-accent: #f3eeea;
   --sidebar-accent-foreground: #111010;
-  --sidebar-border: #e4d8d0;
+  --sidebar-border: #ebe5e0;
   --sidebar-ring: var(--cyan);
 }
 

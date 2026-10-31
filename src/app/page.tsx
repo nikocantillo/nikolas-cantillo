@@ -113,7 +113,7 @@ export default function Home() {
       {/* SOBRE MÍ — portada a pantalla completa */}
       <section
         id="sobre-mi"
-        className="bg-peach px-6 pt-28 pb-[15vh] md:min-h-screen md:flex md:flex-col md:justify-center"
+        className="px-6 pt-28 pb-[15vh] md:min-h-screen md:flex md:flex-col md:justify-center"
       >
         <div className="mx-auto w-full max-w-[740px] lg:max-w-[900px]">
           <div className="relative size-[160px] md:size-[200px] rounded-full overflow-hidden">
@@ -273,8 +273,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ENFOQUE — bloque oscuro */}
-      <section id="enfoque" className="bg-night text-white px-6 py-[15vh]">
+      {/* ENFOQUE */}
+      <section id="enfoque" className="px-6 pb-[15vh]">
         <div className="mx-auto max-w-[740px] lg:max-w-[900px] xl:max-w-[1000px]">
           <h2 className="font-display text-[clamp(2.25rem,4vw,3.75rem)] max-w-[20ch]">
             Mido con la métrica correcta y documento también lo que no funciona.
@@ -284,19 +284,19 @@ export default function Home() {
             {help.map((h) => (
               <div key={h.term}>
                 <dt className="font-display text-[1.6rem]">{h.term}</dt>
-                <dd className="mt-2 text-[16px] leading-relaxed text-white/65">{h.desc}</dd>
+                <dd className="mt-2 text-[16px] leading-relaxed text-foreground/65">{h.desc}</dd>
               </div>
             ))}
           </dl>
 
-          <div className="mt-14 border-t border-white/15">
+          <div className="mt-14 border-t border-black/10">
             {stack.map((row) => (
               <div
                 key={row.label}
-                className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-4 py-4 border-b border-white/15"
+                className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-4 py-4 border-b border-black/10"
               >
                 <span className="text-[15px] font-medium">{row.label}</span>
-                <span className="flex flex-wrap gap-x-5 gap-y-1 text-[15px] text-white/65">
+                <span className="flex flex-wrap gap-x-5 gap-y-1 text-[15px] text-foreground/65">
                   {row.items.map((it) => (
                     <span key={it}>{it}</span>
                   ))}
@@ -308,7 +308,7 @@ export default function Home() {
       </section>
 
       {/* BIOGRAFÍA */}
-      <section id="biografia" className="bg-peach px-6 py-[15vh]">
+      <section id="biografia" className="px-6 pb-[15vh]">
         <div className="mx-auto max-w-[740px] lg:max-w-[900px]">
           <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Biografía</h2>
           <div className="mt-8 space-y-6 text-[clamp(1.1rem,1.4vw,1.35rem)] leading-relaxed">
@@ -343,7 +343,7 @@ export default function Home() {
       </section>
 
       {/* CONTACTO */}
-      <section id="contacto" className="px-6 py-[15vh]">
+      <section id="contacto" className="px-6 pb-[15vh]">
         <div className="mx-auto max-w-[740px] lg:max-w-[900px]">
           <h2 className="font-display text-[clamp(2rem,3vw,3rem)]">Contacto</h2>
           <p className="mt-6 max-w-[52ch] text-[clamp(1.1rem,1.4vw,1.35rem)] leading-relaxed text-foreground/80">
