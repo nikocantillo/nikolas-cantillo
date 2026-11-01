@@ -23,6 +23,8 @@ if (existsSync(".env.local")) process.loadEnvFile(".env.local")
 const MODEL = process.env.ILLUSTRATE_MODEL || "claude-sonnet-5-5"
 const STYLE_PATH = "illustrations/style.md"
 const COVER_STYLE_PATH = "illustrations/cover-style.md"
+const MOBILE_STYLE_PATH = "illustrations/mobile-style.md"
+const MOBILE_WIDTH = 320
 const COVERS_REGISTRY = "src/lib/covers.ts"
 const MAX_RETRIES = 2
 const TYPES = ["flow", "structural", "comparison", "illustrative"] as const
@@ -50,6 +52,12 @@ Antes de escribir, calcula mentalmente anchos de texto (~8px/char a 14px, ~7px/c
 y dimensiona cajas con 24px de padding. Ninguna flecha cruza cajas ajenas.
 Ningún texto se superpone a otro elemento. Devuelve SOLO el SVG, sin explicación.`
 
+const MOBILE_INSTRUCTIONS = `Recibes un diagrama SVG de escritorio (680px de ancho). Rehazlo como su variante
+móvil siguiendo el complemento anterior: mismo contenido, mismas etiquetas, colores y clases,
+reorganizado en una sola columna de 320px. Antes de escribir, calcula anchos de texto
+(~8px/char a 14px, ~7px/char a 12px) y parte en dos líneas lo que no quepa. Ningún texto se
+superpone a otro elemento. Devuelve SOLO el SVG, sin explicación.`
+
 const COVER_INSTRUCTIONS = `Diseña UNA portada SVG que cumpla estrictamente el spec anterior para el escrito
 que recibes. Antes de dibujar, elige una sola metáfora visual de su idea central y compónla con
 pocas formas. Devuelve SOLO el SVG, sin explicación.`
@@ -62,7 +70,13 @@ type FigurePlan = {
   elements: string[]
   caption: string
 }
-type ManifestFigure = FigurePlan & { file: string; model: string; sectionHash: string; styleHash: string }
+type ManifestFigure = FigurePlan & {
+  file: string
+  model: string
+  sectionHash: string
+  styleHash: string
+  mobileHash?: string
+}
 type CoverEntry = { file: string; model: string; articleHash: string; styleHash: string }
 type Manifest = { slug: string; figures: ManifestFigure[]; cover?: CoverEntry }
 
@@ -73,6 +87,10 @@ const styleHash = sha256(styleMd)
 const canonicalCss = styleMd.match(/```css\r?\n([\s\S]*?)```/)?.[1].trim() ?? ""
 if (!canonicalCss) throw new Error(`No encontré el bloque css canónico en ${STYLE_PATH}`)
 const palette = new Set((canonicalCss.match(/#[0-9a-fA-F]{3,8}\b/g) ?? []).map((h) => h.toLowerCase()))
+
+const mobileStyleMd = readFileSync(MOBILE_STYLE_PATH, "utf8")
+// La variante móvil depende del SVG de escritorio y de ambos specs.
+const mobileHashOf = (desktopSvg: string) => sha256(`${desktopSvg}\n${styleMd}\n${mobileStyleMd}`)
 
 const coverStyleMd = readFileSync(COVER_STYLE_PATH, "utf8")
 const coverStyleHash = sha256(coverStyleMd)
@@ -192,6 +210,21 @@ function generate(fig: FigurePlan, section: Section) {
   )
 }
 
+function generateMobile(desktopSvg: string, section: Section) {
+  return generateValidated(
+    [
+      {
+        type: "text",
+        text: `${styleMd}\n\n${mobileStyleMd}\n\n${MOBILE_INSTRUCTIONS}`,
+        cache_control: { type: "ephemeral" },
+      },
+    ],
+    `Diagrama de escritorio:\n${desktopSvg}\n\nTexto de la sección "${section.heading}":\n${section.text}`,
+    normalizeSvg,
+    (svg) => validateSvg(svg, palette, canonicalCss, MOBILE_WIDTH),
+  )
+}
+
 const extractSvg = (text: string) => {
   const start = text.indexOf("<svg")
   const end = text.lastIndexOf("</svg>")
@@ -282,6 +315,13 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
   const manifestPath = `${outDir}/manifest.json`
   const previous: Manifest | null = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : null
   const sectionHash = (heading: string) => sha256(sections.find((s) => s.heading === heading)?.text ?? "")
+  const mobileStale = (f: ManifestFigure) => {
+    const desktop = `${outDir}/${f.id}.svg`
+    const mobile = `${outDir}/${f.id}.mobile.svg`
+    if (!existsSync(desktop)) return true
+    if (existsSync(mobile) && readFileSync(mobile, "utf8").includes("<!-- manual -->")) return false
+    return !existsSync(mobile) || f.mobileHash !== mobileHashOf(readFileSync(desktop, "utf8"))
+  }
 
   // El plan se reutiliza del manifest salvo --force; así una sección editada solo
   // regenera sus figuras.
@@ -292,7 +332,8 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
       (f) =>
         f.sectionHash !== sectionHash(f.after_heading) ||
         f.styleHash !== styleHash ||
-        !existsSync(`${outDir}/${f.id}.svg`),
+        !existsSync(`${outDir}/${f.id}.svg`) ||
+        mobileStale(f),
     )
     if (!stale.length) {
       console.log("  al día (caché): nada que regenerar")
@@ -317,6 +358,26 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
   mkdirSync(`illustrations/.previews/${slug}`, { recursive: true })
   const manifest: Manifest = { slug, figures: [], cover: previous?.cover }
 
+  // Variante móvil (fig-NN.mobile.svg): se rehace si cambió el SVG de escritorio o un spec.
+  const ensureMobile = async (f: ManifestFigure) => {
+    if (!mobileStale(f)) return
+    const desktopSvg = readFileSync(`${outDir}/${f.id}.svg`, "utf8")
+    const section = sections.find((s) => s.heading === f.after_heading)
+    if (!section) return
+    console.log(`  ${f.id}: generando variante móvil`)
+    try {
+      const { svg, png } = await generateMobile(desktopSvg, section)
+      writeFileSync(`${outDir}/${f.id}.mobile.svg`, svg)
+      if (png) writeFileSync(`illustrations/.previews/${slug}/${f.id}.mobile.png`, png)
+      f.mobileHash = mobileHashOf(desktopSvg)
+      report.created.push(`${slug}/${f.id}.mobile`)
+      console.log(`  ${f.id}: ✓ móvil`)
+    } catch (e) {
+      console.log(`  ${f.id}: ✗ móvil no generada (se usará la de escritorio con scroll)\n      ${(e as Error).message}`)
+      report.failed.push(`${slug}/${f.id}.mobile`)
+    }
+  }
+
   for (const f of figures) {
     const file = `${outDir}/${f.id}.svg`
     const src = `/blog/${slug}/${f.id}.svg`
@@ -328,12 +389,14 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
       console.log(`  ${f.id}: editada a mano, se respeta`)
       report.skipped.push(`${slug}/${f.id} (manual)`)
       manifest.figures.push(old ?? entry)
+      await ensureMobile(old ?? entry)
       continue
     }
     if (!force && existsSync(file) && old?.sectionHash === hash && old.styleHash === styleHash) {
       console.log(`  ${f.id}: sin cambios (caché)`)
       report.skipped.push(`${slug}/${f.id} (caché)`)
       manifest.figures.push(old)
+      await ensureMobile(old)
       continue
     }
 
@@ -346,9 +409,11 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
       if (!insertFigure(slug, f.after_heading, src, f.caption)) {
         throw new Error(`no encontré dónde insertar tras "${f.after_heading}"`)
       }
-      manifest.figures.push({ ...entry, model: MODEL })
+      const created = { ...entry, model: MODEL, mobileHash: undefined }
+      manifest.figures.push(created)
       report.created.push(`${slug}/${f.id}`)
       console.log(`  ${f.id}: ✓ ${file}`)
+      await ensureMobile(created)
     } catch (e) {
       console.log(`  ${f.id}: ✗ no se inserta\n      ${(e as Error).message}`)
       report.failed.push(`${slug}/${f.id}`)
@@ -362,6 +427,7 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
     if (existsSync(file) && readFileSync(file, "utf8").includes("<!-- manual -->")) continue
     removeFigure(slug, p.file)
     rmSync(file, { force: true })
+    rmSync(`${outDir}/${p.id}.mobile.svg`, { force: true })
     console.log(`  ${p.id}: ya no está en el plan, se quitó`)
   }
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)

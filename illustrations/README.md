@@ -29,6 +29,14 @@ npm run illustrate -- --all --cover      # portadas para todos los que no tienen
 npm run illustrate -- --all --og         # rehacer las imágenes para redes (sin API)
 ```
 
+## Versión móvil de los diagramas
+
+Cada figura tiene además `fig-NN.mobile.svg`: el mismo diagrama rehecho en una columna de
+320px (spec en `illustrations/mobile-style.md`), generado a partir del SVG de escritorio y
+validado igual que él. En pantallas de hasta 640px `<Figure>` muestra esa versión a tamaño
+real; si una figura no tiene versión móvil, se muestra la de escritorio con scroll lateral.
+Se regenera sola cuando cambia el SVG de escritorio o algún spec.
+
 ## Portadas
 
 `--cover` genera `public/blog/<slug>/cover.svg` con el spec de `illustrations/cover-style.md`:

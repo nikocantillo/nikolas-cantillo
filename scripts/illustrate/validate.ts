@@ -96,7 +96,7 @@ const forMeasure = (s: string) =>
     .replace(/font-family:\s*"IBM Plex Mono"[^;]*;/g, `font-family: "${mono}";`)
     .replace(/font-family:\s*"Inter Tight"[^;]*;/g, `font-family: "${sans}";`)
 
-export function validateSvg(svg: string, palette: Set<string>, rawCss: string): ValidationResult {
+export function validateSvg(svg: string, palette: Set<string>, rawCss: string, width = 680): ValidationResult {
   const errors: string[] = []
   const css = forMeasure(rawCss)
   const valid = XMLValidator.validate(svg)
@@ -109,8 +109,8 @@ export function validateSvg(svg: string, palette: Set<string>, rawCss: string): 
   const ra = attrsOf(root)
   if (ra.role !== "img") errors.push('La raíz debe tener role="img".')
   const vb = (ra.viewBox ?? "").trim().split(/[\s,]+/).map(Number)
-  if (vb.length !== 4 || vb[0] !== 0 || vb[1] !== 0 || vb[2] !== 680 || !(vb[3] > 0)) {
-    errors.push(`viewBox debe ser "0 0 680 H"; es "${ra.viewBox ?? ""}".`)
+  if (vb.length !== 4 || vb[0] !== 0 || vb[1] !== 0 || vb[2] !== width || !(vb[3] > 0)) {
+    errors.push(`viewBox debe ser "0 0 ${width} H"; es "${ra.viewBox ?? ""}".`)
   }
   const height = vb[3] > 0 ? vb[3] : 0
   const kids = childrenOf(root)
@@ -183,7 +183,7 @@ export function validateSvg(svg: string, palette: Set<string>, rawCss: string): 
   const measured: { label: string; box: Box; parent: Box | null }[] = []
   for (const t of texts) {
     const isolated =
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ra.viewBox}" width="680" height="${height}">` +
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ra.viewBox}" width="${width}" height="${height}">` +
       `<style>${css}</style>${builder.build([t.node])}</svg>`
     let box: Box | undefined
     try {
@@ -193,7 +193,7 @@ export function validateSvg(svg: string, palette: Set<string>, rawCss: string): 
     }
     if (!box) continue
     measured.push({ label: t.label, box, parent: t.parent })
-    if (box.x < 0 || box.y < 0 || box.x + box.width > 680 || box.y + box.height > height) {
+    if (box.x < 0 || box.y < 0 || box.x + box.width > width || box.y + box.height > height) {
       errors.push(`El texto "${t.label}" se sale del viewBox.`)
     }
     if (t.parent && !inside(box, t.parent)) {

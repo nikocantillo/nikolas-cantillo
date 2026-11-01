@@ -409,15 +409,26 @@
     width: 100%;
     height: auto;
   }
-  /* En móvil la figura no baja de 560px (etiquetas >= 11.5px) y se desplaza en su
-     propio contenedor; la página no gana scroll horizontal. */
+  .article-figure .fig-mobile {
+    display: none;
+  }
   @media (max-width: 640px) {
-    .article-figure > div {
+    /* Con variante móvil (320px, una columna) se muestra esa, a tamaño real. */
+    .article-figure.has-mobile .fig-desktop {
+      display: none;
+    }
+    .article-figure.has-mobile .fig-mobile {
+      display: block;
+      max-width: 360px;
+      margin-inline: auto;
+    }
+    /* Respaldo sin variante móvil: no baja de 560px y se desplaza en su contenedor. */
+    .article-figure:not(.has-mobile) .fig-desktop {
       overflow-x: auto;
       margin-inline: -1.5rem;
       padding-inline: 1.5rem;
     }
-    .article-figure svg {
+    .article-figure:not(.has-mobile) .fig-desktop svg {
       min-width: 560px;
     }
   }

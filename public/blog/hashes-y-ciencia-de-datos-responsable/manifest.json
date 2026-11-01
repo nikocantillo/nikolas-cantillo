@@ -17,7 +17,8 @@
       "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-01.svg",
       "model": "claude-sonnet-5-5",
       "sectionHash": "b802d456193e1db61d92dc3af2628e5296dcbd2cfab4128bfb239d77cd9e5965",
-      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937",
+      "mobileHash": "b4c463087611d6c233c27b37e9a4464d1f03202759ef7bcad9b8b36d72892956"
     },
     {
       "id": "fig-02",
@@ -36,7 +37,8 @@
       "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-02.svg",
       "model": "claude-sonnet-5-5",
       "sectionHash": "8a99b89e0c31931fd1e12420089ff65dece88eb1ce67b66925d05a56cab0cd7a",
-      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937",
+      "mobileHash": "fe2cbcd39caaa507f0af103b94a511d3dc3f4b9134693f856e6fec9baada32f4"
     },
     {
       "id": "fig-03",
@@ -55,7 +57,8 @@
       "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-03.svg",
       "model": "claude-sonnet-5-5",
       "sectionHash": "b3a00322b203462b196f3ffc6db678a5da026fd932405d0abbd388cad446e7cd",
-      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937",
+      "mobileHash": "29e05f0b253684f08240394b3d022beefb9045b5c455e64b42d923a42c1ccbe1"
     },
     {
       "id": "fig-04",
@@ -74,7 +77,8 @@
       "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-04.svg",
       "model": "claude-sonnet-5-5",
       "sectionHash": "733282770bcd589c9393da719e6b7ca08197e1822220c7815558df86eb3b4b8c",
-      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937",
+      "mobileHash": "58df5d970f16e20f53178fdf8b315aa045ab98009b620d265d8ab6dbeca04c3c"
     }
   ],
   "cover": {
