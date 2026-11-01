@@ -1,4 +1,7 @@
 import { ArticleLayout } from "@/components/blog/article-layout"
+import { articleMetadata } from "@/lib/posts"
+
+export const metadata = articleMetadata("/blog/data-mesh-arquitectura-datos")
 
 export default function DataMeshArquitecturaDatosPage() {
   return (

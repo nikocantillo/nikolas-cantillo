@@ -1,0 +1,1 @@
+Data Mesh: arquitectura de datos para escalar equipos y decisiones

@@ -5,6 +5,7 @@
 //   npm run illustrate -- <slug> --force    regenerar aunque no haya cambios
 //   npm run illustrate -- <slug> --dry-run  solo mostrar el plan de figuras
 //   npm run illustrate -- <slug> --cover    generar la portada (imagen principal)
+//   npm run illustrate -- <slug> --og       rehacer la imagen para redes desde la portada (sin API)
 //
 // Requiere ANTHROPIC_API_KEY (en .env.local o en el entorno). Modelo: ILLUSTRATE_MODEL.
 // Detalles en illustrations/README.md.
@@ -12,6 +13,7 @@
 import { createHash } from "node:crypto"
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import Anthropic from "@anthropic-ai/sdk"
+import { Resvg } from "@resvg/resvg-js"
 import { insertFigure, readPost, removeFigure, type Section } from "./illustrate/post"
 import { validateCover, validateSvg, type ValidationResult } from "./illustrate/validate"
 import { posts } from "../src/lib/posts"
@@ -209,6 +211,21 @@ function writeCoversRegistry() {
   )
 }
 
+// Imagen para Facebook/LinkedIn/X: PNG 1200×630 recortado al centro de la portada (los
+// SVG no sirven como og:image). Next la publica sola como og:image de la ruta.
+function writeOgImage(slug: string) {
+  const cover = `public/blog/${slug}/cover.svg`
+  if (!existsSync(cover)) return false
+  const post = posts.find((p) => p.href === `/blog/${slug}`)
+  const svg = readFileSync(cover, "utf8")
+    .replace(/viewBox="0 0 1200 675"/, 'viewBox="0 22.5 1200 630"')
+    .replace(/(<svg[^>]*?)\sheight="675"/, '$1 height="630"')
+  const png = new Resvg(svg, { fitTo: { mode: "width", value: 1200 }, logLevel: "off" }).render().asPng()
+  writeFileSync(`src/app/blog/${slug}/opengraph-image.png`, png)
+  writeFileSync(`src/app/blog/${slug}/opengraph-image.alt.txt`, post?.title ?? slug)
+  return true
+}
+
 async function illustrateCover(slug: string, force: boolean) {
   console.log(`\n▸ ${slug} (portada)`)
   const post = posts.find((p) => p.href === `/blog/${slug}`)
@@ -249,6 +266,7 @@ async function illustrateCover(slug: string, force: boolean) {
     manifest.cover = { file: `/blog/${slug}/cover.svg`, model: MODEL, articleHash, styleHash: coverStyleHash }
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
     writeCoversRegistry()
+    writeOgImage(slug)
     report.created.push(`${slug}/cover`)
     console.log(`  portada: ✓ ${file}`)
   } catch (e) {
@@ -355,6 +373,7 @@ async function main() {
   const dryRun = args.includes("--dry-run")
   const all = args.includes("--all")
   const coverMode = args.includes("--cover")
+  const ogMode = args.includes("--og")
   const slugs = all
     ? readdirSync("src/app/blog", { withFileTypes: true })
         .filter((d) => d.isDirectory() && existsSync(`src/app/blog/${d.name}/page.tsx`))
@@ -364,12 +383,12 @@ async function main() {
           const m = `public/blog/${s}/manifest.json`
           if (!existsSync(m)) return true
           const data = JSON.parse(readFileSync(m, "utf8")) as Manifest
-          return coverMode ? !data.cover : !data.figures.length
+          return coverMode ? !data.cover : ogMode ? true : !data.figures.length
         })
     : args.filter((a) => !a.startsWith("--"))
 
   if (!slugs.length) {
-    console.log("Uso: npm run illustrate -- <slug> [--force] [--dry-run] [--cover]  |  npm run illustrate -- --all [--cover]")
+    console.log("Uso: npm run illustrate -- <slug> [--force] [--dry-run] [--cover] [--og]  |  npm run illustrate -- --all [--cover]")
     process.exit(all ? 0 : 1)
   }
   for (const slug of slugs) {
@@ -379,7 +398,11 @@ async function main() {
       continue
     }
     try {
-      if (coverMode) await illustrateCover(slug, force)
+      if (ogMode) {
+        const ok = writeOgImage(slug)
+        console.log(`\n▸ ${slug}: ${ok ? "✓ opengraph-image.png" : "sin portada, se omite"}`)
+        ;(ok ? report.created : report.skipped).push(`${slug}/og`)
+      } else if (coverMode) await illustrateCover(slug, force)
       else await illustrate(slug, force, dryRun)
     } catch (e) {
       if (e instanceof Anthropic.AuthenticationError) {

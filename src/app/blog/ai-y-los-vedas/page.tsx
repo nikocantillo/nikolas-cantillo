@@ -1,4 +1,7 @@
 import { ArticleLayout } from "@/components/blog/article-layout"
+import { articleMetadata } from "@/lib/posts"
+
+export const metadata = articleMetadata("/blog/ai-y-los-vedas")
 
 export default function AiYLosVedasPage() {
   return (

@@ -1,8 +1,11 @@
 import Link from "next/link"
 import { ArticleLayout } from "@/components/blog/article-layout"
+import { articleMetadata } from "@/lib/posts"
 import { Figure } from "@/components/blog/figure"
 
 const SOURCE_URL = "https://humanistreview.ai/issue-1/acemoglu-ai-replace-workers/"
+
+export const metadata = articleMetadata("/blog/acemoglu-ia-pro-trabajador")
 
 export default function AcemogluIaProTrabajadorPage() {
   return (

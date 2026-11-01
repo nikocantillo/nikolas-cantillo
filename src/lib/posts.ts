@@ -1,3 +1,5 @@
+import type { Metadata } from "next"
+
 export type Post = {
   title: string
   excerpt: string
@@ -65,4 +67,26 @@ export const posts: Post[] = [
 export function issueNumber(href: string) {
   const i = posts.findIndex((p) => p.href === href)
   return String(posts.length - i).padStart(2, "0")
+}
+
+// Metadata de cada escrito para buscadores y redes. La imagen la aporta el archivo
+// opengraph-image.png de la carpeta del escrito (lo genera scripts/illustrate.ts).
+export function articleMetadata(href: string): Metadata {
+  const post = posts.find((p) => p.href === href)
+  if (!post) return {}
+  return {
+    title: `${post.title} · Nikolas Cantillo`,
+    description: post.excerpt,
+    alternates: { canonical: href },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      url: href,
+      siteName: "Nikolas Cantillo",
+      locale: "es_CL",
+      authors: ["Nikolas Cantillo"],
+    },
+    twitter: { card: "summary_large_image", title: post.title, description: post.excerpt },
+  }
 }

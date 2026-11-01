@@ -1,5 +1,8 @@
 import { ArticleLayout } from "@/components/blog/article-layout"
+import { articleMetadata } from "@/lib/posts"
 import { Figure } from "@/components/blog/figure"
+
+export const metadata = articleMetadata("/blog/hashes-y-ciencia-de-datos-responsable")
 
 export default function HashesCienciaDatosResponsablePage() {
   return (

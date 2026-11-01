@@ -26,6 +26,7 @@ npm run illustrate -- <slug> --force     # regenerar aunque no haya cambios
 npm run illustrate -- <slug> --dry-run   # solo mostrar el plan (1 llamada, no escribe nada)
 npm run illustrate -- <slug> --cover     # portada ilustrada (imagen principal)
 npm run illustrate -- --all --cover      # portadas para todos los que no tienen
+npm run illustrate -- --all --og         # rehacer las imágenes para redes (sin API)
 ```
 
 ## Portadas
@@ -35,7 +36,9 @@ una ilustración editorial abstracta (papel rasgado, capas, una metáfora visual
 del escrito, sin texto) en la paleta de las portadas. Se valida (XML, 1200×675, paleta,
 sin texto ni imágenes, solo el filtro de grano) y se registra en `src/lib/covers.ts`, que
 `ArticleCover` consulta: si un escrito no tiene portada generada, sigue usando el papel
-rasgado automático. Misma caché (por texto del escrito + spec) y mismo `<!-- manual -->`.
+rasgado automático. Además escribe `src/app/blog/<slug>/opengraph-image.png` (1200×630,
+recorte central de la portada): Next la publica como `og:image` para Facebook, LinkedIn y X.
+Misma caché (por texto del escrito + spec) y mismo `<!-- manual -->`.
 
 Por cada escrito:
 
