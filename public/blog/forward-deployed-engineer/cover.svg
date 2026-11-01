@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img">
+  <title>Un puente entre dos orillas</title>
+  <desc>Dos masas de papel rasgado, una salmón y otra oscura, separadas por un vacío. Una banda clara las une como un puente, bajo un círculo óxido que representa el impacto real que nace de unir producto y tecnología.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0" result="a"/>
+      <feComposite in="a" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="#f3e3dc"/>
+
+  <!-- círculo: el impacto -->
+  <circle cx="600" cy="205" r="100" fill="#c34109"/>
+  <circle cx="600" cy="205" r="100" fill="#1a1919" filter="url(#grain)" opacity="0.18"/>
+
+  <!-- orilla izquierda: canto claro -->
+  <path d="M-10,675 L-10,408 L60,400 L110,406 L170,390 L230,396 L290,380 L340,387 L395,368 L440,376 L480,360 L512,368 L510,408 L524,458 L508,508 L520,563 L506,675 Z" fill="#fffbf7"/>
+  <!-- orilla izquierda -->
+  <path d="M-10,675 L-10,424 L60,416 L110,422 L170,406 L230,412 L290,396 L340,403 L395,384 L440,392 L480,376 L505,384 L498,424 L512,474 L496,524 L508,579 L494,675 Z" fill="#f09885"/>
+  <path d="M-10,675 L-10,424 L60,416 L110,422 L170,406 L230,412 L290,396 L340,403 L395,384 L440,392 L480,376 L505,384 L498,424 L512,474 L496,524 L508,579 L494,675 Z" fill="#8a3a14" filter="url(#grain)" opacity="0.16"/>
+
+  <!-- orilla derecha: canto claro -->
+  <path d="M1210,675 L1210,318 L1140,310 L1085,318 L1030,300 L975,306 L920,288 L870,296 L815,278 L770,286 L725,270 L688,280 L698,328 L682,383 L696,438 L680,498 L692,568 L684,675 Z" fill="#fffbf7"/>
+  <!-- orilla derecha -->
+  <path d="M1210,675 L1210,330 L1140,322 L1085,330 L1030,312 L975,318 L920,300 L870,308 L815,290 L770,298 L725,282 L700,292 L710,340 L694,395 L708,450 L692,510 L704,580 L696,675 Z" fill="#1a1919"/>
+
+  <!-- puente: canto óxido -->
+  <path d="M428,362 L478,357 L540,350 L600,345 L660,336 L720,326 L792,316 L796,350 L724,358 L662,368 L602,376 L540,381 L480,388 L430,394 Z" fill="#c34109"/>
+  <!-- puente: banda de papel -->
+  <path d="M430,350 L452,347 L480,346 L512,341 L540,340 L572,335 L600,334 L632,328 L660,326 L692,320 L720,316 L756,311 L790,306 L794,322 L790,338 L756,342 L722,347 L690,352 L660,356 L630,361 L600,364 L570,368 L540,370 L510,374 L480,376 L452,380 L432,382 L436,366 Z" fill="#fffbf7"/>
+</svg>

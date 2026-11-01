@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img">
+  <title>Tradición, datos y criterio</title>
+  <desc>Un círculo de óxido atravesado por una órbita queda parcialmente cubierto por una capa oscura de papel rasgado con una constelación de puntos unidos; en la rasgadura, un círculo claro representa el criterio humano que media entre tradición y datos.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="4" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 -0.3" result="m"/>
+      <feComposite in="m" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="#f3e3dc"/>
+
+  <!-- círculo limpio: la tradición -->
+  <circle cx="700" cy="340" r="210" fill="#c34109"/>
+
+  <!-- órbita -->
+  <ellipse cx="700" cy="340" rx="310" ry="112" transform="rotate(-20 700 340)" fill="none" stroke="#1a1919" stroke-width="3"/>
+
+  <!-- banda inferior rasgada -->
+  <path d="M770,675 L778,628 L796,640 L815,606 L842,622 L868,590 L897,606 L925,576 L958,594 L990,566 L1024,582 L1060,560 L1096,574 L1130,556 L1200,566 L1200,675 Z" fill="#fffbf7"/>
+  <path d="M770,675 L782,640 L800,652 L820,620 L846,634 L872,604 L900,619 L928,590 L962,606 L994,580 L1028,594 L1064,574 L1100,588 L1134,570 L1200,578 L1200,675 Z" fill="#f09885"/>
+
+  <!-- canto claro de la capa oscura -->
+  <path transform="translate(12,3)" d="M0,0 L610,0 L598,34 L612,58 L603,92 L622,121 L611,150 L629,184 L618,212 L640,246 L628,274 L647,305 L636,336 L652,368 L640,399 L658,431 L645,462 L634,497 L648,526 L630,558 L641,590 L622,622 L630,650 L618,675 L0,675 Z" fill="#fffbf7"/>
+
+  <!-- capa oscura rasgada: los datos -->
+  <path d="M0,0 L610,0 L598,34 L612,58 L603,92 L622,121 L611,150 L629,184 L618,212 L640,246 L628,274 L647,305 L636,336 L652,368 L640,399 L658,431 L645,462 L634,497 L648,526 L630,558 L641,590 L622,622 L630,650 L618,675 L0,675 Z" fill="#1a1919"/>
+  <path d="M0,0 L610,0 L598,34 L612,58 L603,92 L622,121 L611,150 L629,184 L618,212 L640,246 L628,274 L647,305 L636,336 L652,368 L640,399 L658,431 L645,462 L634,497 L648,526 L630,558 L641,590 L622,622 L630,650 L618,675 L0,675 Z" fill="#fffbf7" filter="url(#grain)" opacity="0.18"/>
+
+  <!-- constelación: patrones -->
+  <g stroke="#fffbf7" stroke-width="1.5" fill="none" opacity="0.7">
+    <polyline points="180,160 290,250 240,380 400,330 470,450 360,520"/>
+    <line x1="290" y1="250" x2="400" y2="330"/>
+  </g>
+  <g fill="#fffbf7">
+    <circle cx="180" cy="160" r="6"/>
+    <circle cx="240" cy="380" r="6"/>
+    <circle cx="400" cy="330" r="6"/>
+    <circle cx="470" cy="450" r="6"/>
+    <circle cx="360" cy="520" r="6"/>
+  </g>
+  <circle cx="290" cy="250" r="10" fill="#f09885"/>
+
+  <!-- criterio humano en la rasgadura -->
+  <circle cx="642" cy="400" r="38" fill="#fffbf7"/>
+</svg>

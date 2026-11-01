@@ -1,0 +1,10 @@
+{
+  "slug": "ai-y-los-vedas",
+  "figures": [],
+  "cover": {
+    "file": "/blog/ai-y-los-vedas/cover.svg",
+    "model": "claude-sonnet-5-5",
+    "articleHash": "572afb132d2f2f47e37b624af5089169239f0f4df22bf9999f7163683c379dce",
+    "styleHash": "2ea2241452e565d7fa27da7811a74fac72b6d24ea1868eca7999286e1be703bb"
+  }
+}

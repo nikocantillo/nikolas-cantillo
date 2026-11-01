@@ -76,5 +76,11 @@
       "sectionHash": "733282770bcd589c9393da719e6b7ca08197e1822220c7815558df86eb3b4b8c",
       "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
     }
-  ]
+  ],
+  "cover": {
+    "file": "/blog/hashes-y-ciencia-de-datos-responsable/cover.svg",
+    "model": "claude-sonnet-5-5",
+    "articleHash": "9e66e32bd4080d3d7b51ce65eaf7528f17fb62ca6d51ba00047b38be93ede69a",
+    "styleHash": "2ea2241452e565d7fa27da7811a74fac72b6d24ea1868eca7999286e1be703bb"
+  }
 }

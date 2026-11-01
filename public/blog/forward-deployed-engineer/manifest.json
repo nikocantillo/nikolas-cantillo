@@ -1,0 +1,10 @@
+{
+  "slug": "forward-deployed-engineer",
+  "figures": [],
+  "cover": {
+    "file": "/blog/forward-deployed-engineer/cover.svg",
+    "model": "claude-sonnet-5-5",
+    "articleHash": "6f915c214523a10c2481086de25b6b7bd2f1b8eb0f005192dac433aa8f9f5ba2",
+    "styleHash": "2ea2241452e565d7fa27da7811a74fac72b6d24ea1868eca7999286e1be703bb"
+  }
+}

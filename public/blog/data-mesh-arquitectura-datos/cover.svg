@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img">
+  <title>Data Mesh: dominios distribuidos sobre una base común</title>
+  <desc>Cuatro piezas de papel rasgado, que representan dominios de datos, se reparten alrededor de un círculo central y quedan unidas por una banda horizontal. Simboliza la responsabilidad distribuida bajo una plataforma y estándares compartidos.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0.9 -0.25" result="m"/>
+      <feComposite in="m" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="#f3e3dc"/>
+
+  <!-- plataforma: forma limpia -->
+  <circle cx="720" cy="338" r="230" fill="#f09885"/>
+  <circle cx="720" cy="338" r="230" fill="#1a1919" filter="url(#grain)" opacity="0.35"/>
+
+  <!-- governance: banda común -->
+  <rect x="160" y="334" width="880" height="8" fill="#1a1919"/>
+
+  <!-- dominio A -->
+  <path transform="translate(-10,10)" fill="#fffbf7" d="M250,160 L282,154 L318,162 L356,152 L392,160 L430,151 L470,158 L520,150 L526,190 L519,230 L527,270 L520,318 L480,324 L440,316 L400,326 L360,317 L320,325 L280,318 L252,322 L258,280 L249,240 L256,200 Z"/>
+  <path fill="#1a1919" d="M250,160 L282,154 L318,162 L356,152 L392,160 L430,151 L470,158 L520,150 L526,190 L519,230 L527,270 L520,318 L480,324 L440,316 L400,326 L360,317 L320,325 L280,318 L252,322 L258,280 L249,240 L256,200 Z"/>
+
+  <!-- dominio B -->
+  <path transform="translate(10,10)" fill="#fffbf7" d="M640,130 L690,122 L730,131 L780,120 L830,129 L900,124 L894,170 L903,215 L895,262 L902,306 L850,312 L800,303 L750,314 L700,305 L648,312 L653,270 L641,225 L650,175 Z"/>
+  <path fill="#c34109" d="M640,130 L690,122 L730,131 L780,120 L830,129 L900,124 L894,170 L903,215 L895,262 L902,306 L850,312 L800,303 L750,314 L700,305 L648,312 L653,270 L641,225 L650,175 Z"/>
+
+  <!-- dominio C -->
+  <path transform="translate(-10,10)" fill="#c34109" d="M520,380 L570,372 L620,382 L670,370 L720,381 L790,374 L783,425 L792,470 L784,520 L790,560 L730,552 L680,563 L630,553 L575,564 L525,555 L532,510 L521,460 L531,420 Z"/>
+  <path fill="#fffbf7" d="M520,380 L570,372 L620,382 L670,370 L720,381 L790,374 L783,425 L792,470 L784,520 L790,560 L730,552 L680,563 L630,553 L575,564 L525,555 L532,510 L521,460 L531,420 Z"/>
+
+  <!-- dominio D -->
+  <path transform="translate(9,9)" fill="#fffbf7" d="M860,380 L900,372 L945,382 L990,374 L984,420 L992,465 L985,500 L940,508 L895,498 L858,506 L864,460 L856,420 Z"/>
+  <path fill="#c34109" d="M860,380 L900,372 L945,382 L990,374 L984,420 L992,465 L985,500 L940,508 L895,498 L858,506 L864,460 L856,420 Z"/>
+</svg>
