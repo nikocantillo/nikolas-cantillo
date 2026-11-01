@@ -4,6 +4,7 @@
 //   npm run illustrate -- --all             todos los que aún no tienen figuras
 //   npm run illustrate -- <slug> --force    regenerar aunque no haya cambios
 //   npm run illustrate -- <slug> --dry-run  solo mostrar el plan de figuras
+//   npm run illustrate -- <slug> --cover    generar la portada (imagen principal)
 //
 // Requiere ANTHROPIC_API_KEY (en .env.local o en el entorno). Modelo: ILLUSTRATE_MODEL.
 // Detalles en illustrations/README.md.
@@ -12,12 +13,15 @@ import { createHash } from "node:crypto"
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import Anthropic from "@anthropic-ai/sdk"
 import { insertFigure, readPost, removeFigure, type Section } from "./illustrate/post"
-import { validateSvg } from "./illustrate/validate"
+import { validateCover, validateSvg, type ValidationResult } from "./illustrate/validate"
+import { posts } from "../src/lib/posts"
 
 if (existsSync(".env.local")) process.loadEnvFile(".env.local")
 
 const MODEL = process.env.ILLUSTRATE_MODEL || "claude-sonnet-5-5"
 const STYLE_PATH = "illustrations/style.md"
+const COVER_STYLE_PATH = "illustrations/cover-style.md"
+const COVERS_REGISTRY = "src/lib/covers.ts"
 const MAX_RETRIES = 2
 const TYPES = ["flow", "structural", "comparison", "illustrative"] as const
 
@@ -44,6 +48,10 @@ Antes de escribir, calcula mentalmente anchos de texto (~8px/char a 14px, ~7px/c
 y dimensiona cajas con 24px de padding. Ninguna flecha cruza cajas ajenas.
 Ningún texto se superpone a otro elemento. Devuelve SOLO el SVG, sin explicación.`
 
+const COVER_INSTRUCTIONS = `Diseña UNA portada SVG que cumpla estrictamente el spec anterior para el escrito
+que recibes. Antes de dibujar, elige una sola metáfora visual de su idea central y compónla con
+pocas formas. Devuelve SOLO el SVG, sin explicación.`
+
 type FigurePlan = {
   id: string
   after_heading: string
@@ -53,7 +61,8 @@ type FigurePlan = {
   caption: string
 }
 type ManifestFigure = FigurePlan & { file: string; model: string; sectionHash: string; styleHash: string }
-type Manifest = { slug: string; figures: ManifestFigure[] }
+type CoverEntry = { file: string; model: string; articleHash: string; styleHash: string }
+type Manifest = { slug: string; figures: ManifestFigure[]; cover?: CoverEntry }
 
 const sha256 = (s: string) => createHash("sha256").update(s).digest("hex")
 
@@ -62,6 +71,10 @@ const styleHash = sha256(styleMd)
 const canonicalCss = styleMd.match(/```css\r?\n([\s\S]*?)```/)?.[1].trim() ?? ""
 if (!canonicalCss) throw new Error(`No encontré el bloque css canónico en ${STYLE_PATH}`)
 const palette = new Set((canonicalCss.match(/#[0-9a-fA-F]{3,8}\b/g) ?? []).map((h) => h.toLowerCase()))
+
+const coverStyleMd = readFileSync(COVER_STYLE_PATH, "utf8")
+const coverStyleHash = sha256(coverStyleMd)
+const coverPalette = new Set((coverStyleMd.match(/#[0-9a-fA-F]{6}\b/g) ?? []).map((h) => h.toLowerCase()))
 
 const client = new Anthropic()
 const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
@@ -143,21 +156,19 @@ function normalizeSvg(text: string): string {
   return `${svg}\n`
 }
 
-async function generate(fig: FigurePlan, section: Section) {
-  const system: Anthropic.Beta.BetaTextBlockParam[] = [
-    { type: "text", text: `${styleMd}\n\n${GENERATE_INSTRUCTIONS}`, cache_control: { type: "ephemeral" } },
-  ]
-  const messages: Anthropic.Beta.BetaMessageParam[] = [
-    {
-      role: "user",
-      content: `${JSON.stringify(fig, null, 2)}\n\nTexto de la sección "${section.heading}":\n${section.text}`,
-    },
-  ]
+// Pide un SVG, lo valida y reintenta con la lista exacta de errores.
+async function generateValidated(
+  system: Anthropic.Beta.BetaTextBlockParam[],
+  userContent: string,
+  prepare: (text: string) => string,
+  validate: (svg: string) => ValidationResult,
+) {
+  const messages: Anthropic.Beta.BetaMessageParam[] = [{ role: "user", content: userContent }]
   let lastErrors: string[] = []
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     const { message, text } = await ask(system, messages)
-    const svg = normalizeSvg(text)
-    const { errors, png } = validateSvg(svg, palette, canonicalCss)
+    const svg = prepare(text)
+    const { errors, png } = validate(svg)
     if (!errors.length) return { svg, png }
     lastErrors = errors
     console.log(`    intento ${attempt + 1}: ${errors.length} error(es) de validación`)
@@ -168,6 +179,82 @@ async function generate(fig: FigurePlan, section: Section) {
     })
   }
   throw new Error(lastErrors.join("\n      "))
+}
+
+function generate(fig: FigurePlan, section: Section) {
+  return generateValidated(
+    [{ type: "text", text: `${styleMd}\n\n${GENERATE_INSTRUCTIONS}`, cache_control: { type: "ephemeral" } }],
+    `${JSON.stringify(fig, null, 2)}\n\nTexto de la sección "${section.heading}":\n${section.text}`,
+    normalizeSvg,
+    (svg) => validateSvg(svg, palette, canonicalCss),
+  )
+}
+
+const extractSvg = (text: string) => {
+  const start = text.indexOf("<svg")
+  const end = text.lastIndexOf("</svg>")
+  return start === -1 || end === -1 ? text : `${text.slice(start, end + "</svg>".length)}\n`
+}
+
+// Registro de portadas para los componentes (cliente y servidor): se reconstruye
+// desde los cover.svg presentes en disco.
+function writeCoversRegistry() {
+  const entries = readdirSync("public/blog", { withFileTypes: true })
+    .filter((d) => d.isDirectory() && existsSync(`public/blog/${d.name}/cover.svg`))
+    .map((d) => `  "/blog/${d.name}": "/blog/${d.name}/cover.svg",`)
+    .sort()
+  writeFileSync(
+    COVERS_REGISTRY,
+    `// Generado por scripts/illustrate.ts --cover. No editar a mano.\nexport const covers: Record<string, string> = {\n${entries.join("\n")}${entries.length ? "\n" : ""}}\n`,
+  )
+}
+
+async function illustrateCover(slug: string, force: boolean) {
+  console.log(`\n▸ ${slug} (portada)`)
+  const post = posts.find((p) => p.href === `/blog/${slug}`)
+  if (!post) throw new Error(`no está en src/lib/posts.ts`)
+  const { article } = readPost(slug)
+  const outDir = `public/blog/${slug}`
+  const file = `${outDir}/cover.svg`
+  const manifestPath = `${outDir}/manifest.json`
+  const manifest: Manifest = existsSync(manifestPath)
+    ? JSON.parse(readFileSync(manifestPath, "utf8"))
+    : { slug, figures: [] }
+  const articleHash = sha256(`${post.title}\n${post.excerpt}\n${article}`)
+
+  if (existsSync(file) && readFileSync(file, "utf8").includes("<!-- manual -->")) {
+    console.log("  portada editada a mano, se respeta")
+    report.skipped.push(`${slug}/cover (manual)`)
+    return
+  }
+  const old = manifest.cover
+  if (!force && existsSync(file) && old?.articleHash === articleHash && old.styleHash === coverStyleHash) {
+    console.log("  portada sin cambios (caché)")
+    report.skipped.push(`${slug}/cover (caché)`)
+    return
+  }
+
+  console.log(`  generando portada para "${post.title}"`)
+  try {
+    const { svg, png } = await generateValidated(
+      [{ type: "text", text: `${coverStyleMd}\n\n${COVER_INSTRUCTIONS}`, cache_control: { type: "ephemeral" } }],
+      `Título: ${post.title}\nBajada: ${post.excerpt}\nTema: ${post.tag}\n\n${article}`,
+      extractSvg,
+      (svg) => validateCover(svg, coverPalette),
+    )
+    mkdirSync(outDir, { recursive: true })
+    mkdirSync(`illustrations/.previews/${slug}`, { recursive: true })
+    writeFileSync(file, svg)
+    if (png) writeFileSync(`illustrations/.previews/${slug}/cover.png`, png)
+    manifest.cover = { file: `/blog/${slug}/cover.svg`, model: MODEL, articleHash, styleHash: coverStyleHash }
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
+    writeCoversRegistry()
+    report.created.push(`${slug}/cover`)
+    console.log(`  portada: ✓ ${file}`)
+  } catch (e) {
+    console.log(`  portada: ✗ no se usa\n      ${(e as Error).message}`)
+    report.failed.push(`${slug}/cover`)
+  }
 }
 
 async function illustrate(slug: string, force: boolean, dryRun: boolean) {
@@ -210,7 +297,7 @@ async function illustrate(slug: string, force: boolean, dryRun: boolean) {
 
   mkdirSync(outDir, { recursive: true })
   mkdirSync(`illustrations/.previews/${slug}`, { recursive: true })
-  const manifest: Manifest = { slug, figures: [] }
+  const manifest: Manifest = { slug, figures: [], cover: previous?.cover }
 
   for (const f of figures) {
     const file = `${outDir}/${f.id}.svg`
@@ -267,15 +354,22 @@ async function main() {
   const force = args.includes("--force")
   const dryRun = args.includes("--dry-run")
   const all = args.includes("--all")
+  const coverMode = args.includes("--cover")
   const slugs = all
     ? readdirSync("src/app/blog", { withFileTypes: true })
         .filter((d) => d.isDirectory() && existsSync(`src/app/blog/${d.name}/page.tsx`))
         .map((d) => d.name)
-        .filter((s) => force || !existsSync(`public/blog/${s}/manifest.json`))
+        .filter((s) => {
+          if (force) return true
+          const m = `public/blog/${s}/manifest.json`
+          if (!existsSync(m)) return true
+          const data = JSON.parse(readFileSync(m, "utf8")) as Manifest
+          return coverMode ? !data.cover : !data.figures.length
+        })
     : args.filter((a) => !a.startsWith("--"))
 
   if (!slugs.length) {
-    console.log("Uso: npm run illustrate -- <slug> [--force] [--dry-run]  |  npm run illustrate -- --all")
+    console.log("Uso: npm run illustrate -- <slug> [--force] [--dry-run] [--cover]  |  npm run illustrate -- --all [--cover]")
     process.exit(all ? 0 : 1)
   }
   for (const slug of slugs) {
@@ -285,7 +379,8 @@ async function main() {
       continue
     }
     try {
-      await illustrate(slug, force, dryRun)
+      if (coverMode) await illustrateCover(slug, force)
+      else await illustrate(slug, force, dryRun)
     } catch (e) {
       if (e instanceof Anthropic.AuthenticationError) {
         console.error("\nANTHROPIC_API_KEY inválida o ausente. Ponla en .env.local (ver illustrations/README.md).")

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ArticleLayout } from "@/components/blog/article-layout"
+import { Figure } from "@/components/blog/figure"
 
 const SOURCE_URL = "https://humanistreview.ai/issue-1/acemoglu-ai-replace-workers/"
 
@@ -32,6 +33,9 @@ export default function AcemogluIaProTrabajadorPage() {
           trabajos puede automatizar por completo. Él propone otro norte, que resume en la bajada
           del ensayo:
         </p>
+
+        <Figure src="/blog/acemoglu-ia-pro-trabajador/fig-01.svg" caption="El mismo punto de partida tecnológico lleva a destinos opuestos según la meta con que se diseñe la IA." />
+
         <blockquote>«Instead of replacing workers, it should make them better at their jobs.»</blockquote>
         <p>
           A esa alternativa la llama <strong>IA pro-trabajador</strong>: sistemas diseñados para
@@ -68,6 +72,9 @@ export default function AcemogluIaProTrabajadorPage() {
           prácticamente estancados durante dos décadas en el uso cotidiano: las empresas que los
           compraban priorizaron mercados corporativos y médicos, y el consumidor dejó de importar.
         </p>
+
+        <Figure src="/blog/acemoglu-ia-pro-trabajador/fig-02.svg" caption="En el dictado por voz, la precisión técnica no bastó: faltaron mercado, usuarios y el último tramo de fiabilidad." />
+
         <p>
           La lección tiene dos partes. Primero, un avance técnico no basta: hacen falta
           aplicaciones, modelos de negocio y retroalimentación de usuarios. Segundo, el último
@@ -86,6 +93,9 @@ export default function AcemogluIaProTrabajadorPage() {
           patrones, pero sin el filtro social que corrige sus errores. Si son distintas, lo
           sensato es combinarlas, no copiar una con la otra.
         </p>
+
+        <Figure src="/blog/acemoglu-ia-pro-trabajador/fig-03.svg" caption="Dos tipos de inteligencia con fortalezas distintas: el valor está en la intersección, no en la copia." />
+
         <p>
           Acemoglu enlaza esta idea con la «simbiosis hombre-computador» que planteó J. C. R.
           Licklider en 1960 y da un ejemplo concreto: herramientas que detectan dónde se traba cada
@@ -101,6 +111,9 @@ export default function AcemogluIaProTrabajadorPage() {
         <p>
           Si la alternativa es mejor, ¿por qué no domina? El ensayo identifica cuatro fuerzas:
         </p>
+
+        <Figure src="/blog/acemoglu-ia-pro-trabajador/fig-04.svg" caption="Modelos de negocio, concentración, coordinación e ideología convergen en un mismo sesgo hacia la automatización." />
+
         <ul>
           <li>
             <strong>Modelos de negocio:</strong> las grandes tecnológicas ganan vendiendo software

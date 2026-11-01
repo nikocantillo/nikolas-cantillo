@@ -1,3 +1,6 @@
+import Image from "next/image"
+import { covers } from "@/lib/covers"
+
 // Portada abstracta tipo "papel rasgado": dos planos de color separados por un
 // borde irregular. Determinista a partir de `seed`, así cada escrito tiene la suya.
 
@@ -36,6 +39,21 @@ function tearPath(rand: () => number, w: number, h: number, offset = 0) {
 }
 
 export function ArticleCover({ seed, className }: { seed: string; className?: string }) {
+  // Portada ilustrada (scripts/illustrate.ts --cover) si existe; si no, papel rasgado.
+  const cover = covers[seed]
+  if (cover) {
+    return (
+      <Image
+        src={cover}
+        alt=""
+        width={1200}
+        height={675}
+        unoptimized
+        className={`object-cover ${className ?? ""}`}
+      />
+    )
+  }
+
   const w = 1200
   const h = 675
   const rand = rng(seed)

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 376" width="680" height="376" role="img">
+  <title>Cuatro fuerzas que empujan hacia la automatización</title>
+  <desc>Modelos de negocio, concentración, problema de coordinación e ideología se refuerzan entre sí y producen un foco en automatizar, que relega la IA pro-trabajador.</desc>
+<style>
+text { font-family: "Inter Tight", system-ui, sans-serif; }
+.t-label { font-size: 14px; font-weight: 400; }
+.t-strong { font-size: 14px; font-weight: 500; }
+.t-sub { font-size: 12px; font-weight: 400; }
+.t-mono { font-size: 12px; font-weight: 400; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.c-ink { fill: #111010; } .c-muted { fill: #5e5853; }
+.c-accent { fill: #7a2905; } .c-secondary { fill: #12415a; } .c-alert { fill: #6b4e12; }
+.b-neutral { fill: #f8f5f2; stroke: #ddd4cd; stroke-width: 1; }
+.b-accent { fill: #f8e8e1; stroke: #c34109; stroke-width: 1; }
+.b-secondary { fill: #e4edf1; stroke: #1f6a8c; stroke-width: 1; }
+.b-alert { fill: #f4efe4; stroke: #a6791f; stroke-width: 1; }
+.l-neutral { fill: none; stroke: #5e5853; stroke-width: 1; }
+.l-accent { fill: none; stroke: #c34109; stroke-width: 1; }
+.l-secondary { fill: none; stroke: #1f6a8c; stroke-width: 1; }
+.l-alert { fill: none; stroke: #a6791f; stroke-width: 1; }
+.l-dashed { stroke-dasharray: 4 3; }
+.m-arrow { fill: #5e5853; }
+.dark .c-ink { fill: #f3eeea; } .dark .c-muted { fill: #a39c96; }
+.dark .c-accent { fill: #f09885; } .dark .c-secondary { fill: #9cc4da; } .dark .c-alert { fill: #e0c27a; }
+.dark .b-neutral { fill: #232120; stroke: #4a4542; }
+.dark .b-accent { fill: #3a1d10; stroke: #e07a5f; }
+.dark .b-secondary { fill: #10283a; stroke: #5b9bbd; }
+.dark .b-alert { fill: #33280f; stroke: #c9a24a; }
+.dark .l-neutral, .dark .m-arrow { stroke: #a39c96; }
+.dark .m-arrow { fill: #a39c96; }
+.dark .l-accent { stroke: #e07a5f; } .dark .l-secondary { stroke: #5b9bbd; } .dark .l-alert { stroke: #c9a24a; }
+</style>
+  
+  <defs>
+    <marker id="arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path class="m-arrow" d="M0,0 L8,4 L0,8 Z"/>
+    </marker>
+  </defs>
+
+  <line class="l-neutral l-dashed" x1="300" y1="72" x2="380" y2="72"/>
+  <line class="l-neutral l-dashed" x1="300" y1="176" x2="380" y2="176"/>
+  <line class="l-neutral l-dashed" x1="340" y1="72" x2="340" y2="176"/>
+
+  <g>
+    <rect class="b-secondary" x="40" y="40" width="260" height="64" rx="6"/>
+    <text class="t-strong c-secondary" x="170" y="64" text-anchor="middle" dominant-baseline="central">Modelos de negocio</text>
+    <text class="t-sub c-secondary" x="170" y="84" text-anchor="middle" dominant-baseline="central">Software y publicidad</text>
+  </g>
+  <g>
+    <rect class="b-secondary" x="380" y="40" width="260" height="64" rx="6"/>
+    <text class="t-strong c-secondary" x="510" y="64" text-anchor="middle" dominant-baseline="central">Concentración</text>
+    <text class="t-sub c-secondary" x="510" y="84" text-anchor="middle" dominant-baseline="central">Capital, datos y talento</text>
+  </g>
+  <g>
+    <rect class="b-secondary" x="40" y="144" width="260" height="64" rx="6"/>
+    <text class="t-strong c-secondary" x="170" y="168" text-anchor="middle" dominant-baseline="central">Problema de coordinación</text>
+    <text class="t-sub c-secondary" x="170" y="188" text-anchor="middle" dominant-baseline="central">Se esperan mutuamente</text>
+  </g>
+  <g>
+    <rect class="b-secondary" x="380" y="144" width="260" height="64" rx="6"/>
+    <text class="t-strong c-secondary" x="510" y="168" text-anchor="middle" dominant-baseline="central">Ideología</text>
+    <text class="t-sub c-secondary" x="510" y="188" text-anchor="middle" dominant-baseline="central">Juego de imitación de Turing</text>
+  </g>
+
+  <line class="l-accent" x1="340" y1="176" x2="340" y2="268" marker-end="url(#arrow)"/>
+  <text class="t-sub c-muted" x="352" y="240" text-anchor="start" dominant-baseline="central">se refuerzan</text>
+
+  <g>
+    <rect class="b-accent" x="140" y="268" width="400" height="68" rx="6"/>
+    <text class="t-strong c-accent" x="340" y="294" text-anchor="middle" dominant-baseline="central">Foco en automatizar</text>
+    <text class="t-sub c-accent" x="340" y="314" text-anchor="middle" dominant-baseline="central">IA pro-trabajador relegada</text>
+  </g>
+</svg>

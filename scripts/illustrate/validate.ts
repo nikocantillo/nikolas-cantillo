@@ -243,3 +243,59 @@ export function validateSvg(svg: string, palette: Set<string>, rawCss: string): 
 
   return { errors: [...new Set(errors)], png }
 }
+
+// Portadas (illustrations/cover-style.md): sin texto, lienzo 1200×675, paleta fija y
+// solo el filtro de grano.
+const COVER_FILTER_PRIMITIVES = ["feTurbulence", "feColorMatrix", "feComposite"]
+const COVER_FORBIDDEN = ["text", "tspan", "image", "foreignObject", "script", "linearGradient", "radialGradient"]
+
+export function validateCover(svg: string, palette: Set<string>): ValidationResult {
+  const errors: string[] = []
+  const valid = XMLValidator.validate(svg)
+  if (valid !== true) return { errors: [`XML inválido: ${valid.err.msg} (línea ${valid.err.line})`] }
+
+  const doc = parser.parse(svg) as Node[]
+  const root = doc.find((n) => tagOf(n) === "svg")
+  if (!root) return { errors: ["No hay elemento <svg> raíz."] }
+  const ra = attrsOf(root)
+  if (ra.role !== "img") errors.push('La raíz debe tener role="img".')
+  if ((ra.viewBox ?? "").trim().split(/[\s,]+/).join(" ") !== "0 0 1200 675") {
+    errors.push(`viewBox debe ser "0 0 1200 675"; es "${ra.viewBox ?? ""}".`)
+  }
+  const kids = childrenOf(root)
+  for (const t of ["title", "desc"]) {
+    const n = kids.find((k) => tagOf(k) === t)
+    if (!n || !textContent(n).trim()) errors.push(`Falta <${t}> con texto.`)
+  }
+  for (const hex of svg.match(/#[0-9a-fA-F]{3,8}\b/g) ?? []) {
+    if (!palette.has(hex.toLowerCase())) errors.push(`Color fuera de la paleta: ${hex}.`)
+  }
+  if (/\b(rgb|hsl)a?\(/i.test(svg)) errors.push("Usa solo hex de la paleta (sin rgb()/hsl()).")
+
+  let filters = 0
+  const walk = (nodes: Node[], inFilter: boolean) => {
+    for (const n of nodes) {
+      const tag = tagOf(n)
+      if (tag === "#text" || tag === "#comment") continue
+      if (COVER_FORBIDDEN.includes(tag)) errors.push(`Elemento prohibido en portada: <${tag}>.`)
+      if (tag === "filter") filters++
+      if (inFilter && !COVER_FILTER_PRIMITIVES.includes(tag)) {
+        errors.push(`Primitiva de filtro no permitida: <${tag}> (solo ${COVER_FILTER_PRIMITIVES.join(", ")}).`)
+      }
+      walk(childrenOf(n), inFilter || tag === "filter")
+    }
+  }
+  walk(kids, false)
+  if (filters > 1) errors.push(`Hay ${filters} filtros; solo se permite uno (grano).`)
+
+  let png: Buffer | undefined
+  try {
+    const r = new Resvg(svg, { ...renderOptions, fitTo: { mode: "width", value: 1200 } })
+    const box = r.getBBox()
+    if (!box || box.width < 1190 || box.height < 665) errors.push("El fondo no cubre todo el lienzo.")
+    png = r.render().asPng()
+  } catch (e) {
+    errors.push(`resvg no pudo renderizar el SVG: ${(e as Error).message}`)
+  }
+  return { errors: [...new Set(errors)], png }
+}

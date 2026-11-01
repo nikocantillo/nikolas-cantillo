@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img">
+  <title>Una pieza orgánica y una pieza circular que encajan</title>
+  <desc>Una forma de papel rasgado con un hueco curvo recibe un círculo oscuro sin tocarlo: la IA que complementa al trabajador en lugar de reemplazarlo.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0" result="a"/>
+      <feComposite in="a" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="#f3e3dc"/>
+
+  <!-- canto claro bajo el papel rasgado -->
+  <path transform="translate(11,9)" fill="#f09885" d="M170,130 L230,118 L300,126 L380,112 L460,122 L540,110 L610,122 L640,150 L605,175 L590,190 L554,218 L538,246 L521,275 L514,305 L510,340 L513,372 L521,405 L537,436 L554,462 L578,486 L605,504 L628,530 L600,552 L520,560 L440,548 L360,562 L280,552 L210,560 L178,520 L188,450 L168,380 L184,300 L166,220 Z"/>
+  <!-- cuerpo rasgado (el trabajador) -->
+  <path fill="#c34109" d="M170,130 L230,118 L300,126 L380,112 L460,122 L540,110 L610,122 L640,150 L605,175 L590,190 L554,218 L538,246 L521,275 L514,305 L510,340 L513,372 L521,405 L537,436 L554,462 L578,486 L605,504 L628,530 L600,552 L520,560 L440,548 L360,562 L280,552 L210,560 L178,520 L188,450 L168,380 L184,300 L166,220 Z"/>
+  <path fill="#8a3a14" filter="url(#grain)" opacity="0.5" d="M170,130 L230,118 L300,126 L380,112 L460,122 L540,110 L610,122 L640,150 L605,175 L590,190 L554,218 L538,246 L521,275 L514,305 L510,340 L513,372 L521,405 L537,436 L554,462 L578,486 L605,504 L628,530 L600,552 L520,560 L440,548 L360,562 L280,552 L210,560 L178,520 L188,450 L168,380 L184,300 L166,220 Z"/>
+
+  <!-- arco limpio concéntrico -->
+  <path d="M700,102 A238,238 0 0 1 700,578" fill="none" stroke="#c34109" stroke-width="10" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- círculo (la IA) -->
+  <circle cx="700" cy="340" r="165" fill="#1a1919"/>
+
+  <!-- banda de hueso rasgada abajo a la derecha -->
+  <path transform="translate(-8,-9)" fill="#f09885" d="M690,590 L760,572 L840,584 L930,566 L1020,580 L1112,568 L1110,626 L690,630 Z"/>
+  <path fill="#efe5de" d="M690,590 L760,572 L840,584 L930,566 L1020,580 L1112,568 L1110,626 L690,630 Z"/>
+
+  <!-- acento -->
+  <circle cx="985" cy="195" r="46" fill="#f09885"/>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 420" width="680" height="420" role="img">
+<title>Humanos y modelos se complementan</title>
+<desc>Dos cajas muestran las fortalezas de la inteligencia humana y de la artificial; ambas convergen en una zona de complementariedad, ilustrada con una herramienta que ayuda al docente a agrupar estudiantes.</desc>
+<style>
+text { font-family: "Inter Tight", system-ui, sans-serif; }
+.t-label { font-size: 14px; font-weight: 400; }
+.t-strong { font-size: 14px; font-weight: 500; }
+.t-sub { font-size: 12px; font-weight: 400; }
+.t-mono { font-size: 12px; font-weight: 400; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.c-ink { fill: #111010; } .c-muted { fill: #5e5853; }
+.c-accent { fill: #7a2905; } .c-secondary { fill: #12415a; } .c-alert { fill: #6b4e12; }
+.b-neutral { fill: #f8f5f2; stroke: #ddd4cd; stroke-width: 1; }
+.b-accent { fill: #f8e8e1; stroke: #c34109; stroke-width: 1; }
+.b-secondary { fill: #e4edf1; stroke: #1f6a8c; stroke-width: 1; }
+.b-alert { fill: #f4efe4; stroke: #a6791f; stroke-width: 1; }
+.l-neutral { fill: none; stroke: #5e5853; stroke-width: 1; }
+.l-accent { fill: none; stroke: #c34109; stroke-width: 1; }
+.l-secondary { fill: none; stroke: #1f6a8c; stroke-width: 1; }
+.l-alert { fill: none; stroke: #a6791f; stroke-width: 1; }
+.l-dashed { stroke-dasharray: 4 3; }
+.m-arrow { fill: #5e5853; }
+.dark .c-ink { fill: #f3eeea; } .dark .c-muted { fill: #a39c96; }
+.dark .c-accent { fill: #f09885; } .dark .c-secondary { fill: #9cc4da; } .dark .c-alert { fill: #e0c27a; }
+.dark .b-neutral { fill: #232120; stroke: #4a4542; }
+.dark .b-accent { fill: #3a1d10; stroke: #e07a5f; }
+.dark .b-secondary { fill: #10283a; stroke: #5b9bbd; }
+.dark .b-alert { fill: #33280f; stroke: #c9a24a; }
+.dark .l-neutral, .dark .m-arrow { stroke: #a39c96; }
+.dark .m-arrow { fill: #a39c96; }
+.dark .l-accent { stroke: #e07a5f; } .dark .l-secondary { stroke: #5b9bbd; } .dark .l-alert { stroke: #c9a24a; }
+</style>
+
+<defs>
+<marker id="arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+<path class="m-arrow" d="M0,0 L8,4 L0,8 Z"/>
+</marker>
+</defs>
+
+<g>
+<rect class="b-secondary" x="40" y="40" width="290" height="140" rx="6"/>
+<text class="t-strong c-secondary" x="185" y="66" text-anchor="middle" dominant-baseline="central">Inteligencia humana</text>
+<text class="t-label c-secondary" x="185" y="104" text-anchor="middle" dominant-baseline="central">Aprende con pocos ejemplos</text>
+<text class="t-label c-secondary" x="185" y="128" text-anchor="middle" dominant-baseline="central">Formula hipótesis</text>
+<text class="t-label c-secondary" x="185" y="152" text-anchor="middle" dominant-baseline="central">Aprende con otros</text>
+</g>
+
+<g>
+<rect class="b-neutral" x="350" y="40" width="290" height="140" rx="6"/>
+<text class="t-strong c-ink" x="495" y="66" text-anchor="middle" dominant-baseline="central">Inteligencia artificial</text>
+<text class="t-label c-ink" x="495" y="110" text-anchor="middle" dominant-baseline="central">Grandes volúmenes de datos</text>
+<text class="t-label c-ink" x="495" y="136" text-anchor="middle" dominant-baseline="central">Reconocimiento de patrones</text>
+</g>
+
+<line class="l-neutral" x1="185" y1="180" x2="185" y2="230" marker-end="url(#arrow)"/>
+<line class="l-neutral" x1="495" y1="180" x2="495" y2="230" marker-end="url(#arrow)"/>
+
+<g>
+<rect class="b-accent" x="40" y="230" width="600" height="150" rx="6"/>
+<text class="t-strong c-accent" x="340" y="254" text-anchor="middle" dominant-baseline="central">Zona de complementariedad</text>
+</g>
+
+<g>
+<rect class="b-neutral" x="64" y="280" width="552" height="76" rx="6"/>
+<text class="t-label c-ink" x="340" y="306" text-anchor="middle" dominant-baseline="central">Ejemplo: herramienta que detecta dónde se traba cada</text>
+<text class="t-label c-ink" x="340" y="330" text-anchor="middle" dominant-baseline="central">estudiante y sugiere al docente cómo agruparlos</text>
+</g>
+</svg>

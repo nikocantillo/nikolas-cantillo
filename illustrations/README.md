@@ -24,7 +24,18 @@ npm run illustrate -- <slug>             # un escrito
 npm run illustrate -- --all              # todos los que aún no tienen figuras
 npm run illustrate -- <slug> --force     # regenerar aunque no haya cambios
 npm run illustrate -- <slug> --dry-run   # solo mostrar el plan (1 llamada, no escribe nada)
+npm run illustrate -- <slug> --cover     # portada ilustrada (imagen principal)
+npm run illustrate -- --all --cover      # portadas para todos los que no tienen
 ```
+
+## Portadas
+
+`--cover` genera `public/blog/<slug>/cover.svg` con el spec de `illustrations/cover-style.md`:
+una ilustración editorial abstracta (papel rasgado, capas, una metáfora visual de la idea
+del escrito, sin texto) en la paleta de las portadas. Se valida (XML, 1200×675, paleta,
+sin texto ni imágenes, solo el filtro de grano) y se registra en `src/lib/covers.ts`, que
+`ArticleCover` consulta: si un escrito no tiene portada generada, sigue usando el papel
+rasgado automático. Misma caché (por texto del escrito + spec) y mismo `<!-- manual -->`.
 
 Por cada escrito:
 

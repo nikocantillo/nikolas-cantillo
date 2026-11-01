@@ -1,0 +1,89 @@
+{
+  "slug": "acemoglu-ia-pro-trabajador",
+  "figures": [
+    {
+      "id": "fig-01",
+      "after_heading": "La tesis: la industria persigue el objetivo equivocado",
+      "type": "comparison",
+      "concept": "Dos rutas con la misma tecnología: la que apunta a igualar y sustituir al humano frente a la que apunta a complementarlo y ampliar sus capacidades.",
+      "elements": [
+        "Misma tecnología de IA",
+        "Ruta 1: imitar al humano",
+        "Automatización total",
+        "Trabajadores desplazados",
+        "Ruta 2: complementar (IA pro-trabajador)",
+        "Trabajador + IA",
+        "Más productividad y tareas nuevas"
+      ],
+      "caption": "El mismo punto de partida tecnológico lleva a destinos opuestos según la meta con que se diseñe la IA.",
+      "file": "/blog/acemoglu-ia-pro-trabajador/fig-01.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "43a3149c7a884aa62f1dd1f90743ff652b22fbe0018e78b6db35f306cb1fa281",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    },
+    {
+      "id": "fig-02",
+      "after_heading": "Lo que enseña el reconocimiento de voz",
+      "type": "flow",
+      "concept": "Un avance técnico no llega al uso masivo por sí solo: necesita aplicaciones, modelos de negocio y retroalimentación, y el último tramo de fiabilidad es el más difícil.",
+      "elements": [
+        "Precisión alta",
+        "Aplicaciones",
+        "Modelo de negocio",
+        "Retroalimentación de usuarios",
+        "Último tramo de fiabilidad",
+        "Estancamiento en el uso cotidiano"
+      ],
+      "caption": "En el dictado por voz, la precisión técnica no bastó: faltaron mercado, usuarios y el último tramo de fiabilidad.",
+      "file": "/blog/acemoglu-ia-pro-trabajador/fig-02.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "c39c67450e5a2fc4f0e365e2050b266eb992337c69956b1bd5ecaeb35608599e",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    },
+    {
+      "id": "fig-03",
+      "after_heading": "Complementar en lugar de imitar",
+      "type": "structural",
+      "concept": "Humanos y modelos tienen fortalezas distintas, y por eso combinarlos produce más que copiar a uno con el otro.",
+      "elements": [
+        "Humano: aprende con pocos ejemplos",
+        "Humano: formula hipótesis",
+        "Humano: aprende con otros",
+        "IA: grandes volúmenes de datos",
+        "IA: reconocimiento de patrones",
+        "Zona de complementariedad",
+        "Ejemplo: herramienta que detecta dónde se traba cada estudiante y sugiere al docente cómo agruparlos"
+      ],
+      "caption": "Dos tipos de inteligencia con fortalezas distintas: el valor está en la intersección, no en la copia.",
+      "file": "/blog/acemoglu-ia-pro-trabajador/fig-03.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "666ab0bc8155bfb847457901dd5102cf5d848208f2b667bce92648d9a2559786",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    },
+    {
+      "id": "fig-04",
+      "after_heading": "Por qué la industria insiste en automatizar",
+      "type": "structural",
+      "concept": "Cuatro fuerzas se refuerzan entre sí y empujan a la industria hacia la automatización, aunque exista una alternativa mejor.",
+      "elements": [
+        "Modelos de negocio",
+        "Concentración",
+        "Problema de coordinación",
+        "Ideología del juego de imitación",
+        "Foco en automatizar",
+        "IA pro-trabajador relegada"
+      ],
+      "caption": "Modelos de negocio, concentración, coordinación e ideología convergen en un mismo sesgo hacia la automatización.",
+      "file": "/blog/acemoglu-ia-pro-trabajador/fig-04.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "2477b0c460f57d962983103698bae3a8e56121c901f06b871b692069ffa42b46",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    }
+  ],
+  "cover": {
+    "file": "/blog/acemoglu-ia-pro-trabajador/cover.svg",
+    "model": "claude-sonnet-5-5",
+    "articleHash": "30d4a5899fb4b9fabfc02aacb5913861dad5faa41535f5b8cf7995c75af2569b",
+    "styleHash": "2ea2241452e565d7fa27da7811a74fac72b6d24ea1868eca7999286e1be703bb"
+  }
+}
