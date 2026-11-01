@@ -20,6 +20,23 @@ type Project = {
 
 const projects: Project[] = [
   {
+    title: "Riesgo de precios bajos de la papa Yungay",
+    kind: "Series de tiempo · pronóstico probabilístico",
+    href: "/projects/yungay-price-risk",
+    desc: "Quince modelos —clásicos, deep learning y fundacionales— contra ARIMA en el precio mayorista de la papa en Lima: ninguno gana en el pronóstico puntual. El aporte es una banda DeepAR calibrada y una alarma de precios no rentables.",
+    metrics: [
+      { k: "modelos", v: "15" },
+      { k: "orígenes", v: "41" },
+      { k: "Brier alarma", v: "0.10" },
+      { k: "ahorro costo", v: "≈37%" },
+    ],
+    tags: ["ARIMA", "DeepAR", "Chronos", "neuralforecast", "Diebold-Mariano"],
+    links: [
+      { label: "Ver caso →", href: "/projects/yungay-price-risk" },
+      { label: "Notebook →", href: "/projects/yungay-price-risk/notebook" },
+    ],
+  },
+  {
     title: "Predicción del desenlace en cirrosis",
     kind: "ML clínico · clasificación",
     href: "/projects/cirrhosis-survival-ml",

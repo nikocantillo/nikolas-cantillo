@@ -6,6 +6,12 @@ import { Separator } from "@/components/ui/separator"
 
 const projects = [
   {
+    title: "Riesgo de precios bajos de la papa Yungay",
+    desc: "Quince modelos contra ARIMA en el precio mayorista de la papa en Lima: ninguno gana en el pronóstico puntual, pero una banda DeepAR calibrada y una alarma P(precio < T) sí sirven para decidir. Proyecto de graduación del Magíster en Ciencia de Datos (UC Chile), con notebook verificable.",
+    tag: "Series de tiempo · Riesgo",
+    href: "/projects/yungay-price-risk",
+  },
+  {
     title: "Fact-checking con RAG (FEVER)",
     desc: "Verificación de afirmaciones con Llama-3.2-3B: baseline zero-shot vs pipeline RAG con Wikipedia y FAISS. Caso del Magíster en Ciencia de Datos (UC Chile), con notebook verificable.",
     tag: "NLP / RAG",
