@@ -38,44 +38,49 @@ export function ArticleLayout({ href, children }: { href: string; children: Reac
             <Image src="/nikolascantillo.jpeg" alt="" fill className="object-cover" />
           </span>
           <span>
-            Por <em className="font-display text-[1.15em]">Nikolas Cantillo</em>
+            Por <span className="font-medium">Nikolas Cantillo</span>
           </span>
         </div>
       </header>
 
-      {/* PORTADA */}
-      <figure className="mx-auto mt-12 md:mt-16 max-w-[1200px]">
-        <ArticleCover seed={href} className="aspect-[16/9] w-full rounded-[1.25rem]" />
-      </figure>
+      {/* PORTADA + HOJA: en escritorio la portada queda fija y la hoja con el texto sube
+          por encima al hacer scroll (como ia.samaltman.com). En móvil, todo apilado. */}
+      <div className="relative mx-auto mt-12 md:mt-16 max-w-[1200px]">
+        <figure className="md:sticky md:top-8">
+          <ArticleCover seed={href} className="aspect-[16/9] w-full rounded-[1.25rem]" />
+        </figure>
 
-      {/* METADATOS + COMPARTIR */}
-      <div className="mx-auto mt-8 flex max-w-[680px] flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-6 text-[14px] text-foreground/60">
-        <span>
-          Nº {issueNumber(href)} <span className="mx-2">·</span> {post.date}
-          <span className="mx-2">·</span> {post.readTime} de lectura
-        </span>
-        <ShareActions title={post.title} path={href} />
-      </div>
+        <div className="relative z-10 bg-background md:mx-10 lg:mx-16 md:-mt-[18%] md:rounded-t-[1.25rem] md:px-10 md:pt-14">
+          {/* METADATOS + COMPARTIR */}
+          <div className="mx-auto mt-8 md:mt-0 flex max-w-[680px] flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-6 text-[14px] text-foreground/60">
+            <span>
+              Nº {issueNumber(href)} <span className="mx-2">·</span> {post.date}
+              <span className="mx-2">·</span> {post.readTime} de lectura
+            </span>
+            <ShareActions title={post.title} path={href} />
+          </div>
 
-      {/* CUERPO */}
-      <article className="article-prose mx-auto mt-12 max-w-[680px]">{children}</article>
+          {/* CUERPO */}
+          <article className="article-prose mx-auto mt-12 max-w-[680px]">{children}</article>
 
-      {/* AUTOR */}
-      <aside className="mx-auto mt-20 flex max-w-[680px] items-center gap-6 border-y border-black/10 py-8">
-        <span className="relative size-20 shrink-0 overflow-hidden rounded-full">
-          <Image src="/nikolascantillo.jpeg" alt="Nikolas Cantillo" fill className="object-cover" />
-        </span>
-        <div>
-          <p className="font-display text-[1.6rem] italic leading-none">Nikolas Cantillo</p>
-          <p className="mt-2 text-[15px] leading-relaxed text-foreground/70">
-            Científico de datos y Principal Consultant en Oracle. Magíster en Ciencia de Datos,
-            Pontificia Universidad Católica de Chile.{" "}
-            <Link href="/about" className="text-accent hover:underline underline-offset-4">
-              Más sobre mí
-            </Link>
-          </p>
+          {/* AUTOR */}
+          <aside className="mx-auto mt-20 flex max-w-[680px] items-center gap-6 border-y border-black/10 py-8">
+            <span className="relative size-20 shrink-0 overflow-hidden rounded-full">
+              <Image src="/nikolascantillo.jpeg" alt="Nikolas Cantillo" fill className="object-cover" />
+            </span>
+            <div>
+              <p className="font-display text-[1.6rem] leading-none">Nikolas Cantillo</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-foreground/70">
+                Científico de datos y Principal Consultant en Oracle. Magíster en Ciencia de Datos,
+                Pontificia Universidad Católica de Chile.{" "}
+                <Link href="/about" className="text-accent hover:underline underline-offset-4">
+                  Más sobre mí
+                </Link>
+              </p>
+            </div>
+          </aside>
         </div>
-      </aside>
+      </div>
 
       {/* RELACIONADOS */}
       <section className="mx-auto mt-20 max-w-[1000px]">

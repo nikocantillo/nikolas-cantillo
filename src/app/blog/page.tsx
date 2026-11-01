@@ -65,7 +65,7 @@ export default function BlogPage() {
             </h2>
             <p className="mt-5 text-[17px] leading-relaxed text-foreground/70">{featured.excerpt}</p>
             <p className="mt-6 text-[14px] text-foreground/55">
-              Por <em className="font-display text-[1.1em]">Nikolas Cantillo</em> · {featured.date}{" "}
+              Por <span className="font-medium">Nikolas Cantillo</span> · {featured.date}{" "}
               · {featured.readTime}
             </p>
           </div>

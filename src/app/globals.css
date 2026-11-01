@@ -8,7 +8,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-grotesk);
   --font-mono: var(--font-plex-mono);
-  --font-serif: var(--font-editorial);
   --color-peach: var(--peach);
   --color-night: var(--night);
   --color-rust-light: var(--rust-light);
@@ -53,7 +52,7 @@
 }
 
 /*
-  Sistema "editorial": fondo blanco + tinta negra, titulares en serif editorial
+  Sistema "editorial": fondo blanco + tinta negra, todo en Inter (titulares a 500)
   y un único acento óxido. Un solo fondo continuo, sin bandas de color;
   jerarquía por tamaño tipográfico y aire, no por cajas ni sombras.
 */
@@ -117,12 +116,12 @@
   }
 }
 
-/* Titulares: serif editorial, un solo peso; el tamaño da la jerarquía */
+/* Titulares: Inter 500 con tracking cerrado (como ia.samaltman.com); el tamaño da la jerarquía */
 @utility font-display {
-  font-family: var(--font-editorial), serif;
-  font-weight: 400 !important;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-family: var(--font-grotesk), system-ui, sans-serif;
+  font-weight: 500 !important;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
 /* Bordes estructurales (más visibles que el hairline por defecto) */
@@ -225,9 +224,9 @@
   .nb-prose h1,
   .nb-prose h2 {
     color: var(--foreground);
-    font-family: var(--font-editorial), serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-family: var(--font-grotesk), system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.025em;
     font-size: 1.35rem;
     margin-top: 0.5rem;
     margin-bottom: 0.75rem;
@@ -339,18 +338,19 @@
   }
   .article-prose > p:first-child::first-letter {
     float: left;
-    font-family: var(--font-editorial), serif;
+    font-family: var(--font-grotesk), system-ui, sans-serif;
+    font-weight: 500;
     font-size: 4.6em;
     line-height: 0.82;
     margin: 0.08em 0.12em 0 0;
     color: var(--cyan);
   }
   .article-prose h2 {
-    font-family: var(--font-editorial), serif;
-    font-weight: 400;
+    font-family: var(--font-grotesk), system-ui, sans-serif;
+    font-weight: 500;
     font-size: clamp(1.75rem, 2.6vw, 2.25rem);
     line-height: 1.15;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
     color: var(--foreground);
     margin-bottom: 1.25rem;
   }
@@ -379,7 +379,8 @@
     margin: 3.5rem -2rem;
     padding: 2rem 0;
     border-block: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
-    font-family: var(--font-editorial), serif;
+    font-family: var(--font-grotesk), system-ui, sans-serif;
+    font-weight: 500;
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     line-height: 1.2;
     text-align: center;

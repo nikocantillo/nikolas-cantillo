@@ -1,20 +1,13 @@
 import type { Metadata } from "next"
-import { Instrument_Serif, Inter_Tight, IBM_Plex_Mono } from "next/font/google"
+import { Inter, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 
-const editorial = Instrument_Serif({
-  variable: "--font-editorial",
-  weight: "400",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  display: "swap",
-})
-
-const grotesk = Inter_Tight({
+const grotesk = Inter({
   variable: "--font-grotesk",
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
   display: "swap",
 })
@@ -40,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${editorial.variable} ${grotesk.variable} ${plexMono.variable} min-h-screen font-sans antialiased flex flex-col`}
+        className={`${grotesk.variable} ${plexMono.variable} min-h-screen font-sans antialiased flex flex-col`}
       >
         <Navbar />
         <div className="flex-1">{children}</div>
