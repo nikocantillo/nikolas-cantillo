@@ -35,7 +35,7 @@ export function ArticleLayout({ href, children }: { href: string; children: Reac
         </p>
         <div className="mt-8 flex items-center justify-center gap-3 text-[15px]">
           <span className="relative size-9 overflow-hidden rounded-full">
-            <Image src="/nikolascantillo.jpeg" alt="" fill className="object-cover" />
+            <Image src="/nikolas-cantillo.jpg" alt="" fill className="object-cover" />
           </span>
           <span>
             Por <span className="font-medium">Nikolas Cantillo</span>
@@ -66,7 +66,7 @@ export function ArticleLayout({ href, children }: { href: string; children: Reac
           {/* AUTOR */}
           <aside className="mx-auto mt-20 flex max-w-[680px] items-center gap-6 border-y border-black/10 py-8">
             <span className="relative size-20 shrink-0 overflow-hidden rounded-full">
-              <Image src="/nikolascantillo.jpeg" alt="Nikolas Cantillo" fill className="object-cover" />
+              <Image src="/nikolas-cantillo.jpg" alt="Nikolas Cantillo" fill className="object-cover" />
             </span>
             <div>
               <p className="font-display text-[1.6rem] leading-none">Nikolas Cantillo</p>

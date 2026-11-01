@@ -152,7 +152,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-[740px] lg:max-w-[1000px] grid gap-10 md:grid-cols-[auto_1fr] md:items-center md:gap-14 lg:gap-20">
           <div className="relative size-[160px] md:size-[240px] lg:size-[300px] rounded-full overflow-hidden">
             <Image
-              src="/nikolascantillo.jpeg"
+              src="/nikolas-cantillo.jpg"
               alt="Nikolas Cantillo"
               fill
               className="object-cover"
