@@ -1,0 +1,80 @@
+{
+  "slug": "hashes-y-ciencia-de-datos-responsable",
+  "figures": [
+    {
+      "id": "fig-01",
+      "after_heading": "Que es el hash de un archivo",
+      "type": "comparison",
+      "concept": "Efecto avalancha: dos archivos que difieren en un solo byte producen digests SHA-256 que no se parecen en nada.",
+      "elements": [
+        "Archivo original",
+        "Mismo archivo, 1 byte distinto",
+        "SHA-256",
+        "Digest 9f2a4c…e81b",
+        "Digest 03be71…a4d0"
+      ],
+      "caption": "Efecto avalancha: cambiar un solo byte del archivo produce un hash irreconocible.",
+      "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-01.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "b802d456193e1db61d92dc3af2628e5296dcbd2cfab4128bfb239d77cd9e5965",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    },
+    {
+      "id": "fig-02",
+      "after_heading": "Integridad: saber que el dato no cambio",
+      "type": "flow",
+      "concept": "Para verificar la integridad se recalcula el hash del archivo descargado y se compara con el hash publicado por el proveedor: si coinciden, el archivo es el correcto.",
+      "elements": [
+        "Proveedor publica SHA-256",
+        "Descarga del dataset",
+        "Recalcular hash local",
+        "Comparar hashes",
+        "Coinciden: archivo íntegro",
+        "Difieren: corrupción o alteración"
+      ],
+      "caption": "Verificar un dataset descargado consiste en recalcular su hash y compararlo con el publicado.",
+      "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-02.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "8a99b89e0c31931fd1e12420089ff65dece88eb1ce67b66925d05a56cab0cd7a",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    },
+    {
+      "id": "fig-03",
+      "after_heading": "Trazabilidad y reproducibilidad",
+      "type": "structural",
+      "concept": "Registrar los hashes del dato, el código y el modelo en un mismo registro crea un linaje verificable de extremo a extremo.",
+      "elements": [
+        "Hash del dataset",
+        "Hash del código",
+        "Entrenamiento",
+        "Hash del modelo",
+        "Registro de linaje auditable",
+        "dataset_final_v2.csv (nombre que miente)"
+      ],
+      "caption": "Enlazar los hashes de datos, código y modelo da un linaje verificable que los nombres de archivo no pueden ofrecer.",
+      "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-03.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "b3a00322b203462b196f3ffc6db678a5da026fd932405d0abbd388cad446e7cd",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    },
+    {
+      "id": "fig-04",
+      "after_heading": "Hashing y privacidad: util pero no magico",
+      "type": "comparison",
+      "concept": "Un hash simple de un identificador con pocos valores posibles se revierte por fuerza bruta, mientras que un HMAC con clave secreta lo impide sin acceso a la clave.",
+      "elements": [
+        "Email → hash simple",
+        "Atacante hashea todos los valores posibles",
+        "Tabla invertida: email recuperado",
+        "Email + clave secreta (HMAC)",
+        "Atacante sin la clave: no puede reconstruir la tabla",
+        "Seudonimizado, no anónimo"
+      ],
+      "caption": "Un hash simple se revierte con un diccionario de valores posibles; el HMAC con clave secreta eleva la barrera, aunque los datos siguen siendo personales.",
+      "file": "/blog/hashes-y-ciencia-de-datos-responsable/fig-04.svg",
+      "model": "claude-sonnet-5-5",
+      "sectionHash": "733282770bcd589c9393da719e6b7ca08197e1822220c7815558df86eb3b4b8c",
+      "styleHash": "90a00c8a661d418d1cbe9386d70d337b433e47cb1bd3b959d47cb1fd62646937"
+    }
+  ]
+}

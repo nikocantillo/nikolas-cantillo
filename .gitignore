@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# previews PNG de scripts/illustrate.ts
+/illustrations/.previews/

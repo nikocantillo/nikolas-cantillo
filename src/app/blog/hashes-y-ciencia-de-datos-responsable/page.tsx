@@ -1,4 +1,5 @@
 import { ArticleLayout } from "@/components/blog/article-layout"
+import { Figure } from "@/components/blog/figure"
 
 export default function HashesCienciaDatosResponsablePage() {
   return (
@@ -25,6 +26,9 @@ export default function HashesCienciaDatosResponsablePage() {
           que solemos ver como 64 caracteres hexadecimales. El mismo archivo produce siempre el
           mismo hash; si cambia un solo byte, el hash resultante es completamente distinto.
         </p>
+
+        <Figure src="/blog/hashes-y-ciencia-de-datos-responsable/fig-01.svg" caption="Efecto avalancha: cambiar un solo byte del archivo produce un hash irreconocible." />
+
         <p>
           Tres propiedades hacen utiles a los hashes criptograficos: son deterministas (misma
           entrada, misma salida), son unidireccionales (no puedes reconstruir el archivo desde
@@ -43,6 +47,9 @@ export default function HashesCienciaDatosResponsablePage() {
           completo y sin alteraciones: ni corrupcion en la transferencia, ni modificaciones
           maliciosas en el camino.
         </p>
+
+        <Figure src="/blog/hashes-y-ciencia-de-datos-responsable/fig-02.svg" caption="Verificar un dataset descargado consiste en recalcular su hash y compararlo con el publicado." />
+
         <p>
           En pipelines de datos esto se traduce en practicas concretas: calcular el hash de cada
           archivo al ingerirlo, guardarlo como metadato, y validarlo antes de cada procesamiento.
@@ -61,6 +68,9 @@ export default function HashesCienciaDatosResponsablePage() {
           un clasico), pero los hashes no. Si registras el hash del dataset, del codigo y de los
           artefactos del modelo, tienes un linaje verificable de extremo a extremo.
         </p>
+
+        <Figure src="/blog/hashes-y-ciencia-de-datos-responsable/fig-03.svg" caption="Enlazar los hashes de datos, código y modelo da un linaje verificable que los nombres de archivo no pueden ofrecer." />
+
         <p>
           Esto habilita reproducibilidad real: cualquier persona puede confirmar que esta usando
           exactamente los mismos insumos del experimento original. Tambien habilita auditoria:
@@ -78,6 +88,9 @@ export default function HashesCienciaDatosResponsablePage() {
           original. Es una practica valida, pero aqui la responsabilidad exige precision: hashear
           no es anonimizar.
         </p>
+
+        <Figure src="/blog/hashes-y-ciencia-de-datos-responsable/fig-04.svg" caption="Un hash simple se revierte con un diccionario de valores posibles; el HMAC con clave secreta eleva la barrera, aunque los datos siguen siendo personales." />
+
         <p>
           Si el espacio de valores es pequeño o conocido (emails, telefonos, documentos de
           identidad), un atacante puede hashear todos los valores posibles y revertir la tabla

@@ -397,3 +397,42 @@
     margin-top: 3.5rem;
   }
 }
+
+/* Figuras SVG dentro de artículos (generadas por scripts/illustrate.ts) */
+@layer components {
+  .article-prose .article-figure {
+    margin: 2.75rem 0;
+  }
+  .article-figure svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* En móvil la figura no baja de 560px (etiquetas >= 11.5px) y se desplaza en su
+     propio contenedor; la página no gana scroll horizontal. */
+  @media (max-width: 640px) {
+    .article-figure > div {
+      overflow-x: auto;
+      margin-inline: -1.5rem;
+      padding-inline: 1.5rem;
+    }
+    .article-figure svg {
+      min-width: 560px;
+    }
+  }
+  .article-figure figcaption {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+}
+
+/* Fuera de @layer a propósito: el <style> propio de cada SVG no tiene capa y ganaría. */
+.article-figure svg text {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+.article-figure svg text.t-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}

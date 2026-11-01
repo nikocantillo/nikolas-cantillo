@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 390" width="680" height="390" role="img">
+  <title>Efecto avalancha en SHA-256</title>
+  <desc>Dos archivos que difieren en un solo byte pasan por SHA-256 y producen digests que no se parecen en nada. Un cambio mínimo en la entrada altera por completo el hash.</desc>
+<style>
+text { font-family: "Inter Tight", system-ui, sans-serif; }
+.t-label { font-size: 14px; font-weight: 400; }
+.t-strong { font-size: 14px; font-weight: 500; }
+.t-sub { font-size: 12px; font-weight: 400; }
+.t-mono { font-size: 12px; font-weight: 400; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.c-ink { fill: #111010; } .c-muted { fill: #5e5853; }
+.c-accent { fill: #7a2905; } .c-secondary { fill: #12415a; } .c-alert { fill: #6b4e12; }
+.b-neutral { fill: #f8f5f2; stroke: #ddd4cd; stroke-width: 1; }
+.b-accent { fill: #f8e8e1; stroke: #c34109; stroke-width: 1; }
+.b-secondary { fill: #e4edf1; stroke: #1f6a8c; stroke-width: 1; }
+.b-alert { fill: #f4efe4; stroke: #a6791f; stroke-width: 1; }
+.l-neutral { fill: none; stroke: #5e5853; stroke-width: 1; }
+.l-accent { fill: none; stroke: #c34109; stroke-width: 1; }
+.l-secondary { fill: none; stroke: #1f6a8c; stroke-width: 1; }
+.l-alert { fill: none; stroke: #a6791f; stroke-width: 1; }
+.l-dashed { stroke-dasharray: 4 3; }
+.m-arrow { fill: #5e5853; }
+.dark .c-ink { fill: #f3eeea; } .dark .c-muted { fill: #a39c96; }
+.dark .c-accent { fill: #f09885; } .dark .c-secondary { fill: #9cc4da; } .dark .c-alert { fill: #e0c27a; }
+.dark .b-neutral { fill: #232120; stroke: #4a4542; }
+.dark .b-accent { fill: #3a1d10; stroke: #e07a5f; }
+.dark .b-secondary { fill: #10283a; stroke: #5b9bbd; }
+.dark .b-alert { fill: #33280f; stroke: #c9a24a; }
+.dark .l-neutral, .dark .m-arrow { stroke: #a39c96; }
+.dark .m-arrow { fill: #a39c96; }
+.dark .l-accent { stroke: #e07a5f; } .dark .l-secondary { stroke: #5b9bbd; } .dark .l-alert { stroke: #c9a24a; }
+</style>
+  
+  <defs>
+    <marker id="arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path class="m-arrow" d="M0,0 L8,4 L0,8 Z"/>
+    </marker>
+  </defs>
+
+  <g>
+    <rect class="b-neutral" x="40" y="40" width="260" height="56" rx="6"/>
+    <text class="t-strong c-ink" x="170" y="62" text-anchor="middle" dominant-baseline="central">Archivo original</text>
+    <text class="t-sub c-muted" x="170" y="80" text-anchor="middle" dominant-baseline="central">Sin modificar</text>
+  </g>
+
+  <g>
+    <rect class="b-alert" x="380" y="40" width="260" height="56" rx="6"/>
+    <text class="t-strong c-alert" x="510" y="62" text-anchor="middle" dominant-baseline="central">Mismo archivo</text>
+    <text class="t-sub c-alert" x="510" y="80" text-anchor="middle" dominant-baseline="central">1 byte distinto</text>
+  </g>
+
+  <path class="l-neutral" d="M170,96 L170,156" marker-end="url(#arrow)"/>
+  <path class="l-neutral" d="M510,96 L510,156" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect class="b-accent" x="40" y="156" width="600" height="48" rx="6"/>
+    <text class="t-strong c-accent" x="340" y="172" text-anchor="middle" dominant-baseline="central">SHA-256</text>
+    <text class="t-sub c-accent" x="340" y="190" text-anchor="middle" dominant-baseline="central">Misma función para ambos</text>
+  </g>
+
+  <path class="l-neutral" d="M170,204 L170,264" marker-end="url(#arrow)"/>
+  <path class="l-neutral" d="M510,204 L510,264" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect class="b-neutral" x="40" y="264" width="260" height="56" rx="6"/>
+    <text class="t-strong c-ink" x="170" y="286" text-anchor="middle" dominant-baseline="central">Digest</text>
+    <text class="t-mono c-muted" x="170" y="304" text-anchor="middle" dominant-baseline="central">9f2a4c…e81b</text>
+  </g>
+
+  <g>
+    <rect class="b-alert" x="380" y="264" width="260" height="56" rx="6"/>
+    <text class="t-strong c-alert" x="510" y="286" text-anchor="middle" dominant-baseline="central">Digest</text>
+    <text class="t-mono c-alert" x="510" y="304" text-anchor="middle" dominant-baseline="central">03be71…a4d0</text>
+  </g>
+
+  <text class="t-sub c-muted" x="340" y="350" text-anchor="middle" dominant-baseline="central">Ningún parecido entre los dos digests</text>
+</svg>
