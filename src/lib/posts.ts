@@ -10,6 +10,16 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    title: "¿La IA reemplazará a los trabajadores? El argumento de Daron Acemoglu",
+    excerpt:
+      "Resumen comentado del ensayo de Acemoglu en The Humanist Review of AI: por qué la industria persigue la meta equivocada y qué sería una IA pro-trabajador.",
+    tag: "AI / Economía",
+    href: "/blog/acemoglu-ia-pro-trabajador",
+    date: "Oct 2026",
+    readTime: "6 min",
+    deco: "complementar > reemplazar",
+  },
+  {
     title: "Hashes de archivos y ciencia de datos responsable: integridad, trazabilidad y privacidad",
     excerpt:
       "Que es el hash de un archivo, como garantiza integridad y reproducibilidad en pipelines, y por que hashear datos personales no es lo mismo que anonimizarlos.",
